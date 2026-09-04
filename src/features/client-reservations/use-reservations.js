@@ -70,7 +70,7 @@ export const useReservations = (customUser = null) => {
     } finally {
       setLoading(false);
     }
-  }, [currentUser?.id]);
+  }, [currentUser]);
 
   /**
    * Carga las reservas de una fecha para calcular ocupación y validar reglas de capacidad
@@ -90,12 +90,18 @@ export const useReservations = (customUser = null) => {
 
   // Cargar reservas del usuario al montar el hook
   useEffect(() => {
-    loadUserReservations();
+    const timer = setTimeout(() => {
+      void loadUserReservations();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [loadUserReservations]);
 
   // Cargar reservas de la fecha seleccionada cada vez que cambia
   useEffect(() => {
-    loadDateReservations(selectedDate);
+    const timer = setTimeout(() => {
+      void loadDateReservations(selectedDate);
+    }, 0);
+    return () => clearTimeout(timer);
   }, [selectedDate, loadDateReservations]);
 
   /**

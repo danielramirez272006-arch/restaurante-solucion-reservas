@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import {
   MAX_CAPACITY_PER_SLOT,
   validateReservationForm
@@ -35,31 +35,19 @@ export const BookingForm = ({
   });
 
   const [touched, setTouched] = useState({});
-  const [validationErrors, setValidationErrors] = useState({});
-
-  // Sincronizar datos iniciales del usuario
-  useEffect(() => {
-    if (currentUser) {
-      setFormData((prev) => ({
-        ...prev,
-        guestName: prev.guestName || currentUser.guestName || '',
-        email: prev.email || currentUser.email || '',
-        phone: prev.phone || currentUser.phone || ''
-      }));
-    }
-  }, [currentUser]);
-
-  // Validar en tiempo real ante cambios
-  useEffect(() => {
+  const validationResult = useMemo(() => {
     const dataToValidate = {
       ...formData,
+      guestName: formData.guestName || currentUser?.guestName || '',
+      email: formData.email || currentUser?.email || '',
+      phone: formData.phone || currentUser?.phone || '',
       date: selectedDate,
       time: selectedTime,
       guests: guestsCount
     };
-    const { errors } = validateReservationForm(dataToValidate);
-    setValidationErrors(errors);
-  }, [formData, selectedDate, selectedTime, guestsCount]);
+    return validateReservationForm(dataToValidate);
+  }, [formData, currentUser, selectedDate, selectedTime, guestsCount]);
+  const validationErrors = validationResult.errors;
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -88,9 +76,8 @@ export const BookingForm = ({
       guests: Number(guestsCount)
     };
 
-    const { isValid, errors } = validateReservationForm(fullPayload);
+    const { isValid } = validateReservationForm(fullPayload);
     if (!isValid) {
-      setValidationErrors(errors);
       return;
     }
 

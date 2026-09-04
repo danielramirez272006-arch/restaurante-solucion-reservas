@@ -129,13 +129,14 @@ export const getNextDays = (count = 7) => {
     const day = String(d.getDate()).padStart(2, '0');
     const dateString = `${year}-${month}-${day}`;
 
-    let label = '';
-    if (i === 0) label = 'Hoy';
-    else if (i === 1) label = 'Mañana';
-    else {
-      const weekday = d.toLocaleDateString('es-ES', { weekday: 'short' });
-      label = `${weekday.charAt(0).toUpperCase() + weekday.slice(1)} ${d.getDate()}`;
-    }
+    const label = i === 0
+      ? 'Hoy'
+      : i === 1
+        ? 'Mañana'
+        : (() => {
+            const weekday = d.toLocaleDateString('es-ES', { weekday: 'short' });
+            return `${weekday.charAt(0).toUpperCase() + weekday.slice(1)} ${d.getDate()}`;
+          })();
 
     const weekdayFull = d.toLocaleDateString('es-ES', { weekday: 'long' });
 
