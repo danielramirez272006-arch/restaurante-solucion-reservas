@@ -18,7 +18,7 @@ import {
  */
 const getActiveUser = () => {
   try {
-    const rawUser = localStorage.getItem('user') || localStorage.getItem('auth_user');
+    const rawUser = localStorage.getItem('donde-ray-session') || localStorage.getItem('user') || localStorage.getItem('auth_user');
     if (rawUser) {
       const parsed = JSON.parse(rawUser);
       if (parsed && (parsed.id || parsed.userId)) {
