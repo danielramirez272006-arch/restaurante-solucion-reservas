@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
 import {
-  RESERVATION_TYPES,
   MAX_CAPACITY_PER_SLOT,
   validateReservationForm
 } from '../../../shared/utils/reservation-rules.js';
 import { formatDateToSpanish, formatTime12h } from '../../../shared/utils/date-helpers.js';
+
+const OCCASION_CARDS = [
+  { id: 'Cena', label: 'Cena Gourmet', icon: '🍷' },
+  { id: 'Romántica', label: 'Cena Romántica', icon: '🕯️' },
+  { id: 'Cumpleaños', label: 'Cumpleaños', icon: '🎂' },
+  { id: 'Aniversario', label: 'Aniversario', icon: '🥂' },
+  { id: 'Negocios', label: 'Negocios', icon: '💼' },
+  { id: 'Familiar', label: 'Reunión Familiar', icon: '👨‍👩‍👧‍👦' },
+  { id: 'Otro', label: 'Casual / Otro', icon: '✨' }
+];
 
 export const BookingForm = ({
   selectedDate,
@@ -142,7 +151,7 @@ export const BookingForm = ({
             Número de Personas (Máx. {MAX_CAPACITY_PER_SLOT}):
           </label>
           <span style={styles.guestsValueDisplay}>
-            {guestsCount} {guestsCount === 1 ? 'Persona' : 'Personas'}
+            👥 {guestsCount} {guestsCount === 1 ? 'Persona' : 'Personas'}
           </span>
         </div>
         <div style={styles.guestsCounterWrapper}>
@@ -151,6 +160,7 @@ export const BookingForm = ({
             style={styles.counterBtn}
             onClick={() => onGuestsChange(Math.max(1, guestsCount - 1))}
             disabled={guestsCount <= 1}
+            aria-label="Disminuir comensales"
           >
             -
           </button>
@@ -171,9 +181,34 @@ export const BookingForm = ({
             style={styles.counterBtn}
             onClick={() => onGuestsChange(Math.min(MAX_CAPACITY_PER_SLOT, guestsCount + 1))}
             disabled={guestsCount >= MAX_CAPACITY_PER_SLOT}
+            aria-label="Aumentar comensales"
           >
             +
           </button>
+        </div>
+      </div>
+
+      {/* Selector Visual de Tipo de Ocasión */}
+      <div style={styles.fieldGroup}>
+        <label style={styles.label}>Tipo de Ocasión:</label>
+        <div style={styles.occasionsGrid}>
+          {OCCASION_CARDS.map((occ) => {
+            const isSelected = formData.type === occ.id;
+            return (
+              <button
+                key={occ.id}
+                type="button"
+                onClick={() => handleChange('type', occ.id)}
+                style={{
+                  ...styles.occasionCard,
+                  ...(isSelected ? styles.occasionCardSelected : {})
+                }}
+              >
+                <span style={styles.occasionIcon}>{occ.icon}</span>
+                <span style={styles.occasionLabel}>{occ.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -226,48 +261,27 @@ export const BookingForm = ({
         </div>
       </div>
 
-      <div style={styles.rowGrid}>
-        {/* Correo Electrónico */}
-        <div style={styles.fieldGroup}>
-          <label htmlFor="guest-email-input" style={styles.label}>
-            Correo Electrónico *
-          </label>
-          <input
-            id="guest-email-input"
-            type="email"
-            placeholder="cliente@ejemplo.com"
-            value={formData.email}
-            onChange={(e) => handleChange('email', e.target.value)}
-            onBlur={() => handleBlur('email')}
-            style={{
-              ...styles.input,
-              borderColor:
-                touched.email && validationErrors.email ? '#f87171' : 'rgba(255, 255, 255, 0.15)'
-            }}
-          />
-          {touched.email && validationErrors.email && (
-            <span style={styles.errorText}>{validationErrors.email}</span>
-          )}
-        </div>
-
-        {/* Tipo de Ocasión */}
-        <div style={styles.fieldGroup}>
-          <label htmlFor="reservation-type-select" style={styles.label}>
-            Tipo de Ocasión *
-          </label>
-          <select
-            id="reservation-type-select"
-            value={formData.type}
-            onChange={(e) => handleChange('type', e.target.value)}
-            style={styles.select}
-          >
-            {RESERVATION_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* Correo Electrónico */}
+      <div style={styles.fieldGroup}>
+        <label htmlFor="guest-email-input" style={styles.label}>
+          Correo Electrónico para confirmación *
+        </label>
+        <input
+          id="guest-email-input"
+          type="email"
+          placeholder="cliente@ejemplo.com"
+          value={formData.email}
+          onChange={(e) => handleChange('email', e.target.value)}
+          onBlur={() => handleBlur('email')}
+          style={{
+            ...styles.input,
+            borderColor:
+              touched.email && validationErrors.email ? '#f87171' : 'rgba(255, 255, 255, 0.15)'
+          }}
+        />
+        {touched.email && validationErrors.email && (
+          <span style={styles.errorText}>{validationErrors.email}</span>
+        )}
       </div>
 
       {/* Peticiones especiales */}
@@ -278,7 +292,7 @@ export const BookingForm = ({
         <textarea
           id="reservation-notes-input"
           rows={3}
-          placeholder="Ej: Mesa cerca a la ventana, silla para niño, opción vegetariana..."
+          placeholder="Ej: Mesa cerca a la ventana, silla para niño, opción vegetariana, decoración de aniversario..."
           value={formData.notes}
           onChange={(e) => handleChange('notes', e.target.value)}
           style={styles.textarea}
@@ -402,6 +416,41 @@ const styles = {
     borderRadius: '10px',
     fontSize: '13px'
   },
+  occasionsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+    gap: '8px'
+  },
+  occasionCard: {
+    background: 'rgba(15, 17, 23, 0.7)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '10px',
+    padding: '10px 8px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    color: '#d1d5db',
+    fontSize: '12px',
+    fontWeight: '500',
+    transition: 'all 0.15s ease',
+    outline: 'none',
+    textAlign: 'left'
+  },
+  occasionCardSelected: {
+    background: 'linear-gradient(135deg, rgba(212, 163, 89, 0.25), rgba(180, 120, 40, 0.35))',
+    borderColor: '#ffd89b',
+    color: '#ffffff',
+    fontWeight: '700',
+    boxShadow: '0 0 10px rgba(212, 163, 89, 0.3)'
+  },
+  occasionIcon: {
+    fontSize: '18px'
+  },
+  occasionLabel: {
+    flex: 1,
+    lineHeight: '1.2'
+  },
   rowGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
@@ -472,16 +521,6 @@ const styles = {
     fontSize: '14px',
     outline: 'none',
     transition: 'border-color 0.2s'
-  },
-  select: {
-    background: 'rgba(15, 17, 23, 0.9)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: '10px',
-    color: '#ffffff',
-    padding: '10px 14px',
-    fontSize: '14px',
-    outline: 'none',
-    cursor: 'pointer'
   },
   textarea: {
     background: 'rgba(15, 17, 23, 0.9)',

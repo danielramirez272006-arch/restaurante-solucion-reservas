@@ -95,3 +95,90 @@ export const isTimePassed = (dateString, timeString) => {
   const slotDate = new Date(year, month - 1, day, hours, minutes, 0);
   return slotDate.getTime() <= Date.now();
 };
+
+/**
+ * Determina si una reserva es futura
+ * @param {string} dateString 'YYYY-MM-DD'
+ * @param {string} timeString 'HH:MM'
+ * @returns {boolean}
+ */
+export const isFutureReservation = (dateString, timeString = '23:59') => {
+  if (!dateString) return false;
+  const [year, month, day] = dateString.split('-').map(Number);
+  const [hours, minutes] = (timeString || '23:59').split(':').map(Number);
+
+  const slotDate = new Date(year, month - 1, day, hours || 23, minutes || 59, 0);
+  return slotDate.getTime() > Date.now();
+};
+
+/**
+ * Genera una lista de los próximos N días para acceso rápido en la UI
+ * @param {number} count
+ * @returns {Array<{ dateString: string, label: string, dayNumber: number, weekday: string }>}
+ */
+export const getNextDays = (count = 7) => {
+  const days = [];
+  const now = new Date();
+
+  for (let i = 0; i < count; i++) {
+    const d = new Date();
+    d.setDate(now.getDate() + i);
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
+
+    let label = '';
+    if (i === 0) label = 'Hoy';
+    else if (i === 1) label = 'Mañana';
+    else {
+      const weekday = d.toLocaleDateString('es-ES', { weekday: 'short' });
+      label = `${weekday.charAt(0).toUpperCase() + weekday.slice(1)} ${d.getDate()}`;
+    }
+
+    const weekdayFull = d.toLocaleDateString('es-ES', { weekday: 'long' });
+
+    days.push({
+      dateString,
+      label,
+      dayNumber: d.getDate(),
+      weekday: weekdayFull
+    });
+  }
+
+  return days;
+};
+
+/**
+ * Genera la URL para agregar la reserva directamente a Google Calendar
+ * @param {Object} reservation 
+ * @returns {string}
+ */
+export const createGoogleCalendarUrl = (reservation) => {
+  if (!reservation || !reservation.date || !reservation.time) return '#';
+
+  const [year, month, day] = reservation.date.split('-').map(Number);
+  const [hours, minutes] = reservation.time.split(':').map(Number);
+
+  const startDate = new Date(year, month - 1, day, hours, minutes, 0);
+  // Asumir duración estándar de 2 horas para la experiencia gastronómica
+  const endDate = new Date(startDate.getTime() + 2 * 60 * 60 * 1000);
+
+  const formatCalTime = (d) =>
+    d.toISOString().replace(/-|:|\.\d+/g, '');
+
+  const title = encodeURIComponent(`Reserva en Restaurante Donde Ray (${reservation.guests} personas)`);
+  const details = encodeURIComponent(
+    `Reserva #${reservation.id} a nombre de ${reservation.guestName}.\n` +
+    `Tipo de ocasión: ${reservation.type || 'Cena'}.\n` +
+    `Notas: ${reservation.notes || 'Ninguna'}.\n` +
+    `Estado: ${reservation.status || 'Pendiente'}.`
+  );
+  const location = encodeURIComponent('Restaurante Donde Ray');
+
+  const startIso = formatCalTime(startDate);
+  const endIso = formatCalTime(endDate);
+
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startIso}/${endIso}&details=${details}&location=${location}`;
+};

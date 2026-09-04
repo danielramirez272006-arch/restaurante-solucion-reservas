@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { jsPDF } from 'jspdf';
-import { formatDateToSpanish, formatTime12h } from '../../../shared/utils/date-helpers.js';
+import {
+  formatDateToSpanish,
+  formatTime12h,
+  createGoogleCalendarUrl
+} from '../../../shared/utils/date-helpers.js';
 
 export const VoucherTicket = ({ reservation, onClose }) => {
   const [downloading, setDownloading] = useState(false);
@@ -31,6 +35,8 @@ export const VoucherTicket = ({ reservation, onClose }) => {
     guests,
     status: status || 'Pendiente'
   });
+
+  const googleCalUrl = createGoogleCalendarUrl(reservation);
 
   const handleDownloadPDF = () => {
     try {
@@ -149,7 +155,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
       <div style={styles.modalContent}>
         {/* Ticket Header */}
         <div style={styles.ticketHeader}>
-          <div style={styles.restaurantTag}>DONDE RAY</div>
+          <div style={styles.restaurantTag}>DONDE RAY RESTAURANTE</div>
           <h2 style={styles.ticketTitle}>Voucher de Reserva</h2>
           <p style={styles.ticketSubtitle}>
             Presenta este comprobante digital o su código QR al llegar al restaurante
@@ -178,7 +184,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
             <div style={styles.qrWrapper}>
               <QRCodeSVG
                 value={qrData}
-                size={130}
+                size={125}
                 level="M"
                 includeMargin={true}
                 bgColor="#ffffff"
@@ -252,8 +258,17 @@ export const VoucherTicket = ({ reservation, onClose }) => {
             disabled={downloading}
             style={styles.downloadBtn}
           >
-            {downloading ? 'Generando PDF...' : '📄 Descargar Voucher PDF'}
+            {downloading ? 'Generando PDF...' : '📄 Descargar PDF'}
           </button>
+
+          <a
+            href={googleCalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.calendarBtn}
+          >
+            📅 Google Calendar
+          </a>
 
           <button
             type="button"
@@ -264,7 +279,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
           </button>
 
           <button type="button" onClick={onClose} style={styles.closeBtn}>
-            Volver
+            Cerrar
           </button>
         </div>
       </div>
@@ -279,8 +294,8 @@ const styles = {
     left: 0,
     width: '100vw',
     height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    backdropFilter: 'blur(6px)',
+    backgroundColor: 'rgba(0, 0, 0, 0.78)',
+    backdropFilter: 'blur(8px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -289,14 +304,15 @@ const styles = {
   },
   modalContent: {
     background: 'linear-gradient(160deg, #1e2029 0%, #12131a 100%)',
-    border: '1px solid rgba(212, 163, 89, 0.4)',
+    border: '1px solid rgba(212, 163, 89, 0.45)',
     borderRadius: '20px',
-    maxWidth: '520px',
+    maxWidth: '540px',
     width: '100%',
-    boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 163, 89, 0.2)',
+    boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(212, 163, 89, 0.25)',
     overflow: 'hidden',
     position: 'relative',
-    color: '#ffffff'
+    color: '#ffffff',
+    animation: 'voucherEnter 0.25s ease-out'
   },
   ticketHeader: {
     padding: '24px 24px 16px',
@@ -306,7 +322,7 @@ const styles = {
   restaurantTag: {
     fontSize: '11px',
     fontWeight: '800',
-    letterSpacing: '2px',
+    letterSpacing: '2.5px',
     color: '#ffd89b',
     textTransform: 'uppercase',
     marginBottom: '6px'
@@ -347,29 +363,29 @@ const styles = {
   notchLeft: {
     width: '14px',
     height: '24px',
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backgroundColor: 'rgba(0, 0, 0, 0.78)',
     borderTopRightRadius: '14px',
     borderBottomRightRadius: '14px',
-    borderRight: '1px solid rgba(212, 163, 89, 0.4)'
+    borderRight: '1px solid rgba(212, 163, 89, 0.45)'
   },
   notchRight: {
     width: '14px',
     height: '24px',
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backgroundColor: 'rgba(0, 0, 0, 0.78)',
     borderTopLeftRadius: '14px',
     borderBottomLeftRadius: '14px',
-    borderLeft: '1px solid rgba(212, 163, 89, 0.4)'
+    borderLeft: '1px solid rgba(212, 163, 89, 0.45)'
   },
   dashedLine: {
     flex: 1,
-    borderBottom: '2px dashed rgba(212, 163, 89, 0.3)',
+    borderBottom: '2px dashed rgba(212, 163, 89, 0.35)',
     height: '1px'
   },
   ticketBody: {
     padding: '16px 24px',
     display: 'grid',
-    gridTemplateColumns: '140px 1fr',
-    gap: '20px',
+    gridTemplateColumns: '135px 1fr',
+    gap: '18px',
     alignItems: 'center'
   },
   qrContainer: {
@@ -455,36 +471,52 @@ const styles = {
     justifyContent: 'center'
   },
   downloadBtn: {
-    flex: 2,
+    flex: '1 1 140px',
     background: 'linear-gradient(135deg, #d4a359 0%, #b47828 100%)',
     border: 'none',
     color: '#08060d',
     borderRadius: '10px',
-    padding: '10px 16px',
-    fontSize: '13px',
+    padding: '10px 14px',
+    fontSize: '12px',
     fontWeight: '700',
     cursor: 'pointer',
-    boxShadow: '0 4px 14px rgba(212, 163, 89, 0.3)'
+    boxShadow: '0 4px 14px rgba(212, 163, 89, 0.3)',
+    textAlign: 'center'
+  },
+  calendarBtn: {
+    flex: '1 1 140px',
+    background: 'rgba(66, 133, 244, 0.15)',
+    border: '1px solid rgba(66, 133, 244, 0.4)',
+    color: '#93c5fd',
+    borderRadius: '10px',
+    padding: '10px 14px',
+    fontSize: '12px',
+    fontWeight: '600',
+    textDecoration: 'none',
+    textAlign: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   printBtn: {
-    flex: 1,
+    flex: '0 1 80px',
     background: 'rgba(255, 255, 255, 0.08)',
     border: '1px solid rgba(255, 255, 255, 0.15)',
     color: '#ffffff',
     borderRadius: '10px',
-    padding: '10px 14px',
-    fontSize: '13px',
+    padding: '10px 12px',
+    fontSize: '12px',
     fontWeight: '600',
     cursor: 'pointer'
   },
   closeBtn: {
-    flex: 1,
+    flex: '0 1 70px',
     background: 'transparent',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     color: '#9ca3af',
     borderRadius: '10px',
-    padding: '10px 14px',
-    fontSize: '13px',
+    padding: '10px 12px',
+    fontSize: '12px',
     cursor: 'pointer'
   }
 };

@@ -186,6 +186,65 @@ export const useReservations = (customUser = null) => {
   };
 
   /**
+   * Reagenda o actualiza una reserva existente (validando capacidad y límites)
+   */
+  const rescheduleReservation = async (reservationId, updatePayload) => {
+    setActionLoading(true);
+    setError(null);
+
+    try {
+      const targetDate = updatePayload.date;
+      const targetTime = updatePayload.time;
+      const requestedGuests = Number(updatePayload.guests);
+
+      // Validar reservas frescas para la nueva fecha
+      const freshReservations = await reservationService.getReservationsByDate(targetDate);
+
+      // Excluir la reserva que se está editando del cálculo
+      const otherReservations = freshReservations.filter((r) => String(r.id) !== String(reservationId));
+
+      // Validar límite diario por usuario (Regla 2)
+      const limitCheck = checkUserDailyLimit(otherReservations, currentUser?.id);
+      if (!limitCheck.allowed) {
+        throw new Error(`No puedes reagendar: superarías el límite de ${MAX_USER_RESERVATIONS_PER_DATE} reservas en esa fecha.`);
+      }
+
+      // Validar capacidad de la franja (Regla 1 y 4)
+      const activeInSlot = otherReservations.filter((r) => r.time === targetTime && r.status !== 'Cancelada');
+      const bookedInSlot = activeInSlot.reduce((acc, r) => acc + (Number(r.guests) || 0), 0);
+
+      if (bookedInSlot + requestedGuests > MAX_CAPACITY_PER_SLOT) {
+        const remaining = Math.max(0, MAX_CAPACITY_PER_SLOT - bookedInSlot);
+        throw new Error(`Capacidad insuficiente a las ${targetTime}. Cupos disponibles: ${remaining} de ${MAX_CAPACITY_PER_SLOT}.`);
+      }
+
+      // Enviar actualización
+      const updated = await reservationService.updateReservation(reservationId, {
+        date: targetDate,
+        time: targetTime,
+        guests: requestedGuests,
+        type: updatePayload.type,
+        notes: updatePayload.notes
+      });
+
+      // Actualizar estados
+      setReservations((prev) => prev.map((r) => (r.id === reservationId ? { ...r, ...updated } : r)));
+      if (selectedDate === targetDate) {
+        loadDateReservations(targetDate);
+      }
+      setActiveVoucher({ ...updated });
+
+      return { success: true, reservation: updated };
+    } catch (err) {
+      const msg = err.message || 'Error al reagendar la reserva.';
+      setError(msg);
+      return { success: false, error: msg };
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  /**
    * Cancela una reserva existente
    */
   const cancelUserReservation = async (reservationId) => {
@@ -226,6 +285,7 @@ export const useReservations = (customUser = null) => {
     userDateLimitStatus,
     calculateAvailability,
     bookReservation,
+    rescheduleReservation,
     cancelUserReservation,
     loadUserReservations,
     loadDateReservations,

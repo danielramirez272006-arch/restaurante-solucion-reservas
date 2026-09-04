@@ -137,6 +137,33 @@ export const reservationService = {
   },
 
   /**
+   * Actualiza o reagenda parcialmente una reserva existente
+   * 
+   * @param {string|number} id ID de la reserva
+   * @param {Object} partialData Datos a actualizar
+   * @returns {Promise<Object>}
+   */
+  async updateReservation(id, partialData) {
+    if (!id) throw new Error('Se requiere el ID de la reserva a actualizar.');
+    try {
+      const response = await fetch(`${API_BASE_URL}/${encodeURIComponent(id)}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...partialData,
+          updatedAt: new Date().toISOString()
+        })
+      });
+      return await handleResponse(response);
+    } catch (error) {
+      console.error(`[reservationService] Error al actualizar la reserva ${id}:`, error);
+      throw error;
+    }
+  },
+
+  /**
    * Permite al cliente cancelar una de sus reservas
    * 
    * @param {string|number} id ID de la reserva

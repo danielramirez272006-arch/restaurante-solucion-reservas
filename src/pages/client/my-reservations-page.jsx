@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useReservations } from '../../features/client-reservations/use-reservations.js';
 import { ReservationCard } from '../../features/client-reservations/components/reservation-card.jsx';
 import { VoucherTicket } from '../../features/client-reservations/components/voucher-ticket.jsx';
+import { isFutureReservation } from '../../shared/utils/date-helpers.js';
 
 export const MyReservationsPage = () => {
   const {
@@ -10,6 +11,7 @@ export const MyReservationsPage = () => {
     loading,
     actionLoading,
     error,
+    rescheduleReservation,
     cancelUserReservation,
     loadUserReservations,
     activeVoucher,
@@ -18,15 +20,24 @@ export const MyReservationsPage = () => {
   } = useReservations();
 
   const [activeFilter, setActiveFilter] = useState('ALL');
+  const [timeFilter, setTimeFilter] = useState('ALL'); // 'ALL', 'UPCOMING', 'PAST'
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Filtrado local según pestaña y término de búsqueda
+  // Filtrado local según estado, tiempo (próximas vs pasadas) y término de búsqueda
   const filteredReservations = reservations.filter((res) => {
     // Filtro por tab de estado
     if (activeFilter !== 'ALL') {
       if (activeFilter === 'PENDING' && res.status !== 'Pendiente') return false;
       if (activeFilter === 'CONFIRMED' && res.status !== 'Confirmada') return false;
       if (activeFilter === 'CANCELLED' && res.status !== 'Cancelada') return false;
+    }
+
+    // Filtro temporal: próximas vs pasadas
+    if (timeFilter === 'UPCOMING' && !isFutureReservation(res.date, res.time)) {
+      return false;
+    }
+    if (timeFilter === 'PAST' && isFutureReservation(res.date, res.time)) {
+      return false;
     }
 
     // Filtro de búsqueda textual
@@ -46,7 +57,41 @@ export const MyReservationsPage = () => {
     all: reservations.length,
     pending: reservations.filter((r) => r.status === 'Pendiente').length,
     confirmed: reservations.filter((r) => r.status === 'Confirmada').length,
-    cancelled: reservations.filter((r) => r.status === 'Cancelada').length
+    cancelled: reservations.filter((r) => r.status === 'Cancelada').length,
+    upcoming: reservations.filter((r) => isFutureReservation(r.date, r.time)).length
+  };
+
+  /**
+   * Exporta las reservas del usuario actual a un archivo CSV estructurado
+   */
+  const handleExportCSV = () => {
+    if (!reservations || reservations.length === 0) {
+      alert('No hay reservas para exportar.');
+      return;
+    }
+
+    const headers = ['ID', 'Titular', 'Fecha', 'Hora', 'Personas', 'Ocasion', 'Estado', 'Telefono', 'Email', 'Notas'];
+    const rows = reservations.map((r) => [
+      `"${r.id}"`,
+      `"${r.guestName || ''}"`,
+      `"${r.date || ''}"`,
+      `"${r.time || ''}"`,
+      r.guests || 1,
+      `"${r.type || ''}"`,
+      `"${r.status || 'Pendiente'}"`,
+      `"${r.phone || ''}"`,
+      `"${r.email || ''}"`,
+      `"${(r.notes || '').replace(/"/g, '""')}"`
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `mis-reservas-donde-ray-${currentUser?.id || 'cliente'}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -61,7 +106,54 @@ export const MyReservationsPage = () => {
         </p>
       </header>
 
-      {/* Barra de Filtros y Búsqueda */}
+      {/* Barra de Filtros Temporales (Próximas vs Pasadas) y Exportación */}
+      <div style={styles.subBar}>
+        <div style={styles.timeFilterGroup}>
+          <button
+            type="button"
+            onClick={() => setTimeFilter('ALL')}
+            style={{
+              ...styles.pillBtn,
+              ...(timeFilter === 'ALL' ? styles.pillBtnActive : {})
+            }}
+          >
+            Todas las Fechas
+          </button>
+          <button
+            type="button"
+            onClick={() => setTimeFilter('UPCOMING')}
+            style={{
+              ...styles.pillBtn,
+              ...(timeFilter === 'UPCOMING' ? styles.pillBtnActive : {})
+            }}
+          >
+            ⏳ Próximas ({counts.upcoming})
+          </button>
+          <button
+            type="button"
+            onClick={() => setTimeFilter('PAST')}
+            style={{
+              ...styles.pillBtn,
+              ...(timeFilter === 'PAST' ? styles.pillBtnActive : {})
+            }}
+          >
+            📁 Historial / Pasadas
+          </button>
+        </div>
+
+        {reservations.length > 0 && (
+          <button
+            type="button"
+            onClick={handleExportCSV}
+            style={styles.exportBtn}
+            title="Descargar listado en archivo Excel / CSV"
+          >
+            📥 Exportar a CSV
+          </button>
+        )}
+      </div>
+
+      {/* Barra de Filtros por Estado y Búsqueda */}
       <div style={styles.toolbar}>
         <div style={styles.tabsRow}>
           <button
@@ -149,6 +241,8 @@ export const MyReservationsPage = () => {
           <p style={styles.emptyText}>
             {searchTerm
               ? 'No hay reservas que coincidan con tu búsqueda.'
+              : timeFilter === 'UPCOMING'
+              ? 'No tienes reservas próximas por el momento.'
               : activeFilter !== 'ALL'
               ? `No tienes reservas en estado "${activeFilter}".`
               : 'Aún no has registrado ninguna reserva en Donde Ray.'}
@@ -166,6 +260,7 @@ export const MyReservationsPage = () => {
               reservation={reservation}
               onViewVoucher={setActiveVoucher}
               onCancel={cancelUserReservation}
+              onReschedule={rescheduleReservation}
               isCancelling={actionLoading}
             />
           ))}
@@ -188,7 +283,7 @@ const styles = {
     color: '#ffffff',
     display: 'flex',
     flexDirection: 'column',
-    gap: '24px'
+    gap: '20px'
   },
   header: {
     textAlign: 'center',
@@ -217,6 +312,46 @@ const styles = {
     margin: 0,
     fontSize: '14px',
     color: '#9ca3af'
+  },
+  subBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: '12px'
+  },
+  timeFilterGroup: {
+    display: 'flex',
+    gap: '8px',
+    flexWrap: 'wrap'
+  },
+  pillBtn: {
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.12)',
+    borderRadius: '20px',
+    padding: '6px 14px',
+    fontSize: '12px',
+    fontWeight: '500',
+    color: '#d1d5db',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  },
+  pillBtnActive: {
+    background: 'linear-gradient(135deg, rgba(212, 163, 89, 0.25), rgba(180, 120, 40, 0.35))',
+    borderColor: '#ffd89b',
+    color: '#ffffff',
+    fontWeight: '700'
+  },
+  exportBtn: {
+    background: 'rgba(16, 185, 129, 0.12)',
+    border: '1px solid rgba(16, 185, 129, 0.35)',
+    borderRadius: '10px',
+    padding: '6px 14px',
+    fontSize: '12px',
+    fontWeight: '600',
+    color: '#34d399',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
   },
   toolbar: {
     display: 'flex',
