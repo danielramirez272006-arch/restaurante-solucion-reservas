@@ -1,0 +1,14 @@
+const API_URL = 'http://localhost:3001'
+
+export async function apiRequest(path, options = {}) {
+	const response = await fetch(`${API_URL}${path}`, {
+		headers: { 'Content-Type': 'application/json', ...options.headers },
+		...options,
+	})
+
+	if (!response.ok) throw new Error(`La API respondió con ${response.status}`)
+	if (response.status === 204) return null
+	return response.json()
+}
+
+export { API_URL }
