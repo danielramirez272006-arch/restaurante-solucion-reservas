@@ -1,1 +1,22 @@
 
+{
+  "users": [
+    {
+      "id": "u-admin",
+      "name": "Raymon",
+      "email": "admin@demo.com",
+      "password": "1234",
+      "role": "admin",
+      "phone": "+57 300 000 0000"
+    },
+    {
+      "id": "u-client",
+      "name": "Cliente Demo",
+      "email": "user@demo.com",
+      "password": "1234",
+      "role": "user",
+      "phone": "+57 301 000 0000"
+    }
+  ],
+  "reservations": []
+}
