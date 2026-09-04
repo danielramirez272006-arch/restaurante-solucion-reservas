@@ -118,6 +118,9 @@ export const reservationService = {
       notes: reservationData.notes ? reservationData.notes.trim() : '',
       // REGLA 3: Toda nueva reserva creada debe tener obligatoriamente el status: 'Pendiente'
       status: 'Pendiente',
+      // Aliases de compatibilidad con el panel de administración
+      estado: 'Pendiente',
+      cliente: reservationData.guestName.trim(),
       createdAt: reservationData.createdAt || new Date().toISOString()
     };
 
@@ -179,6 +182,7 @@ export const reservationService = {
         },
         body: JSON.stringify({
           status: 'Cancelada',
+          estado: 'Cancelada',
           cancelledAt: new Date().toISOString()
         })
       });

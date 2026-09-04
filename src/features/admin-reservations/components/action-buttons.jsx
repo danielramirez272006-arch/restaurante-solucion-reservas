@@ -1,5 +1,5 @@
 export default function ActionButtons({ reservation, onStatusChange, onView, busy }) {
-	const canAct = reservation.estado === 'Pendiente'
+	const canAct = (reservation.estado || reservation.status) === 'Pendiente'
 	return <div className="actions">
 		<button className="button ghost" type="button" onClick={() => onView(reservation)}>Ver detalle</button>
 		{canAct && <>

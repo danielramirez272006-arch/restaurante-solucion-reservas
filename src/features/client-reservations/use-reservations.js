@@ -36,10 +36,10 @@ const getActiveUser = () => {
 
   // Fallback por defecto para MVP y pruebas de desarrollo
   return {
-    id: 'user_1',
-    guestName: 'Daniel Ramírez',
-    email: 'daniel@dondeway.com',
-    phone: '+57 300 123 4567'
+    id: 'u-client',
+    guestName: 'Cliente Demo',
+    email: 'user@demo.com',
+    phone: '+57 301 000 0000'
   };
 };
 

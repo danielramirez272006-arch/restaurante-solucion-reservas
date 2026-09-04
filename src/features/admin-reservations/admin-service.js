@@ -7,7 +7,7 @@ export function getReservations() {
 export function updateReservationStatus(id, estado) {
 	return apiRequest(`/reservations/${id}`, {
 		method: 'PATCH',
-		body: JSON.stringify({ estado }),
+		body: JSON.stringify({ estado, status: estado }),
 	})
 }
 
