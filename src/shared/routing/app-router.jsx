@@ -30,6 +30,11 @@ function AdminLayout() {
   )
 }
 
+function ReservationsRedirect() {
+  const { isAuthenticated } = useAuth()
+  return <Navigate to={isAuthenticated ? '/reservar' : '/login'} replace />
+}
+
 export default function AppRouter() {
   return (
     <Routes>
@@ -38,14 +43,15 @@ export default function AppRouter() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/reservas" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
+        <Route path="/reservas" element={<ReservationsRedirect />} />
 
-      <Route element={<PrivateRoute />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/reservar" element={<BookReservationPage />} />
-        <Route path="/mis-reservas" element={<MyReservationsPage />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/reservar" element={<BookReservationPage />} />
+          <Route path="/mis-reservas" element={<MyReservationsPage />} />
+        </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
 
       <Route element={<AdminRoute />}>

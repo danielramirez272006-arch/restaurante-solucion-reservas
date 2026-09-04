@@ -34,6 +34,18 @@ export const BookingForm = ({
     notes: ''
   });
 
+  // Ajustar estado durante renderizado si currentUser se resuelve asíncronamente
+  const [prevUser, setPrevUser] = useState(currentUser);
+  if (currentUser !== prevUser) {
+    setPrevUser(currentUser);
+    setFormData((prev) => ({
+      ...prev,
+      guestName: prev.guestName || currentUser?.guestName || '',
+      email: prev.email || currentUser?.email || '',
+      phone: prev.phone || currentUser?.phone || ''
+    }));
+  }
+
   const [touched, setTouched] = useState({});
   const validationResult = useMemo(() => {
     const dataToValidate = {
@@ -71,6 +83,9 @@ export const BookingForm = ({
 
     const fullPayload = {
       ...formData,
+      guestName: (formData.guestName || currentUser?.guestName || '').trim(),
+      email: (formData.email || currentUser?.email || '').trim(),
+      phone: (formData.phone || currentUser?.phone || '').trim(),
       date: selectedDate,
       time: selectedTime,
       guests: Number(guestsCount)

@@ -1,9 +1,18 @@
 import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../../features/auth/use-auth'
 
 function Navbar() {
 	const [isOpen, setIsOpen] = useState(false)
 	const closeMenu = () => setIsOpen(false)
+	const { user, isAuthenticated, logout } = useAuth()
+	const navigate = useNavigate()
+
+	const handleLogout = () => {
+		closeMenu()
+		logout()
+		navigate('/')
+	}
 
 	return (
 		<header className="site-header">
@@ -19,8 +28,33 @@ function Navbar() {
 					<NavLink to="/" end onClick={closeMenu}>Inicio</NavLink>
 					<NavLink to="/menu" onClick={closeMenu}>Carta</NavLink>
 					<a href="/#nosotros" onClick={closeMenu}>Nosotros</a>
-					<NavLink className="nav-login" to="/login" onClick={closeMenu}>Iniciar sesión</NavLink>
-					<NavLink className="button button--small button--primary" to="/reservas" onClick={closeMenu}>Reservar mesa</NavLink>
+
+					{isAuthenticated ? (
+						<>
+							{user?.role === 'admin' ? (
+								<NavLink to="/admin" onClick={closeMenu}>Panel Admin</NavLink>
+							) : (
+								<>
+									<NavLink to="/dashboard" onClick={closeMenu}>Mi Panel</NavLink>
+									<NavLink to="/mis-reservas" onClick={closeMenu}>Mis Reservas</NavLink>
+									<NavLink className="button button--small button--primary" to="/reservar" onClick={closeMenu}>Reservar mesa</NavLink>
+								</>
+							)}
+							<button
+								type="button"
+								className="nav-login"
+								style={{ background: 'none', border: 'none', cursor: 'pointer', font: 'inherit', padding: '6px 12px' }}
+								onClick={handleLogout}
+							>
+								Salir
+							</button>
+						</>
+					) : (
+						<>
+							<NavLink className="nav-login" to="/login" onClick={closeMenu}>Iniciar sesión</NavLink>
+							<NavLink className="button button--small button--primary" to="/reservas" onClick={closeMenu}>Reservar mesa</NavLink>
+						</>
+					)}
 				</nav>
 			</div>
 		</header>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useReservations } from '../../features/client-reservations/use-reservations.js';
 import { AvailabilityCalendar } from '../../features/client-reservations/components/availability-calendar.jsx';
 import { BookingForm } from '../../features/client-reservations/components/booking-form.jsx';
@@ -25,21 +25,17 @@ export const BookReservationPage = () => {
   const [guestsCount, setGuestsCount] = useState(2);
   const [successBanner, setSuccessBanner] = useState(null);
 
-  // Calcular la disponibilidad de cada franja para la cantidad de comensales seleccionada
-  const slotsAvailability = calculateAvailability(guestsCount);
+  // Memoizar el cálculo de disponibilidad para no recrear el array en cada render
+  const slotsAvailability = useMemo(
+    () => calculateAvailability(guestsCount),
+    [calculateAvailability, guestsCount]
+  );
 
-  // Si la fecha cambia o el horario elegido ya no está disponible con la nueva cantidad de comensales, resetearlo
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (selectedTime) {
-        const currentSlot = slotsAvailability.find((s) => s.time === selectedTime);
-        if (!currentSlot || !currentSlot.isAvailable) {
-          setSelectedTime('');
-        }
-      }
-    }, 0);
-    return () => clearTimeout(timer);
-  }, [selectedDate, guestsCount, slotsAvailability, selectedTime]);
+  // Derivar si la franja horaria sigue disponible; si no, queda deseleccionada sin efectos secundarios
+  const isCurrentSlotAvailable = selectedTime
+    ? Boolean(slotsAvailability.find((s) => s.time === selectedTime)?.isAvailable)
+    : false;
+  const effectiveSelectedTime = isCurrentSlotAvailable ? selectedTime : '';
 
   const handleBookingSubmit = async (formData) => {
     setSuccessBanner(null);
@@ -106,8 +102,11 @@ export const BookReservationPage = () => {
         <section aria-label="Selección de Fecha y Disponibilidad">
           <AvailabilityCalendar
             selectedDate={selectedDate}
-            onDateChange={setSelectedDate}
-            selectedTime={selectedTime}
+            onDateChange={(newDate) => {
+              setSelectedDate(newDate);
+              setSelectedTime('');
+            }}
+            selectedTime={effectiveSelectedTime}
             onTimeSelect={setSelectedTime}
             slotsAvailability={slotsAvailability}
             guestsCount={guestsCount}
@@ -121,7 +120,7 @@ export const BookReservationPage = () => {
         <section aria-label="Formulario de Reserva">
           <BookingForm
             selectedDate={selectedDate}
-            selectedTime={selectedTime}
+            selectedTime={effectiveSelectedTime}
             currentUser={currentUser}
             guestsCount={guestsCount}
             onGuestsChange={setGuestsCount}
