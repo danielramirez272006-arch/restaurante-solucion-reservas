@@ -279,39 +279,41 @@ const styles = {
   container: {
     maxWidth: '1200px',
     margin: '0 auto',
-    padding: '32px 20px 60px',
-    color: '#ffffff',
+    padding: '40px 20px 80px',
+    color: '#202820',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px'
+    gap: '24px'
   },
   header: {
     textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '10px'
+    gap: '12px'
   },
   badge: {
     fontSize: '11px',
-    fontWeight: '800',
+    fontWeight: '700',
     letterSpacing: '2px',
-    color: '#ffd89b',
-    background: 'rgba(212, 163, 89, 0.12)',
-    padding: '4px 12px',
+    color: '#b17a3c',
+    background: 'rgba(177, 122, 60, 0.1)',
+    padding: '6px 14px',
     borderRadius: '20px',
-    border: '1px solid rgba(212, 163, 89, 0.25)'
+    border: '1px solid rgba(177, 122, 60, 0.25)',
+    textTransform: 'uppercase'
   },
   title: {
     margin: 0,
-    fontSize: '36px',
-    fontWeight: '700',
-    color: '#ffffff'
+    fontSize: 'clamp(32px, 4vw, 44px)',
+    fontFamily: 'Newsreader, Georgia, serif',
+    fontWeight: '500',
+    color: '#202820'
   },
   subtitle: {
     margin: 0,
-    fontSize: '14px',
-    color: '#9ca3af'
+    fontSize: '15px',
+    color: '#73786f'
   },
   subBar: {
     display: 'flex',
@@ -326,30 +328,32 @@ const styles = {
     flexWrap: 'wrap'
   },
   pillBtn: {
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
     borderRadius: '20px',
-    padding: '6px 14px',
+    padding: '8px 16px',
     fontSize: '12px',
     fontWeight: '500',
-    color: '#d1d5db',
+    color: '#202820',
     cursor: 'pointer',
-    transition: 'all 0.2s'
+    transition: 'all 0.2s',
+    boxShadow: '0 2px 6px rgba(32, 40, 32, 0.03)'
   },
   pillBtnActive: {
-    background: 'linear-gradient(135deg, rgba(212, 163, 89, 0.25), rgba(180, 120, 40, 0.35))',
-    borderColor: '#ffd89b',
+    background: '#304b3d',
+    borderColor: '#304b3d',
     color: '#ffffff',
-    fontWeight: '700'
+    fontWeight: '700',
+    boxShadow: '0 4px 12px rgba(48, 75, 61, 0.2)'
   },
   exportBtn: {
-    background: 'rgba(16, 185, 129, 0.12)',
-    border: '1px solid rgba(16, 185, 129, 0.35)',
-    borderRadius: '10px',
-    padding: '6px 14px',
+    background: 'rgba(48, 75, 61, 0.08)',
+    border: '1px solid rgba(48, 75, 61, 0.25)',
+    borderRadius: '8px',
+    padding: '8px 16px',
     fontSize: '12px',
     fontWeight: '600',
-    color: '#34d399',
+    color: '#304b3d',
     cursor: 'pointer',
     transition: 'all 0.2s'
   },
@@ -359,10 +363,11 @@ const styles = {
     alignItems: 'center',
     flexWrap: 'wrap',
     gap: '16px',
-    background: 'rgba(26, 28, 36, 0.7)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
     borderRadius: '14px',
-    padding: '12px 16px'
+    padding: '14px 18px',
+    boxShadow: '0 4px 16px rgba(32, 40, 32, 0.04)'
   },
   tabsRow: {
     display: 'flex',
@@ -372,7 +377,7 @@ const styles = {
   tabBtn: {
     background: 'transparent',
     border: 'none',
-    color: '#9ca3af',
+    color: '#73786f',
     borderRadius: '8px',
     padding: '8px 14px',
     fontSize: '13px',
@@ -381,9 +386,9 @@ const styles = {
     transition: 'all 0.2s'
   },
   tabBtnActive: {
-    background: 'rgba(212, 163, 89, 0.2)',
-    color: '#ffd89b',
-    border: '1px solid rgba(212, 163, 89, 0.4)',
+    background: '#f4f1e9',
+    color: '#202820',
+    border: '1px solid #d6d1c5',
     fontWeight: '700'
   },
   searchWrapper: {
@@ -395,29 +400,29 @@ const styles = {
   },
   searchInput: {
     flex: 1,
-    background: 'rgba(15, 17, 23, 0.9)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
-    borderRadius: '10px',
-    color: '#ffffff',
-    padding: '8px 14px',
+    background: '#f4f1e9',
+    border: '1px solid #d6d1c5',
+    borderRadius: '8px',
+    color: '#202820',
+    padding: '10px 14px',
     fontSize: '13px',
     outline: 'none'
   },
   refreshBtn: {
-    background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    background: '#f4f1e9',
+    border: '1px solid #d6d1c5',
     borderRadius: '8px',
-    color: '#ffffff',
-    padding: '7px 10px',
+    color: '#202820',
+    padding: '9px 12px',
     cursor: 'pointer'
   },
   errorAlert: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    background: 'rgba(239, 68, 68, 0.15)',
-    border: '1px solid rgba(239, 68, 68, 0.4)',
-    color: '#fca5a5',
+    background: '#fef2f2',
+    border: '1px solid #fca5a5',
+    color: '#991b1b',
     padding: '12px 16px',
     borderRadius: '10px',
     fontSize: '13px'
@@ -438,57 +443,59 @@ const styles = {
     justifyContent: 'center',
     gap: '12px',
     padding: '60px 20px',
-    color: '#9ca3af'
+    color: '#73786f'
   },
   spinner: {
     width: '32px',
     height: '32px',
-    border: '3px solid rgba(212, 163, 89, 0.2)',
-    borderTop: '3px solid #ffd89b',
+    border: '3px solid rgba(48, 75, 61, 0.2)',
+    borderTop: '3px solid #304b3d',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite'
   },
   emptyCard: {
-    background: 'rgba(26, 28, 36, 0.6)',
-    border: '1px dashed rgba(255, 255, 255, 0.15)',
+    background: '#ffffff',
+    border: '1px dashed #d6d1c5',
     borderRadius: '20px',
     padding: '60px 20px',
     textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '12px'
+    gap: '12px',
+    boxShadow: '0 6px 20px rgba(32, 40, 32, 0.03)'
   },
   emptyIcon: {
     fontSize: '48px',
-    opacity: 0.7
+    opacity: 0.8
   },
   emptyTitle: {
     margin: 0,
-    fontSize: '20px',
-    color: '#ffffff',
-    fontWeight: '600'
+    fontSize: '22px',
+    fontFamily: 'Newsreader, Georgia, serif',
+    color: '#202820',
+    fontWeight: '500'
   },
   emptyText: {
     margin: 0,
     fontSize: '14px',
-    color: '#9ca3af',
+    color: '#73786f',
     maxWidth: '400px'
   },
   bookNowBtn: {
     marginTop: '10px',
-    background: 'linear-gradient(135deg, #d4a359 0%, #b47828 100%)',
-    color: '#08060d',
-    borderRadius: '12px',
-    padding: '12px 24px',
-    fontSize: '14px',
-    fontWeight: '700',
+    background: '#304b3d',
+    color: '#f8f5ed',
+    borderRadius: '10px',
+    padding: '14px 28px',
+    fontSize: '13px',
+    fontWeight: '600',
     textDecoration: 'none',
-    boxShadow: '0 4px 16px rgba(212, 163, 89, 0.3)'
+    boxShadow: '0 4px 14px rgba(48, 75, 61, 0.25)'
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-    gap: '20px'
+    gap: '24px'
   }
 };

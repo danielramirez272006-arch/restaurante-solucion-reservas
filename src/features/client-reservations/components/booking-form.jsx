@@ -329,50 +329,52 @@ export const BookingForm = ({
 
 const styles = {
   formCard: {
-    background: 'linear-gradient(145deg, rgba(26, 28, 36, 0.95), rgba(18, 19, 24, 0.98))',
-    border: '1px solid rgba(212, 163, 89, 0.25)',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
     borderRadius: '16px',
-    padding: '24px',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
-    color: '#f3f4f6',
+    padding: '28px',
+    boxShadow: '0 10px 30px rgba(32, 40, 32, 0.05)',
+    color: '#202820',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px'
+    gap: '24px'
   },
   header: {
     display: 'flex',
     alignItems: 'center',
     gap: '14px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-    paddingBottom: '14px'
+    borderBottom: '1px solid #e8e4db',
+    paddingBottom: '16px'
   },
   iconCircle: {
-    fontSize: '24px',
-    background: 'rgba(212, 163, 89, 0.15)',
+    fontSize: '22px',
+    background: 'rgba(48, 75, 61, 0.08)',
+    color: '#304b3d',
     width: '46px',
     height: '46px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '12px',
-    border: '1px solid rgba(212, 163, 89, 0.3)'
+    border: '1px solid rgba(48, 75, 61, 0.18)'
   },
   title: {
     margin: 0,
-    fontSize: '18px',
-    fontWeight: '600',
-    color: '#ffd89b'
+    fontSize: '22px',
+    fontWeight: '500',
+    fontFamily: 'Newsreader, Georgia, serif',
+    color: '#202820'
   },
   subtitle: {
-    margin: '2px 0 0',
+    margin: '3px 0 0',
     fontSize: '13px',
-    color: '#9ca3af'
+    color: '#73786f'
   },
   summaryBox: {
-    background: 'rgba(15, 17, 23, 0.8)',
+    background: '#f4f1e9',
     borderRadius: '12px',
-    padding: '14px 16px',
-    border: '1px solid rgba(255, 255, 255, 0.06)',
+    padding: '16px',
+    border: '1px solid #d6d1c5',
     display: 'flex',
     flexWrap: 'wrap',
     gap: '16px',
@@ -382,28 +384,29 @@ const styles = {
   summaryItem: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '2px'
+    gap: '3px'
   },
   summaryLabel: {
     fontSize: '11px',
-    color: '#9ca3af',
+    color: '#73786f',
     textTransform: 'uppercase',
-    letterSpacing: '0.4px'
+    letterSpacing: '0.06em',
+    fontWeight: '600'
   },
   summaryValue: {
     fontSize: '14px',
     fontWeight: '600',
-    color: '#f3f4f6'
+    color: '#202820'
   },
   statusBadge: {
     display: 'inline-block',
-    fontSize: '12px',
-    fontWeight: '600',
-    color: '#f59e0b',
-    background: 'rgba(245, 158, 11, 0.15)',
-    padding: '2px 10px',
+    fontSize: '11px',
+    fontWeight: '700',
+    color: '#b17a3c',
+    background: '#fffbeb',
+    padding: '3px 10px',
     borderRadius: '6px',
-    border: '1px solid rgba(245, 158, 11, 0.3)',
+    border: '1px solid #fcd34d',
     textTransform: 'uppercase',
     letterSpacing: '0.5px'
   },
@@ -411,28 +414,28 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    background: 'rgba(239, 68, 68, 0.15)',
-    border: '1px solid rgba(239, 68, 68, 0.4)',
-    color: '#fca5a5',
-    padding: '12px 16px',
+    background: '#fef2f2',
+    border: '1px solid #fca5a5',
+    color: '#991b1b',
+    padding: '14px 18px',
     borderRadius: '10px',
     fontSize: '13px'
   },
   occasionsGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
-    gap: '8px'
+    gap: '10px'
   },
   occasionCard: {
-    background: 'rgba(15, 17, 23, 0.7)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    background: '#faf9f6',
+    border: '1px solid #d6d1c5',
     borderRadius: '10px',
-    padding: '10px 8px',
+    padding: '12px 10px',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    color: '#d1d5db',
+    color: '#202820',
     fontSize: '12px',
     fontWeight: '500',
     transition: 'all 0.15s ease',
@@ -440,11 +443,11 @@ const styles = {
     textAlign: 'left'
   },
   occasionCardSelected: {
-    background: 'linear-gradient(135deg, rgba(212, 163, 89, 0.25), rgba(180, 120, 40, 0.35))',
-    borderColor: '#ffd89b',
+    background: '#304b3d',
+    borderColor: '#304b3d',
     color: '#ffffff',
-    fontWeight: '700',
-    boxShadow: '0 0 10px rgba(212, 163, 89, 0.3)'
+    fontWeight: '600',
+    boxShadow: '0 4px 14px rgba(48, 75, 61, 0.22)'
   },
   occasionIcon: {
     fontSize: '18px'
@@ -471,28 +474,28 @@ const styles = {
   label: {
     fontSize: '12px',
     fontWeight: '600',
-    color: '#d1d5db',
+    color: '#202820',
     textTransform: 'uppercase',
-    letterSpacing: '0.4px'
+    letterSpacing: '0.04em'
   },
   guestsValueDisplay: {
     fontSize: '13px',
-    color: '#ffd89b',
+    color: '#b17a3c',
     fontWeight: '600'
   },
   guestsCounterWrapper: {
     display: 'flex',
     alignItems: 'center',
-    background: 'rgba(15, 17, 23, 0.9)',
-    border: '1px solid rgba(212, 163, 89, 0.4)',
-    borderRadius: '10px',
+    background: '#f4f1e9',
+    border: '1px solid #d6d1c5',
+    borderRadius: '8px',
     overflow: 'hidden',
-    height: '42px'
+    height: '44px'
   },
   counterBtn: {
     background: 'transparent',
     border: 'none',
-    color: '#ffd89b',
+    color: '#202820',
     fontSize: '20px',
     fontWeight: 'bold',
     width: '46px',
@@ -508,28 +511,28 @@ const styles = {
     flex: 1,
     background: 'transparent',
     border: 'none',
-    color: '#ffffff',
+    color: '#202820',
     fontSize: '16px',
     fontWeight: '600',
     textAlign: 'center',
     outline: 'none'
   },
   input: {
-    background: 'rgba(15, 17, 23, 0.9)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: '10px',
-    color: '#ffffff',
-    padding: '10px 14px',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
+    borderRadius: '8px',
+    color: '#202820',
+    padding: '12px 14px',
     fontSize: '14px',
     outline: 'none',
     transition: 'border-color 0.2s'
   },
   textarea: {
-    background: 'rgba(15, 17, 23, 0.9)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: '10px',
-    color: '#ffffff',
-    padding: '10px 14px',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
+    borderRadius: '8px',
+    color: '#202820',
+    padding: '12px 14px',
     fontSize: '14px',
     outline: 'none',
     resize: 'vertical',
@@ -537,30 +540,31 @@ const styles = {
   },
   errorText: {
     fontSize: '11px',
-    color: '#f87171',
+    color: '#dc2626',
     fontWeight: '500'
   },
   submitButton: {
-    background: 'linear-gradient(135deg, #d4a359 0%, #b47828 100%)',
-    color: '#08060d',
+    background: '#304b3d',
+    color: '#f8f5ed',
     border: 'none',
-    borderRadius: '12px',
-    padding: '14px 20px',
-    fontSize: '15px',
-    fontWeight: '700',
+    borderRadius: '10px',
+    padding: '16px 24px',
+    fontSize: '14px',
+    fontWeight: '600',
     cursor: 'pointer',
-    transition: 'transform 0.15s, box-shadow 0.15s',
-    boxShadow: '0 4px 18px rgba(212, 163, 89, 0.35)',
+    transition: 'transform 0.15s, background 0.2s, box-shadow 0.15s',
+    boxShadow: '0 4px 16px rgba(48, 75, 61, 0.25)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '8px'
+    marginTop: '10px',
+    letterSpacing: '0.04em'
   },
   submitButtonDisabled: {
     opacity: 0.5,
     cursor: 'not-allowed',
-    background: '#374151',
-    color: '#9ca3af',
+    background: '#8c9187',
+    color: '#f4f1e9',
     boxShadow: 'none'
   },
   btnContent: {
@@ -571,8 +575,8 @@ const styles = {
   btnSpinner: {
     width: '16px',
     height: '16px',
-    border: '2px solid rgba(0, 0, 0, 0.2)',
-    borderTop: '2px solid #000',
+    border: '2px solid rgba(255, 255, 255, 0.3)',
+    borderTop: '2px solid #ffffff',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite'
   }

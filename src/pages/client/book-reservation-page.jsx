@@ -144,43 +144,45 @@ const styles = {
   pageWrapper: {
     maxWidth: '1200px',
     margin: '0 auto',
-    padding: '32px 20px 60px',
-    color: '#ffffff',
+    padding: '40px 20px 80px',
+    color: '#202820',
     display: 'flex',
     flexDirection: 'column',
-    gap: '28px'
+    gap: '32px'
   },
   pageHeader: {
     textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '12px'
+    gap: '14px'
   },
   restaurantTag: {
-    fontSize: '12px',
-    fontWeight: '800',
-    letterSpacing: '3px',
-    color: '#ffd89b',
+    fontSize: '11px',
+    fontWeight: '700',
+    letterSpacing: '2px',
+    color: '#b17a3c',
     textTransform: 'uppercase',
-    background: 'rgba(212, 163, 89, 0.12)',
+    background: 'rgba(177, 122, 60, 0.1)',
     padding: '6px 14px',
     borderRadius: '20px',
-    border: '1px solid rgba(212, 163, 89, 0.25)'
+    border: '1px solid rgba(177, 122, 60, 0.25)'
   },
   heading: {
     margin: 0,
-    fontSize: '38px',
-    fontWeight: '700',
-    color: '#ffffff',
-    letterSpacing: '-0.5px'
+    fontSize: 'clamp(38px, 4.5vw, 56px)',
+    fontFamily: 'Newsreader, Georgia, serif',
+    fontWeight: '400',
+    color: '#202820',
+    letterSpacing: '-0.03em',
+    lineHeight: 1.05
   },
   leadText: {
     margin: 0,
-    fontSize: '15px',
-    color: '#9ca3af',
+    fontSize: '16px',
+    color: '#73786f',
     maxWidth: '650px',
-    lineHeight: '1.5'
+    lineHeight: '1.6'
   },
   policiesRow: {
     display: 'flex',
@@ -192,54 +194,57 @@ const styles = {
   policyPill: {
     display: 'flex',
     alignItems: 'center',
-    gap: '6px',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    gap: '8px',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
     borderRadius: '20px',
-    padding: '5px 12px',
+    padding: '6px 14px',
     fontSize: '12px',
-    color: '#d1d5db'
+    color: '#202820',
+    fontWeight: '500',
+    boxShadow: '0 2px 6px rgba(32, 40, 32, 0.04)'
   },
   successBanner: {
-    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.25))',
-    border: '1px solid rgba(16, 185, 129, 0.5)',
+    background: '#eef6f1',
+    border: '1px solid #a3cfb5',
     borderRadius: '16px',
-    padding: '16px 20px',
+    padding: '18px 24px',
     display: 'flex',
     alignItems: 'center',
     gap: '16px',
     flexWrap: 'wrap',
-    boxShadow: '0 8px 24px rgba(16, 185, 129, 0.15)'
+    boxShadow: '0 8px 24px rgba(48, 75, 61, 0.08)'
   },
   successIcon: {
     fontSize: '28px'
   },
   successTitle: {
     margin: 0,
-    fontSize: '16px',
+    fontSize: '17px',
     fontWeight: '700',
-    color: '#34d399'
+    color: '#20372c'
   },
   successMessage: {
     margin: '4px 0 0',
-    fontSize: '13px',
-    color: '#e5e7eb'
+    fontSize: '14px',
+    color: '#304b3d'
   },
   viewVoucherBtn: {
-    background: '#34d399',
-    color: '#064e3b',
+    background: '#304b3d',
+    color: '#f8f5ed',
     border: 'none',
     borderRadius: '10px',
-    padding: '10px 18px',
+    padding: '12px 20px',
     fontSize: '13px',
-    fontWeight: '700',
+    fontWeight: '600',
     cursor: 'pointer',
-    boxShadow: '0 4px 12px rgba(52, 211, 153, 0.3)'
+    boxShadow: '0 4px 14px rgba(48, 75, 61, 0.25)',
+    transition: 'background 0.2s'
   },
   mainGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-    gap: '24px',
+    gap: '28px',
     alignItems: 'start'
   }
 };

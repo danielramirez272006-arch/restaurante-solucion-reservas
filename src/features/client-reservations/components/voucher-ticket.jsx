@@ -294,8 +294,8 @@ const styles = {
     left: 0,
     width: '100vw',
     height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.78)',
-    backdropFilter: 'blur(8px)',
+    backgroundColor: 'rgba(32, 40, 32, 0.65)',
+    backdropFilter: 'blur(6px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -303,48 +303,50 @@ const styles = {
     padding: '16px'
   },
   modalContent: {
-    background: 'linear-gradient(160deg, #1e2029 0%, #12131a 100%)',
-    border: '1px solid rgba(212, 163, 89, 0.45)',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
     borderRadius: '20px',
     maxWidth: '540px',
     width: '100%',
-    boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(212, 163, 89, 0.25)',
+    boxShadow: '0 24px 60px rgba(32, 40, 32, 0.25)',
     overflow: 'hidden',
     position: 'relative',
-    color: '#ffffff',
+    color: '#202820',
     animation: 'voucherEnter 0.25s ease-out'
   },
   ticketHeader: {
-    padding: '24px 24px 16px',
+    padding: '28px 24px 16px',
     textAlign: 'center',
-    position: 'relative'
+    position: 'relative',
+    background: '#faf8f5'
   },
   restaurantTag: {
     fontSize: '11px',
     fontWeight: '800',
     letterSpacing: '2.5px',
-    color: '#ffd89b',
+    color: '#b17a3c',
     textTransform: 'uppercase',
     marginBottom: '6px'
   },
   ticketTitle: {
     margin: 0,
-    fontSize: '22px',
-    fontWeight: '700',
-    color: '#ffffff'
+    fontSize: '24px',
+    fontFamily: 'Newsreader, Georgia, serif',
+    fontWeight: '500',
+    color: '#202820'
   },
   ticketSubtitle: {
     margin: '4px 0 0',
-    fontSize: '12px',
-    color: '#9ca3af'
+    fontSize: '13px',
+    color: '#73786f'
   },
   closeIconBtn: {
     position: 'absolute',
     top: '16px',
     right: '16px',
-    background: 'rgba(255, 255, 255, 0.1)',
+    background: '#e8e4db',
     border: 'none',
-    color: '#d1d5db',
+    color: '#202820',
     width: '32px',
     height: '32px',
     borderRadius: '50%',
@@ -358,35 +360,37 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     position: 'relative',
-    height: '24px'
+    height: '24px',
+    background: '#faf8f5'
   },
   notchLeft: {
     width: '14px',
     height: '24px',
-    backgroundColor: 'rgba(0, 0, 0, 0.78)',
+    backgroundColor: 'rgba(32, 40, 32, 0.65)',
     borderTopRightRadius: '14px',
     borderBottomRightRadius: '14px',
-    borderRight: '1px solid rgba(212, 163, 89, 0.45)'
+    borderRight: '1px solid #d6d1c5'
   },
   notchRight: {
     width: '14px',
     height: '24px',
-    backgroundColor: 'rgba(0, 0, 0, 0.78)',
+    backgroundColor: 'rgba(32, 40, 32, 0.65)',
     borderTopLeftRadius: '14px',
     borderBottomLeftRadius: '14px',
-    borderLeft: '1px solid rgba(212, 163, 89, 0.45)'
+    borderLeft: '1px solid #d6d1c5'
   },
   dashedLine: {
     flex: 1,
-    borderBottom: '2px dashed rgba(212, 163, 89, 0.35)',
+    borderBottom: '2px dashed #d6d1c5',
     height: '1px'
   },
   ticketBody: {
-    padding: '16px 24px',
+    padding: '20px 24px',
     display: 'grid',
     gridTemplateColumns: '135px 1fr',
-    gap: '18px',
-    alignItems: 'center'
+    gap: '20px',
+    alignItems: 'center',
+    background: '#ffffff'
   },
   qrContainer: {
     display: 'flex',
@@ -395,23 +399,24 @@ const styles = {
     gap: '8px'
   },
   qrWrapper: {
-    padding: '6px',
-    background: '#ffffff',
+    padding: '8px',
+    background: '#f4f1e9',
+    border: '1px solid #d6d1c5',
     borderRadius: '12px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)'
+    boxShadow: '0 4px 12px rgba(32, 40, 32, 0.06)'
   },
   reservationCode: {
     fontSize: '11px',
     fontWeight: '700',
-    color: '#ffd89b',
+    color: '#b17a3c',
     letterSpacing: '1px'
   },
   statusPill: {
     fontSize: '10px',
     fontWeight: '700',
-    background: 'rgba(245, 158, 11, 0.2)',
-    color: '#fbbf24',
-    border: '1px solid rgba(245, 158, 11, 0.4)',
+    background: '#fffbeb',
+    color: '#b17a3c',
+    border: '1px solid #fcd34d',
     padding: '2px 8px',
     borderRadius: '10px',
     textTransform: 'uppercase'
@@ -427,20 +432,20 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     gap: '8px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-    paddingBottom: '4px'
+    borderBottom: '1px solid #f0ece3',
+    paddingBottom: '5px'
   },
   infoLabel: {
-    color: '#9ca3af',
+    color: '#73786f',
     fontWeight: '500'
   },
   infoValue: {
-    color: '#ffffff',
+    color: '#202820',
     fontWeight: '600',
     textAlign: 'right'
   },
   infoValueHighlight: {
-    color: '#ffd89b',
+    color: '#304b3d',
     fontWeight: '700',
     textAlign: 'right'
   },
@@ -450,17 +455,17 @@ const styles = {
   notesText: {
     margin: '2px 0 0',
     fontSize: '11px',
-    color: '#d1d5db',
+    color: '#73786f',
     fontStyle: 'italic'
   },
   policyNotice: {
     margin: '0 24px',
-    background: 'rgba(212, 163, 89, 0.08)',
-    border: '1px solid rgba(212, 163, 89, 0.2)',
+    background: '#f4f1e9',
+    border: '1px solid #d6d1c5',
     borderRadius: '10px',
     padding: '10px 14px',
-    fontSize: '11px',
-    color: '#d1d5db',
+    fontSize: '12px',
+    color: '#555b52',
     lineHeight: '1.4'
   },
   actionsFooter: {
@@ -468,28 +473,29 @@ const styles = {
     display: 'flex',
     flexWrap: 'wrap',
     gap: '10px',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    background: '#ffffff'
   },
   downloadBtn: {
     flex: '1 1 140px',
-    background: 'linear-gradient(135deg, #d4a359 0%, #b47828 100%)',
+    background: '#304b3d',
     border: 'none',
-    color: '#08060d',
+    color: '#f8f5ed',
     borderRadius: '10px',
-    padding: '10px 14px',
+    padding: '12px 14px',
     fontSize: '12px',
     fontWeight: '700',
     cursor: 'pointer',
-    boxShadow: '0 4px 14px rgba(212, 163, 89, 0.3)',
+    boxShadow: '0 4px 14px rgba(48, 75, 61, 0.25)',
     textAlign: 'center'
   },
   calendarBtn: {
     flex: '1 1 140px',
-    background: 'rgba(66, 133, 244, 0.15)',
-    border: '1px solid rgba(66, 133, 244, 0.4)',
-    color: '#93c5fd',
+    background: '#f4f1e9',
+    border: '1px solid #d6d1c5',
+    color: '#202820',
     borderRadius: '10px',
-    padding: '10px 14px',
+    padding: '12px 14px',
     fontSize: '12px',
     fontWeight: '600',
     textDecoration: 'none',
@@ -500,11 +506,11 @@ const styles = {
   },
   printBtn: {
     flex: '0 1 80px',
-    background: 'rgba(255, 255, 255, 0.08)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    color: '#ffffff',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
+    color: '#202820',
     borderRadius: '10px',
-    padding: '10px 12px',
+    padding: '12px 12px',
     fontSize: '12px',
     fontWeight: '600',
     cursor: 'pointer'
@@ -512,10 +518,10 @@ const styles = {
   closeBtn: {
     flex: '0 1 70px',
     background: 'transparent',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    color: '#9ca3af',
+    border: '1px solid #d6d1c5',
+    color: '#73786f',
     borderRadius: '10px',
-    padding: '10px 12px',
+    padding: '12px 12px',
     fontSize: '12px',
     cursor: 'pointer'
   }

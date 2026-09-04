@@ -56,18 +56,18 @@ export default function DashboardPage() {
           <p className="eyebrow">Actividad</p>
           <h2>Tu próxima visita</h2>
           {nextReservation ? (
-            <div style={{ padding: '16px', background: 'rgba(255,255,255,0.04)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <div style={{ padding: '20px', background: '#faf9f6', borderRadius: '12px', border: '1px solid #e8e4db' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <strong style={{ fontSize: '16px', color: '#ffd89b' }}>{formatDateToSpanish(nextReservation.date)}</strong>
+                <strong style={{ fontSize: '17px', color: '#202820' }}>{formatDateToSpanish(nextReservation.date)}</strong>
                 <span className={`status ${String(nextReservation.status || nextReservation.estado || '').toLowerCase()}`}>
                   {nextReservation.status || nextReservation.estado}
                 </span>
               </div>
-              <p style={{ margin: '4px 0', color: '#d1d5db', fontSize: '13px' }}>
+              <p style={{ margin: '6px 0', color: '#555b52', fontSize: '13px' }}>
                 🕒 {formatTime12h(nextReservation.time)} • 👥 {nextReservation.guests} {nextReservation.guests === 1 ? 'persona' : 'personas'} • 🏷️ {nextReservation.type || 'Cena'}
               </p>
               <div style={{ marginTop: '14px' }}>
-                <Link className="button button-accent" to="/mis-reservas" style={{ padding: '6px 14px', fontSize: '13px', textDecoration: 'none', display: 'inline-block' }}>
+                <Link className="button button-accent" to="/mis-reservas" style={{ padding: '8px 16px', fontSize: '13px', textDecoration: 'none', display: 'inline-block' }}>
                   Ver en Mis Reservas
                 </Link>
               </div>

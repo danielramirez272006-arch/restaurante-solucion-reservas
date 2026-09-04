@@ -202,56 +202,58 @@ export const AvailabilityCalendar = ({
 
 const styles = {
   container: {
-    background: 'linear-gradient(145deg, rgba(26, 28, 36, 0.95), rgba(18, 19, 24, 0.98))',
-    border: '1px solid rgba(212, 163, 89, 0.25)',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
     borderRadius: '16px',
-    padding: '24px',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
-    color: '#f3f4f6',
+    padding: '28px',
+    boxShadow: '0 10px 30px rgba(32, 40, 32, 0.05)',
+    color: '#202820',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px'
+    gap: '24px'
   },
   header: {
     display: 'flex',
     alignItems: 'center',
     gap: '14px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-    paddingBottom: '14px'
+    borderBottom: '1px solid #e8e4db',
+    paddingBottom: '16px'
   },
   iconCircle: {
-    fontSize: '24px',
-    background: 'rgba(212, 163, 89, 0.15)',
+    fontSize: '22px',
+    background: 'rgba(48, 75, 61, 0.08)',
+    color: '#304b3d',
     width: '46px',
     height: '46px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '12px',
-    border: '1px solid rgba(212, 163, 89, 0.3)'
+    border: '1px solid rgba(48, 75, 61, 0.18)'
   },
   title: {
     margin: 0,
-    fontSize: '18px',
-    fontWeight: '600',
-    color: '#ffd89b'
+    fontSize: '22px',
+    fontWeight: '500',
+    fontFamily: 'Newsreader, Georgia, serif',
+    color: '#202820'
   },
   subtitle: {
-    margin: '2px 0 0',
+    margin: '3px 0 0',
     fontSize: '13px',
-    color: '#9ca3af'
+    color: '#73786f'
   },
   quickDaysSection: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px'
+    gap: '10px'
   },
   quickDaysLabel: {
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '600',
-    color: '#d1d5db',
+    color: '#73786f',
     textTransform: 'uppercase',
-    letterSpacing: '0.5px'
+    letterSpacing: '0.08em'
   },
   quickDaysRow: {
     display: 'flex',
@@ -261,24 +263,24 @@ const styles = {
   },
   quickDayBtn: {
     flex: '0 0 auto',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    background: '#f4f1e9',
+    border: '1px solid #d6d1c5',
     borderRadius: '10px',
-    padding: '8px 12px',
-    color: '#d1d5db',
+    padding: '10px 14px',
+    color: '#202820',
     cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     gap: '2px',
     transition: 'all 0.2s ease',
-    minWidth: '70px'
+    minWidth: '76px'
   },
   quickDayBtnActive: {
-    background: 'linear-gradient(135deg, rgba(212, 163, 89, 0.3), rgba(180, 120, 40, 0.4))',
-    borderColor: '#ffd89b',
+    background: '#304b3d',
+    borderColor: '#304b3d',
     color: '#ffffff',
-    boxShadow: '0 0 12px rgba(212, 163, 89, 0.3)'
+    boxShadow: '0 4px 12px rgba(48, 75, 61, 0.25)'
   },
   quickDayText: {
     fontSize: '13px',
@@ -296,8 +298,10 @@ const styles = {
   },
   label: {
     fontSize: '12px',
-    fontWeight: '500',
-    color: '#9ca3af'
+    fontWeight: '600',
+    color: '#73786f',
+    textTransform: 'uppercase',
+    letterSpacing: '0.04em'
   },
   dateInputWrapper: {
     display: 'flex',
@@ -306,33 +310,34 @@ const styles = {
     gap: '12px'
   },
   dateInput: {
-    background: 'rgba(15, 17, 23, 0.9)',
-    border: '1px solid rgba(212, 163, 89, 0.4)',
-    borderRadius: '10px',
-    color: '#ffffff',
-    padding: '8px 14px',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
+    borderRadius: '8px',
+    color: '#202820',
+    padding: '10px 14px',
     fontSize: '13px',
     outline: 'none',
     cursor: 'pointer'
   },
   dateBadge: {
     fontSize: '13px',
-    color: '#ffd89b',
-    background: 'rgba(212, 163, 89, 0.1)',
-    padding: '6px 14px',
+    color: '#b17a3c',
+    background: 'rgba(177, 122, 60, 0.08)',
+    padding: '8px 14px',
     borderRadius: '8px',
-    border: '1px solid rgba(212, 163, 89, 0.2)',
+    border: '1px solid rgba(177, 122, 60, 0.25)',
+    fontWeight: '500',
     textTransform: 'capitalize'
   },
   warningAlert: {
     display: 'flex',
     alignItems: 'flex-start',
     gap: '12px',
-    background: 'rgba(239, 68, 68, 0.12)',
-    border: '1px solid rgba(239, 68, 68, 0.4)',
-    padding: '12px 16px',
+    background: '#fef2f2',
+    border: '1px solid #fca5a5',
+    padding: '14px 18px',
     borderRadius: '10px',
-    color: '#fca5a5'
+    color: '#991b1b'
   },
   alertIcon: {
     fontSize: '20px'
@@ -355,15 +360,15 @@ const styles = {
     gap: '8px'
   },
   slotsLabel: {
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '600',
-    color: '#e5e7eb',
+    color: '#202820',
     textTransform: 'uppercase',
-    letterSpacing: '0.5px'
+    letterSpacing: '0.06em'
   },
   capacityLegend: {
-    fontSize: '11px',
-    color: '#9ca3af'
+    fontSize: '12px',
+    color: '#73786f'
   },
   loadingBox: {
     display: 'flex',
@@ -371,29 +376,29 @@ const styles = {
     justifyContent: 'center',
     gap: '10px',
     padding: '24px',
-    background: 'rgba(0,0,0,0.2)',
+    background: '#f4f1e9',
     borderRadius: '10px',
     fontSize: '13px',
-    color: '#9ca3af'
+    color: '#73786f'
   },
   spinner: {
     width: '18px',
     height: '18px',
-    border: '2px solid rgba(212, 163, 89, 0.2)',
-    borderTop: '2px solid #ffd89b',
+    border: '2px solid rgba(48, 75, 61, 0.2)',
+    borderTop: '2px solid #304b3d',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite'
   },
   slotsGrid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
-    gap: '10px'
+    gap: '12px'
   },
   slotButton: {
-    background: 'rgba(24, 26, 32, 0.8)',
-    border: '1px solid rgba(255, 255, 255, 0.12)',
+    background: '#faf9f6',
+    border: '1px solid #d6d1c5',
     borderRadius: '12px',
-    padding: '12px 8px',
+    padding: '14px 10px',
     cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column',
@@ -401,29 +406,32 @@ const styles = {
     gap: '6px',
     transition: 'all 0.2s ease',
     outline: 'none',
-    position: 'relative'
+    position: 'relative',
+    color: '#202820'
   },
   slotButtonSelected: {
-    background: 'linear-gradient(135deg, rgba(212, 163, 89, 0.25), rgba(180, 120, 40, 0.35))',
-    borderColor: '#ffd89b',
-    boxShadow: '0 0 16px rgba(212, 163, 89, 0.4)',
-    transform: 'scale(1.02)'
+    background: '#304b3d',
+    borderColor: '#304b3d',
+    boxShadow: '0 6px 18px rgba(48, 75, 61, 0.28)',
+    transform: 'translateY(-2px)',
+    color: '#ffffff'
   },
   slotButtonDisabled: {
-    opacity: 0.45,
+    opacity: 0.6,
     cursor: 'not-allowed',
-    background: 'rgba(15, 17, 23, 0.5)',
-    borderColor: 'rgba(255, 255, 255, 0.05)'
+    background: '#f0ece3',
+    borderColor: '#e2ded5',
+    color: '#8c9187'
   },
   slotTime: {
     fontSize: '15px',
     fontWeight: '700',
-    color: '#ffffff'
+    color: 'inherit'
   },
   progressBarContainer: {
     width: '80%',
     height: '4px',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(0, 0, 0, 0.08)',
     borderRadius: '2px',
     overflow: 'hidden',
     margin: '2px 0'
@@ -439,35 +447,35 @@ const styles = {
   slotBadge: {
     fontSize: '10px',
     fontWeight: '600',
-    padding: '2px 6px',
+    padding: '3px 8px',
     borderRadius: '6px',
     textTransform: 'uppercase',
     letterSpacing: '0.3px'
   },
   badgeAvailable: {
-    background: 'rgba(16, 185, 129, 0.15)',
-    color: '#34d399',
-    border: '1px solid rgba(16, 185, 129, 0.3)'
+    background: 'rgba(48, 75, 61, 0.1)',
+    color: '#26543d',
+    border: '1px solid rgba(48, 75, 61, 0.25)'
   },
   badgeFull: {
-    background: 'rgba(239, 68, 68, 0.15)',
-    color: '#f87171',
-    border: '1px solid rgba(239, 68, 68, 0.3)'
+    background: '#fee2e2',
+    color: '#b91c1c',
+    border: '1px solid #fca5a5'
   },
   badgeNoFit: {
-    background: 'rgba(245, 158, 11, 0.15)',
-    color: '#fbbf24',
-    border: '1px solid rgba(245, 158, 11, 0.3)'
+    background: '#fef3c7',
+    color: '#b45309',
+    border: '1px solid #fcd34d'
   },
   badgeUrgent: {
-    background: 'rgba(212, 163, 89, 0.25)',
-    color: '#ffd89b',
-    border: '1px solid #ffd89b',
+    background: '#fffbeb',
+    color: '#b17a3c',
+    border: '1px solid #b17a3c',
     fontWeight: '700'
   },
   badgePast: {
-    background: 'rgba(107, 114, 128, 0.15)',
-    color: '#9ca3af',
-    border: '1px solid rgba(107, 114, 128, 0.3)'
+    background: '#e5e7eb',
+    color: '#6b7280',
+    border: '1px solid #d1d5db'
   }
 };
