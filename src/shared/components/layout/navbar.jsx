@@ -52,7 +52,7 @@ function Navbar() {
 					) : (
 						<>
 							<NavLink className="nav-login" to="/login" onClick={closeMenu}>Iniciar sesión</NavLink>
-							<NavLink className="button button--small button--primary" to="/reservas" onClick={closeMenu}>Reservar mesa</NavLink>
+							<NavLink className="button button--small button--primary" to="/reservar" onClick={closeMenu}>Reservar mesa</NavLink>
 						</>
 					)}
 				</nav>
