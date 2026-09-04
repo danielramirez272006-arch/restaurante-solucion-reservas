@@ -30,12 +30,15 @@ export const BookReservationPage = () => {
 
   // Si la fecha cambia o el horario elegido ya no está disponible con la nueva cantidad de comensales, resetearlo
   useEffect(() => {
-    if (selectedTime) {
-      const currentSlot = slotsAvailability.find((s) => s.time === selectedTime);
-      if (!currentSlot || !currentSlot.isAvailable) {
-        setSelectedTime('');
+    const timer = setTimeout(() => {
+      if (selectedTime) {
+        const currentSlot = slotsAvailability.find((s) => s.time === selectedTime);
+        if (!currentSlot || !currentSlot.isAvailable) {
+          setSelectedTime('');
+        }
       }
-    }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [selectedDate, guestsCount, slotsAvailability, selectedTime]);
 
   const handleBookingSubmit = async (formData) => {

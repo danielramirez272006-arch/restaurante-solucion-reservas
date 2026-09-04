@@ -1,11 +1,29 @@
 {
+  "users": [
+    {
+      "id": "u-admin",
+      "name": "Raymon",
+      "email": "admin@demo.com",
+      "password": "1234",
+      "role": "admin",
+      "phone": "+57 300 000 0000"
+    },
+    {
+      "id": "u-client",
+      "name": "Cliente Demo",
+      "email": "user@demo.com",
+      "password": "1234",
+      "role": "user",
+      "phone": "+57 301 000 0000"
+    }
+  ],
   "reservations": [
     {
       "id": "res-101",
-      "userId": "user_1",
-      "guestName": "Daniel Ramírez",
-      "email": "daniel@dondeway.com",
-      "phone": "+57 300 123 4567",
+      "userId": "u-client",
+      "guestName": "Cliente Demo",
+      "email": "user@demo.com",
+      "phone": "+57 301 000 0000",
       "date": "2026-09-04",
       "time": "13:00",
       "guests": 4,
@@ -43,19 +61,18 @@
       "createdAt": "2026-09-04T09:00:00.000Z"
     },
     {
-      "userId": "user_1",
-      "guestName": "Daniel Ramírez",
-      "email": "daniel@dondeway.com",
-      "phone": "+57 300 123 4567",
+      "id": "aACqgWnPTgM",
+      "userId": "u-client",
+      "guestName": "Cliente Demo",
+      "email": "user@demo.com",
+      "phone": "+57 301 000 0000",
       "date": "2026-09-09",
       "time": "19:00",
       "guests": 2,
       "type": "Cena",
       "notes": "",
       "status": "Pendiente",
-      "createdAt": "2026-09-04T20:40:51.825Z",
-      "id": "aACqgWnPTgM"
+      "createdAt": "2026-09-04T20:40:51.825Z"
     }
-  ],
-  "$schema": "./node_modules/json-server/schema.json"
+  ]
 }

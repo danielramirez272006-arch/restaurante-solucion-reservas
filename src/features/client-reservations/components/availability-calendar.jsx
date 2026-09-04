@@ -15,7 +15,6 @@ export const AvailabilityCalendar = ({
   selectedTime,
   onTimeSelect,
   slotsAvailability = [],
-  guestsCount = 1,
   limitReached = false,
   limitCount = 0,
   isLoading = false
