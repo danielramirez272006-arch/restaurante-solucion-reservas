@@ -1,82 +1,172 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../features/auth/use-auth'
 import { useReservations } from '../../features/client-reservations/use-reservations'
-import { formatDateToSpanish, formatTime12h, isFutureReservation } from '../../shared/utils/date-helpers'
+import {
+  formatDateToSpanish,
+  formatTime12h,
+  isFutureReservation,
+} from '../../shared/utils/date-helpers'
 
 export default function DashboardPage() {
   const { user, logout } = useAuth()
   const { reservations, loading } = useReservations(user)
 
   const totalCount = reservations.length
-  const pendingCount = reservations.filter((r) => (r.status || r.estado) === 'Pendiente').length
-  const confirmedCount = reservations.filter((r) => (r.status || r.estado) === 'Confirmada').length
+  const pendingCount = reservations.filter(
+    (reservation) => (reservation.status || reservation.estado) === 'Pendiente'
+  ).length
+  const confirmedCount = reservations.filter(
+    (reservation) => (reservation.status || reservation.estado) === 'Confirmada'
+  ).length
 
   const nextReservation = reservations.find(
-    (r) => isFutureReservation(r.date, r.time) && (r.status || r.estado) !== 'Cancelada'
+    (reservation) =>
+      isFutureReservation(reservation.date, reservation.time) &&
+      (reservation.status || reservation.estado) !== 'Cancelada'
   )
+
+  const firstName = user?.name?.split(' ')[0] || 'cliente'
 
   return (
     <main className="dashboard-page">
       <header className="dashboard-header">
         <Link className="brand" to="/dashboard">
           <span className="brand-mark">DR</span>
-          <span><strong>Donde Ray</strong><small>Cocina con carácter</small></span>
+          <span>
+            <strong>Donde Ray</strong>
+            <small>Sabor del Caribe limonense</small>
+          </span>
         </Link>
+
         <nav className="dashboard-nav-links" aria-label="Navegación del cliente">
-          <Link to="/dashboard">Inicio</Link>
-          <Link to="/reservar">Nueva reserva</Link>
+          <Link to="/dashboard">Mi panel</Link>
+          <Link to="/reservar">Reservar mesa</Link>
           <Link to="/mis-reservas">Mis reservas</Link>
-          <button type="button" onClick={logout}>Cerrar sesión</button>
+          <button type="button" onClick={logout}>
+            Salir
+          </button>
         </nav>
       </header>
+
       <section className="dashboard-content">
-        <div className="page-heading">
+        <div className="dashboard-welcome">
           <div>
-            <p className="eyebrow">Área del cliente</p>
-            <h1>Hola, {user?.name?.split(' ')[0] || 'cliente'}.</h1>
-            <p>Gestiona tus próximas visitas a Donde Ray.</p>
+            <p className="eyebrow">Tu espacio en Donde Ray</p>
+            <h1>
+              Hola, {firstName}.
+
+
+              <em>Qué bueno verte.</em>
+            </h1>
+            <p className="dashboard-intro">
+              Desde aquí podés revisar tus visitas, consultar el estado de una
+              reserva o preparar tu próxima mesa en el Caribe.
+            </p>
           </div>
-          <Link className="button button-accent" to="/reservar">Nueva reserva</Link>
+
+          <Link className="button button--primary" to="/reservar">
+            Nueva reserva <span>→</span>
+          </Link>
         </div>
+
+        <div className="dashboard-rhythm" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <span />
+          <span />
+        </div>
+
         <div className="stats-grid">
-          <article className="stat-card">
+          <article className="stat-card stat-card--main">
             <span>Reservas totales</span>
             <strong>{loading ? '...' : totalCount}</strong>
+            <small>Tu historial completo</small>
           </article>
+
           <article className="stat-card">
             <span>Pendientes</span>
             <strong>{loading ? '...' : pendingCount}</strong>
+            <small>Esperando confirmación</small>
           </article>
+
           <article className="stat-card">
             <span>Confirmadas</span>
             <strong>{loading ? '...' : confirmedCount}</strong>
+            <small>Listas para disfrutarse</small>
           </article>
         </div>
-        <section className="panel-card">
-          <p className="eyebrow">Actividad</p>
-          <h2>Tu próxima visita</h2>
+
+        <section className="dashboard-panel">
+          <div className="dashboard-panel-heading">
+            <div>
+              <p className="eyebrow">Próxima visita</p>
+              <h2>Tu mesa te espera</h2>
+            </div>
+
+            <Link className="text-link" to="/mis-reservas">
+              Ver todas <span>↗</span>
+            </Link>
+          </div>
+
           {nextReservation ? (
-            <div style={{ padding: '20px', background: '#faf9f6', borderRadius: '12px', border: '1px solid #e8e4db' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <strong style={{ fontSize: '17px', color: '#202820' }}>{formatDateToSpanish(nextReservation.date)}</strong>
-                <span className={`status ${String(nextReservation.status || nextReservation.estado || '').toLowerCase()}`}>
-                  {nextReservation.status || nextReservation.estado}
-                </span>
+            <div className="next-reservation-card">
+              <div className="next-reservation-date">
+                <span>Fecha de visita</span>
+                <strong>{formatDateToSpanish(nextReservation.date)}</strong>
               </div>
-              <p style={{ margin: '6px 0', color: '#555b52', fontSize: '13px' }}>
-                🕒 {formatTime12h(nextReservation.time)} • 👥 {nextReservation.guests} {nextReservation.guests === 1 ? 'persona' : 'personas'} • 🏷️ {nextReservation.type || 'Cena'}
-              </p>
-              <div style={{ marginTop: '14px' }}>
-                <Link className="button button-accent" to="/mis-reservas" style={{ padding: '8px 16px', fontSize: '13px', textDecoration: 'none', display: 'inline-block' }}>
-                  Ver en Mis Reservas
+
+              <div className="next-reservation-details">
+                <div className="next-reservation-status-row">
+                  <span className="reservation-label">Estado</span>
+                  <span
+                    className={`status ${String(
+                      nextReservation.status || nextReservation.estado || ''
+                    ).toLowerCase()}`}
+                  >
+                    {nextReservation.status || nextReservation.estado}
+                  </span>
+                </div>
+
+                <div className="reservation-facts">
+                  <span>
+                    <strong>Hora</strong>
+                    {formatTime12h(nextReservation.time)}
+                  </span>
+
+                  <span>
+                    <strong>Personas</strong>
+                    {nextReservation.guests}{' '}
+                    {nextReservation.guests === 1 ? 'persona' : 'personas'}
+                  </span>
+
+                  <span>
+                    <strong>Tipo</strong>
+                    {nextReservation.type || 'Cena'}
+                  </span>
+                </div>
+
+                <Link className="button button--primary" to="/mis-reservas">
+                  Ver detalles <span>→</span>
                 </Link>
               </div>
             </div>
           ) : (
             <div className="empty-state">
-              <strong>Aún no tienes reservas activas.</strong>
-              <p>Solicita tu primera mesa y te ayudaremos a encontrar el mejor horario.</p>
-              <Link className="button button-dark" to="/reservar">Solicitar una mesa</Link>
+              <div className="empty-state-mark" aria-hidden="true">
+                DR
+              </div>
+
+              <strong>Aún no tenés reservas activas.</strong>
+
+              <p>
+                Prepará tu próxima visita y vení a compartir una mesa con sabor de
+                Limón.
+              </p>
+
+              <Link className="button button--primary" to="/reservar">
+                Reservar mesa <span>→</span>
+              </Link>
             </div>
           )}
         </section>
