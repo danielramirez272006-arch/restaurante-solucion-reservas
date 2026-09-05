@@ -194,78 +194,91 @@ button, input { font: inherit; }
   flex-wrap: wrap;
 }
 
-/* Tarjetas de Métricas (Stats) */
+/* Tarjetas de Métricas (Stats) estilo Editorial Donde Ray */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
   gap: 16px;
-  margin: 8px 0;
+  margin: 16px 0 28px;
 }
 .stat-card {
-  background: #ffffff;
+  background: var(--cream);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 22px 20px;
+  padding: 24px 22px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  box-shadow: 0 4px 16px rgba(32, 40, 32, 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  gap: 8px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
 }
 .stat-card:hover {
   transform: translateY(-2px);
   border-color: var(--gold);
-  box-shadow: 0 8px 24px rgba(32, 40, 32, 0.08);
+  box-shadow: 0 8px 24px rgba(32, 40, 32, 0.07);
+}
+.stat-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.stat-card .card-number {
+  color: var(--gold);
+  font: 14px Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
 }
 .stat-card span, .stat-label {
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--muted);
 }
 .stat-card strong, .stat-value {
   font-family: Newsreader, Georgia, serif;
-  font-size: 38px;
-  font-weight: 600;
-  line-height: 1;
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 0.95;
   color: var(--ink);
+  letter-spacing: -0.02em;
 }
 .stat-caption {
   font-size: 12px;
   color: var(--muted);
+  line-height: 1.4;
 }
 .stat-card.pending strong, .stat-card--pending .stat-value {
   color: #b17a3c;
 }
 .stat-card.confirmed strong, .stat-card--confirmed .stat-value {
-  color: #2e5944;
+  color: #264a39;
 }
 .stat-card.rejected strong {
-  color: #b91c1c;
+  color: #991b1b;
 }
 .stat-card.today strong {
   color: #304b3d;
 }
 .stat-card.clients strong {
-  color: #4b5563;
+  color: #202820;
 }
 
-/* Paneles */
+/* Paneles y Contenedores Editoriales */
 .panel-card, .panel {
-  background: #ffffff;
+  background: var(--cream);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 32px 28px;
-  box-shadow: 0 4px 20px rgba(32, 40, 32, 0.04);
+  padding: 36px 32px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+}
+@media (max-width: 600px) {
+  .panel-card, .panel { padding: 24px 20px; }
 }
 .panel-heading, .panel-card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
   flex-wrap: wrap;
   gap: 16px;
   border-bottom: 1px solid var(--line);
@@ -273,22 +286,63 @@ button, input { font: inherit; }
 }
 .panel-heading h2, .panel-card-header h2 {
   font-family: Newsreader, Georgia, serif;
-  font-size: 28px;
-  font-weight: 500;
+  font-size: clamp(26px, 3.2vw, 36px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
   margin: 0;
   color: var(--ink);
+}
+.panel-heading h2 em, .panel-card-header h2 em {
+  color: var(--gold);
+  font-style: italic;
+}
+
+/* Tira de Atajos Editoriales (Cliente) */
+.client-shortcuts-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+@media (max-width: 768px) {
+  .client-shortcuts-strip { grid-template-columns: 1fr; }
+}
+.shortcut-card {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.shortcut-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-2px);
+}
+.shortcut-card h3 {
+  font-family: Newsreader, Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  margin: 4px 0 0;
+  color: var(--ink);
+}
+.shortcut-card p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 10px;
 }
 
 /* Próxima Visita (Client Dashboard) */
 .next-visit-card {
   background: var(--paper);
   border: 1px solid var(--line);
-  border-left: 4px solid var(--gold);
-  border-radius: 10px;
-  padding: 24px;
+  border-left: 3px solid var(--gold);
+  padding: 28px 26px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 .next-visit-header {
   display: flex;
@@ -299,22 +353,27 @@ button, input { font: inherit; }
 }
 .next-visit-date {
   display: block;
-  font-size: 20px;
+  font-size: 24px;
   color: var(--ink);
   font-family: Newsreader, Georgia, serif;
-  margin-bottom: 4px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
 }
 .next-visit-meta {
   font-size: 13px;
   color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .next-visit-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
-  padding-top: 14px;
-  border-top: 1px dashed var(--line);
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
 }
 
 /* Header & Shell de Administración */
@@ -325,9 +384,9 @@ button, input { font: inherit; }
   background: var(--paper);
 }
 .admin-header {
-  background: #1c2621;
+  background: #202d27;
   color: #f8f5ed;
-  border-bottom: 1px solid rgba(177, 122, 60, 0.4);
+  border-bottom: 1px solid var(--gold);
   padding: 14px max(24px, calc((100% - 1200px) / 2));
   display: flex;
   align-items: center;
@@ -337,7 +396,7 @@ button, input { font: inherit; }
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12);
 }
 .admin-header-left {
   display: flex;

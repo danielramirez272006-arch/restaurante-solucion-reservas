@@ -17,49 +17,70 @@ export default function DashboardPage() {
 
   return (
     <main className="reservation-shell">
-      {/* Encabezado del Dashboard de Cliente */}
+      {/* Encabezado Editorial de Cliente */}
       <header className="page-heading">
         <div>
-          <p className="eyebrow">Área del comensal</p>
-          <h1>Hola, {user?.name?.split(' ')[0] || 'Cliente'}.</h1>
-          <p className="lede">Supervisa el estado de tus reservas y asegura tu próxima visita a Donde Ray.</p>
+          <span className="eyebrow">Área del Comensal · Playa Chiquita</span>
+          <h1>
+            Hola, {user?.name?.split(' ')[0] || 'Cliente'}.<br />
+            <em>Tu mesa te espera.</em>
+          </h1>
+          <p className="lede">
+            Supervisa tus visitas a Donde Ray, accede a tus comprobantes con código QR y asegura tu lugar en nuestra mesa caribeña.
+          </p>
         </div>
         <div className="dashboard-actions">
           <Link className="button button--primary" to="/reservar">
-            + Nueva reserva
+            Reservar una mesa <span>→</span>
           </Link>
           <Link className="button button--outline" to="/mis-reservas">
-            Ver mis reservas
+            Mis reservas
           </Link>
         </div>
       </header>
 
-      {/* Tarjetas de Métricas de Reservas */}
+      {/* Tarjetas de Métricas con Estilo Editorial de la Página Principal */}
       <section className="stats-grid" aria-label="Resumen de actividad">
         <article className="stat-card">
-          <span className="stat-label">Reservas totales</span>
+          <div className="stat-card-top">
+            <span className="card-number">01</span>
+            <span className="stat-label">Reservas Totales</span>
+          </div>
           <strong className="stat-value">{loading ? '...' : totalCount}</strong>
-          <small className="stat-caption">Historial completo</small>
+          <small className="stat-caption">Historial de visitas registrado</small>
         </article>
+
         <article className="stat-card stat-card--pending">
-          <span className="stat-label">Pendientes</span>
+          <div className="stat-card-top">
+            <span className="card-number">02</span>
+            <span className="stat-label">En Espera</span>
+          </div>
           <strong className="stat-value">{loading ? '...' : pendingCount}</strong>
-          <small className="stat-caption">En revisión por cocina</small>
+          <small className="stat-caption">En validación por el equipo</small>
         </article>
+
         <article className="stat-card stat-card--confirmed">
-          <span className="stat-label">Confirmadas</span>
+          <div className="stat-card-top">
+            <span className="card-number">03</span>
+            <span className="stat-label">Confirmadas</span>
+          </div>
           <strong className="stat-value">{loading ? '...' : confirmedCount}</strong>
-          <small className="stat-caption">Listas para disfrutar</small>
+          <small className="stat-caption">Listas con aforo garantizado</small>
         </article>
       </section>
 
-      {/* Próxima Visita */}
+      {/* Próxima Visita / Experiencia */}
       <section className="panel-card">
         <div className="panel-card-header">
           <div>
-            <p className="eyebrow">Actividad</p>
-            <h2>Tu próxima visita</h2>
+            <span className="eyebrow">Próxima Cita</span>
+            <h2>Tu próxima visita <em>al Caribe</em></h2>
           </div>
+          {nextReservation && (
+            <Link className="text-link" to="/mis-reservas">
+              Ver todas mis reservas <span>↗</span>
+            </Link>
+          )}
         </div>
 
         {nextReservation ? (
@@ -68,7 +89,7 @@ export default function DashboardPage() {
               <div>
                 <strong className="next-visit-date">{formatDateToSpanish(nextReservation.date)}</strong>
                 <span className="next-visit-meta">
-                  🕒 {formatTime12h(nextReservation.time)} • 👥 {nextReservation.guests} {nextReservation.guests === 1 ? 'persona' : 'personas'} • 🏷️ {nextReservation.type || 'Cena'}
+                  🕒 {formatTime12h(nextReservation.time)} &nbsp;·&nbsp; 👥 {nextReservation.guests} {nextReservation.guests === 1 ? 'comensal' : 'comensales'} &nbsp;·&nbsp; 🏷️ {nextReservation.type || 'Cena'} &nbsp;·&nbsp; 📍 Playa Chiquita
                 </span>
               </div>
               <span className={`status-pill ${String(nextReservation.status || nextReservation.estado || '').toLowerCase()}`}>
@@ -78,22 +99,54 @@ export default function DashboardPage() {
 
             <div className="next-visit-actions">
               <Link className="button button--small button--primary" to="/mis-reservas">
-                Ver detalle y comprobante QR →
+                Ver comprobante digital y QR <span>→</span>
               </Link>
               <Link className="button button--small button--outline" to="/reservar">
                 Hacer otra reserva
+              </Link>
+              <Link className="text-link" to="/menu" style={{ marginLeft: 'auto' }}>
+                Ver carta recomendada <span>↗</span>
               </Link>
             </div>
           </div>
         ) : (
           <div className="empty-state">
-            <strong>Aún no tienes reservas activas próximas.</strong>
-            <p>Descubre el menú caribeño contemporáneo y agenda tu mesa en segundos con confirmación inmediata.</p>
-            <Link className="button button--primary" to="/reservar">
-              Reservar una mesa ahora
-            </Link>
+            <strong>Aún no tienes una mesa agendada próximamente.</strong>
+            <p>
+              Nuestra cocina rinde homenaje a la pesca fresca del día y a los sabores de la leche de coco y jengibre frente al mar.
+            </p>
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '8px' }}>
+              <Link className="button button--primary" to="/reservar">
+                Reservar una mesa ahora <span>→</span>
+              </Link>
+              <Link className="button button--outline" to="/menu">
+                Explorar la carta <span>↗</span>
+              </Link>
+            </div>
           </div>
         )}
+      </section>
+
+      {/* Sección de Descubrimiento Rápido estilo Homepage */}
+      <section className="client-shortcuts-strip">
+        <article className="shortcut-card">
+          <span className="card-number">01</span>
+          <h3>La Carta Caribeña</h3>
+          <p>Rondón de mariscos, pesca en mantequilla de coco y cacao orgánico de Talamanca.</p>
+          <Link className="text-link" to="/menu">Explorar carta <span>↗</span></Link>
+        </article>
+        <article className="shortcut-card">
+          <span className="card-number">02</span>
+          <h3>Comprobantes y Código QR</h3>
+          <p>Descarga tus vouchers en PDF y sincroniza las fechas con Google Calendar en 1 clic.</p>
+          <Link className="text-link" to="/mis-reservas">Ver mis tickets <span>→</span></Link>
+        </article>
+        <article className="shortcut-card">
+          <span className="card-number">03</span>
+          <h3>Concierge Ray en Vivo</h3>
+          <p>¿Dudas con aforo, dietas o parqueo? Nuestro concierge interactivo te asiste al instante.</p>
+          <Link className="text-link" to="/reservar">Reservar con Ray <span>→</span></Link>
+        </article>
       </section>
     </main>
   );

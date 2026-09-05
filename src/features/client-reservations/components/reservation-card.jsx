@@ -45,22 +45,22 @@ export const ReservationCard = ({
     switch (currentStatus) {
       case 'Confirmada':
         return {
-          background: 'rgba(16, 185, 129, 0.15)',
-          color: '#34d399',
-          border: '1px solid rgba(16, 185, 129, 0.4)'
+          background: 'rgba(48, 75, 61, 0.12)',
+          color: '#264a39',
+          border: '1px solid rgba(48, 75, 61, 0.35)'
         };
       case 'Cancelada':
         return {
-          background: 'rgba(239, 68, 68, 0.15)',
-          color: '#f87171',
-          border: '1px solid rgba(239, 68, 68, 0.4)'
+          background: '#fef2f2',
+          color: '#b91c1c',
+          border: '1px solid #fca5a5'
         };
       case 'Pendiente':
       default:
         return {
-          background: 'rgba(245, 158, 11, 0.15)',
-          color: '#fbbf24',
-          border: '1px solid rgba(245, 158, 11, 0.4)'
+          background: 'rgba(177, 122, 60, 0.12)',
+          color: '#9c6828',
+          border: '1px solid rgba(177, 122, 60, 0.35)'
         };
     }
   };
@@ -258,14 +258,14 @@ export const ReservationCard = ({
 
 const styles = {
   card: {
-    background: '#ffffff',
+    background: '#ebe5d8',
     border: '1px solid #d6d1c5',
-    borderRadius: '16px',
+    borderRadius: '12px',
     padding: '24px',
     display: 'flex',
     flexDirection: 'column',
     gap: '16px',
-    boxShadow: '0 6px 20px rgba(32, 40, 32, 0.05)',
+    boxShadow: '0 4px 18px rgba(32, 40, 32, 0.05)',
     transition: 'transform 0.2s ease, border-color 0.2s ease',
     textAlign: 'left',
     color: '#202820'
@@ -274,7 +274,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '1px solid #f0ece3',
+    borderBottom: '1px solid #d6d1c5',
     paddingBottom: '12px'
   },
   idGroup: {
@@ -289,17 +289,17 @@ const styles = {
     fontWeight: '600'
   },
   idValue: {
-    fontSize: '13px',
+    fontSize: '14px',
     fontWeight: '700',
     color: '#b17a3c'
   },
   statusBadge: {
     fontSize: '11px',
-    fontWeight: '700',
-    padding: '4px 10px',
-    borderRadius: '8px',
+    fontWeight: '600',
+    padding: '4px 12px',
+    borderRadius: '20px',
     textTransform: 'uppercase',
-    letterSpacing: '0.5px'
+    letterSpacing: '0.06em'
   },
   mainInfo: {
     display: 'flex',
@@ -312,16 +312,18 @@ const styles = {
     gap: '12px'
   },
   icon: {
-    fontSize: '20px',
+    fontSize: '18px',
     background: 'rgba(48, 75, 61, 0.08)',
     color: '#304b3d',
     padding: '8px',
-    borderRadius: '10px'
+    borderRadius: '8px'
   },
   dateText: {
-    fontSize: '16px',
-    fontWeight: '600',
+    fontFamily: 'Newsreader, Georgia, serif',
+    fontSize: '20px',
+    fontWeight: '400',
     color: '#202820',
+    letterSpacing: '-0.02em',
     textTransform: 'capitalize'
   },
   timeText: {
@@ -337,16 +339,16 @@ const styles = {
   chip: {
     background: '#f4f1e9',
     border: '1px solid #d6d1c5',
-    borderRadius: '6px',
+    borderRadius: '4px',
     padding: '4px 10px',
     fontSize: '12px',
     color: '#202820',
     fontWeight: '500'
   },
   detailsBox: {
-    background: '#faf9f6',
-    borderRadius: '10px',
-    border: '1px solid #e8e4db',
+    background: '#f4f1e9',
+    borderRadius: '8px',
+    border: '1px solid #d6d1c5',
     padding: '14px',
     display: 'flex',
     flexDirection: 'column',
