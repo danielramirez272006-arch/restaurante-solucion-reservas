@@ -334,60 +334,66 @@ export default function ManageReservationsPage() {
             className="modal"
             role="dialog"
             aria-modal="true"
+            aria-labelledby="manual-res-title"
             onClick={(e) => e.stopPropagation()}
-            style={{ width: 'min(560px, calc(100% - 32px))' }}
           >
             <button
               className="modal-close"
               type="button"
               onClick={() => setIsCreateModalOpen(false)}
+              aria-label="Cerrar modal"
             >
-              ×
+              ✕
             </button>
-            <p className="eyebrow">Recepción / Teléfono</p>
-            <h2>Registrar Reserva <em>Manual</em></h2>
-            <p style={{ color: 'var(--muted)', fontSize: '13px', margin: '0 0 18px' }}>
+            <span className="eyebrow">Recepción / Teléfono</span>
+            <h2 id="manual-res-title">Registrar Reserva <em>Manual</em></h2>
+            <p style={{ color: 'var(--muted)', fontSize: '13px', margin: '0 0 14px', lineHeight: 1.5 }}>
               Registra una mesa tomada por teléfono, WhatsApp directo o comensal presencial (Walk-in).
             </p>
 
             {formError && <div className="notice error" style={{ marginBottom: '14px' }}>{formError}</div>}
 
-            <form onSubmit={handleCreateSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                <label className="filter-label" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span>Nombre del Comensal *:</span>
+            <form onSubmit={handleCreateSubmit} className="modal-form-grid">
+              <div className="modal-two-cols">
+                <div className="modal-field-block">
+                  <label htmlFor="manual-name">Nombre del Comensal *:</label>
                   <input
+                    id="manual-name"
                     type="text"
                     required
-                    placeholder="Ej. Sofia Valverde"
+                    autoFocus
+                    placeholder="Ej. Sofía Valverde"
                     value={newResForm.guestName}
                     onChange={(e) => setNewResForm({ ...newResForm, guestName: e.target.value })}
                   />
-                </label>
-                <label className="filter-label" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span>Teléfono de Contacto:</span>
+                </div>
+                <div className="modal-field-block">
+                  <label htmlFor="manual-phone">Teléfono / WhatsApp:</label>
                   <input
+                    id="manual-phone"
                     type="tel"
                     placeholder="Ej. +506 8888-0000"
                     value={newResForm.phone}
                     onChange={(e) => setNewResForm({ ...newResForm, phone: e.target.value })}
                   />
-                </label>
+                </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 0.8fr', gap: '12px' }}>
-                <label className="filter-label" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span>Fecha *:</span>
+              <div className="modal-three-cols">
+                <div className="modal-field-block">
+                  <label htmlFor="manual-date">Fecha *:</label>
                   <input
+                    id="manual-date"
                     type="date"
                     required
                     value={newResForm.date}
                     onChange={(e) => setNewResForm({ ...newResForm, date: e.target.value })}
                   />
-                </label>
-                <label className="filter-label" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span>Hora *:</span>
+                </div>
+                <div className="modal-field-block">
+                  <label htmlFor="manual-time">Hora *:</label>
                   <select
+                    id="manual-time"
                     value={newResForm.time}
                     onChange={(e) => setNewResForm({ ...newResForm, time: e.target.value })}
                   >
@@ -401,56 +407,63 @@ export default function ManageReservationsPage() {
                     <option value="21:00">21:00 (Cena)</option>
                     <option value="22:00">22:00 (Cena)</option>
                   </select>
-                </label>
-                <label className="filter-label" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span>Personas:</span>
+                </div>
+                <div className="modal-field-block">
+                  <label htmlFor="manual-guests">Personas:</label>
                   <input
+                    id="manual-guests"
                     type="number"
                     min="1"
                     max="20"
                     value={newResForm.guests}
                     onChange={(e) => setNewResForm({ ...newResForm, guests: e.target.value })}
                   />
-                </label>
+                </div>
               </div>
 
-              <label className="filter-label" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span>Ocasión / Tipo de Servicio:</span>
-                <select
-                  value={newResForm.type}
-                  onChange={(e) => setNewResForm({ ...newResForm, type: e.target.value })}
-                >
-                  <option value="Cena">Cena</option>
-                  <option value="Almuerzo">Almuerzo</option>
-                  <option value="Cumpleaños">Cumpleaños</option>
-                  <option value="Aniversario">Aniversario</option>
-                  <option value="Negocios">Negocios</option>
-                  <option value="Especial">Especial</option>
-                </select>
-              </label>
+              <div className="modal-two-cols">
+                <div className="modal-field-block">
+                  <label htmlFor="manual-type">Ocasión / Servicio:</label>
+                  <select
+                    id="manual-type"
+                    value={newResForm.type}
+                    onChange={(e) => setNewResForm({ ...newResForm, type: e.target.value })}
+                  >
+                    <option value="Cena">🌙 Cena</option>
+                    <option value="Almuerzo">☀️ Almuerzo</option>
+                    <option value="Cumpleaños">🎂 Cumpleaños</option>
+                    <option value="Aniversario">🥂 Aniversario</option>
+                    <option value="Negocios">💼 Negocios</option>
+                    <option value="Especial">✨ Ocasión Especial</option>
+                  </select>
+                </div>
+                <div className="modal-field-block">
+                  <label htmlFor="manual-email">Correo (Opcional):</label>
+                  <input
+                    id="manual-email"
+                    type="email"
+                    placeholder="comensal@ejemplo.com"
+                    value={newResForm.email}
+                    onChange={(e) => setNewResForm({ ...newResForm, email: e.target.value })}
+                  />
+                </div>
+              </div>
 
-              <label className="filter-label" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span>Notas, Alergias o Peticiones Especiales:</span>
+              <div className="modal-field-block">
+                <label htmlFor="manual-notes">Notas, Alergias o Peticiones Especiales:</label>
                 <textarea
-                  rows="3"
-                  placeholder="Ej. Mesa en terraza jardín, 1 comensal celíaco..."
+                  id="manual-notes"
+                  rows="2"
+                  placeholder="Ej. Mesa en terraza jardín, 1 comensal celíaco, silla alta para bebé..."
                   value={newResForm.notes}
                   onChange={(e) => setNewResForm({ ...newResForm, notes: e.target.value })}
-                  style={{
-                    padding: '10px 12px',
-                    border: '1px solid var(--line)',
-                    borderRadius: '6px',
-                    background: '#fff',
-                    fontFamily: 'inherit',
-                    fontSize: '13px'
-                  }}
                 />
-              </label>
+              </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+              <div className="modal-bottom-actions">
                 <button
                   type="button"
-                  className="button button.ghost"
+                  className="button ghost"
                   onClick={() => setIsCreateModalOpen(false)}
                 >
                   Cancelar
@@ -460,7 +473,7 @@ export default function ManageReservationsPage() {
                   className="button button--primary"
                   disabled={savingNew}
                 >
-                  {savingNew ? 'Guardando...' : 'Confirmar e ingresar reserva →'}
+                  {savingNew ? 'Guardando...' : 'Confirmar e ingresar mesa →'}
                 </button>
               </div>
             </form>
