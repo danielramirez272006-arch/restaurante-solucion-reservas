@@ -95,14 +95,14 @@ export const MyReservationsPage = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="reservation-shell">
       {/* Header */}
-      <header style={styles.header}>
-        <span style={styles.badge}>CLIENTE • DONDE RAY</span>
-        <h1 style={styles.title}>Mis Reservas</h1>
-        <p style={styles.subtitle}>
-          Historial y gestión de tus reservas exclusivas para el comensal{' '}
-          <strong style={{ color: '#ffd89b' }}>{currentUser?.guestName || currentUser?.id}</strong>
+      <header className="page-intro reservation-intro">
+        <span className="eyebrow">Mis Reservas · Donde Ray</span>
+        <h1>Tus mesas<br /><em>y experiencias.</em></h1>
+        <p className="lead">
+          Historial y gestión de tus reservas exclusivas registradas a nombre de{' '}
+          <strong style={{ color: 'var(--ink)' }}>{currentUser?.guestName || currentUser?.id}</strong>.
         </p>
       </header>
 
@@ -127,7 +127,7 @@ export const MyReservationsPage = () => {
               ...(timeFilter === 'UPCOMING' ? styles.pillBtnActive : {})
             }}
           >
-            ⏳ Próximas ({counts.upcoming})
+            Próximas ({counts.upcoming})
           </button>
           <button
             type="button"
@@ -137,7 +137,7 @@ export const MyReservationsPage = () => {
               ...(timeFilter === 'PAST' ? styles.pillBtnActive : {})
             }}
           >
-            📁 Historial / Pasadas
+            Historial
           </button>
         </div>
 
@@ -148,7 +148,7 @@ export const MyReservationsPage = () => {
             style={styles.exportBtn}
             title="Descargar listado en archivo Excel / CSV"
           >
-            📥 Exportar a CSV
+            Exportar CSV ↓
           </button>
         )}
       </div>
