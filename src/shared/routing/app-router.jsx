@@ -1,4 +1,4 @@
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes, NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../../features/auth/use-auth'
 import AdminRoute from './admin-route'
 import PrivateRoute from './private-route'
@@ -21,11 +21,39 @@ function AdminLayout() {
   return (
     <div className="admin-shell">
       <header className="admin-header">
-        <strong>Donde Ray · Administración</strong>
-        <span>{user?.name}</span>
-        <button type="button" onClick={logout}>Cerrar sesión</button>
+        <div className="admin-header-left">
+          <Link className="brand" to="/admin">
+            <span className="brand-mark" style={{ background: '#b17a3c', color: '#fff' }}>DR</span>
+            <span><strong style={{ color: '#f8f5ed' }}>Donde Ray</strong><small style={{ color: '#b2c0b8' }}>Administración</small></span>
+          </Link>
+          <nav className="admin-nav" aria-label="Navegación de administración">
+            <NavLink to="/admin" end className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
+              📊 Resumen
+            </NavLink>
+            <NavLink to="/admin/reservas" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
+              📅 Reservas
+            </NavLink>
+            <NavLink to="/admin/clientes" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
+              👥 Clientes
+            </NavLink>
+            <Link to="/" className="admin-nav-link" target="_blank" rel="noopener noreferrer">
+              ↗ Ver Sitio
+            </Link>
+          </nav>
+        </div>
+        <div className="admin-header-right">
+          <div className="admin-user-info">
+            <span className="admin-user-role">Admin</span>
+            <strong className="admin-user-name">{user?.name || 'Administrador'}</strong>
+          </div>
+          <button type="button" className="admin-logout-btn" onClick={logout}>
+            Cerrar sesión
+          </button>
+        </div>
       </header>
-      <Outlet />
+      <div className="admin-body">
+        <Outlet />
+      </div>
     </div>
   )
 }
