@@ -1098,3 +1098,590 @@ em {
         scroll-behavior: auto !important;
     }
 }
+
+/* DASHBOARD DEL CLIENTE */
+.dashboard-page {
+    min-height: 100vh;
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: min(1180px, calc(100% - 80px));
+    min-height: 82px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--line);
+}
+
+.dashboard-header .brand {
+    flex-shrink: 0;
+}
+
+.dashboard-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.dashboard-nav-links a,
+.dashboard-nav-links button {
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    transition: color 0.2s ease;
+}
+
+.dashboard-nav-links a:hover,
+.dashboard-nav-links button:hover {
+    color: var(--color-turquoise);
+}
+
+.dashboard-content {
+    width: min(1180px, calc(100% - 80px));
+    margin: 0 auto;
+    padding: 72px 0 110px;
+}
+
+.dashboard-welcome {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.dashboard-welcome h1 {
+    margin-bottom: 20px;
+    font-size: clamp(48px, 6vw, 78px);
+}
+
+.dashboard-intro {
+    max-width: 510px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.dashboard-rhythm {
+    display: flex;
+    align-items: end;
+    gap: 6px;
+    height: 26px;
+    margin: 42px 0 16px;
+}
+
+.dashboard-rhythm span {
+    display: block;
+    width: 34px;
+    border-radius: 2px;
+    background: var(--color-turquoise);
+}
+
+.dashboard-rhythm span:nth-child(1) {
+    height: 9px;
+    opacity: 0.45;
+}
+
+.dashboard-rhythm span:nth-child(2) {
+    height: 18px;
+    opacity: 0.65;
+}
+
+.dashboard-rhythm span:nth-child(3) {
+    height: 26px;
+}
+
+.dashboard-rhythm span:nth-child(4) {
+    height: 15px;
+    opacity: 0.72;
+}
+
+.dashboard-rhythm span:nth-child(5) {
+    height: 8px;
+    opacity: 0.45;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 1px;
+    margin-bottom: 60px;
+    border: 1px solid var(--line);
+    background: var(--line);
+}
+
+.stat-card {
+    min-height: 148px;
+    padding: 28px 30px;
+    background: #fffdf8;
+}
+
+.stat-card--main {
+    background: var(--color-palm);
+    color: var(--paper);
+}
+
+.stat-card span {
+    display: block;
+    margin-bottom: 18px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.stat-card--main span {
+    color: var(--color-seafoam);
+}
+
+.stat-card strong {
+    display: block;
+    font-family: Newsreader, Georgia, serif;
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 0.9;
+}
+
+.stat-card small {
+    display: block;
+    margin-top: 15px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.stat-card--main small {
+    color: #c3d9ce;
+}
+
+.dashboard-panel {
+    padding: 38px;
+    border: 1px solid var(--line);
+    border-radius: 8px 34px 8px 34px;
+    background: rgba(255, 253, 248, 0.8);
+    box-shadow: var(--shadow-soft);
+}
+
+.dashboard-panel-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.dashboard-panel-heading h2 {
+    margin: 0;
+    font-size: 42px;
+}
+
+.next-reservation-card {
+    display: grid;
+    grid-template-columns: minmax(190px, 0.75fr) 1.25fr;
+    gap: 30px;
+    padding: 30px;
+    border: 1px solid rgba(19, 143, 145, 0.3);
+    border-radius: 5px 24px 5px 24px;
+    background: var(--color-seafoam);
+}
+
+.next-reservation-date {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 13px;
+    padding-right: 24px;
+    border-right: 1px solid rgba(19, 80, 68, 0.2);
+}
+
+.next-reservation-date span,
+.reservation-label,
+.reservation-facts strong {
+    color: var(--color-deep-green);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.next-reservation-date strong {
+    color: var(--color-palm);
+    font-family: Newsreader, Georgia, serif;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.05;
+}
+
+.next-reservation-details {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.next-reservation-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 6px 10px;
+    background: var(--color-gold);
+    color: var(--color-charcoal);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.status.confirmada {
+    background: #9bceb0;
+    color: #123d32;
+}
+
+.status.cancelada,
+.status.rechazada {
+    background: #e3aaa0;
+    color: #70251f;
+}
+
+.reservation-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.reservation-facts span {
+    display: grid;
+    gap: 6px;
+    color: var(--color-palm);
+    font-size: 14px;
+}
+
+.reservation-facts strong {
+    font-size: 9px;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    min-height: 270px;
+    padding: 40px 20px;
+    border: 1px dashed var(--color-turquoise);
+    border-radius: 5px 22px 5px 22px;
+    text-align: center;
+}
+
+.empty-state-mark {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    margin-bottom: 8px;
+    border: 1px solid var(--color-gold);
+    border-radius: 50%;
+    color: var(--color-palm);
+    font-family: Georgia, serif;
+    font-size: 14px;
+}
+
+.empty-state strong {
+    font-family: Newsreader, Georgia, serif;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.empty-state p {
+    max-width: 390px;
+    margin: 0 0 8px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+@media (max-width: 800px) {
+
+    .dashboard-header,
+    .dashboard-content {
+        width: calc(100% - 40px);
+    }
+
+    .dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 20px 0;
+    }
+
+    .dashboard-nav-links {
+        flex-wrap: wrap;
+        gap: 14px 20px;
+    }
+
+    .dashboard-content {
+        padding-top: 55px;
+    }
+
+    .dashboard-welcome {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 26px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-panel {
+        padding: 24px;
+    }
+
+    .dashboard-panel-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .next-reservation-card {
+        grid-template-columns: 1fr;
+    }
+
+    .next-reservation-date {
+        padding-right: 0;
+        padding-bottom: 22px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(19, 80, 68, 0.2);
+    }
+}
+
+/* IDENTIDAD GLOBAL — LIMÓN Y CARIBE COSTARRICENSE */
+.auth-page--limon {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(260px, 0.85fr) minmax(360px, 460px);
+    align-items: center;
+    justify-content: center;
+    gap: clamp(50px, 9vw, 150px);
+    min-height: calc(100vh - 164px);
+    padding: 90px 40px;
+    background:
+        linear-gradient(135deg, rgba(19, 61, 50, 0.07), transparent 48%),
+        var(--paper);
+}
+
+.auth-page--limon::before {
+    content: '';
+    position: absolute;
+    inset: 25px;
+    border: 1px solid rgba(19, 143, 145, 0.2);
+    border-radius: 8px 70px 8px 70px;
+    pointer-events: none;
+}
+
+.auth-story {
+    position: relative;
+    max-width: 430px;
+}
+
+.auth-story h1 {
+    margin-bottom: 26px;
+    font-size: clamp(55px, 7vw, 92px);
+}
+
+.auth-story p {
+    max-width: 390px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+.auth-page--limon .auth-card {
+    position: relative;
+    z-index: 1;
+    border-radius: 8px 34px 8px 34px;
+}
+
+.auth-page--limon .auth-card h2 {
+    margin-bottom: 12px;
+    color: var(--ink);
+    font-size: 38px;
+}
+
+.auth-page--limon .auth-card .eyebrow {
+    margin-bottom: 13px;
+}
+
+@media (max-width: 800px) {
+    .auth-page--limon {
+        grid-template-columns: 1fr;
+        gap: 34px;
+        min-height: auto;
+        padding: 70px 28px 90px;
+    }
+
+    .auth-page--limon::before {
+        inset: 14px;
+    }
+
+    .auth-story {
+        max-width: 520px;
+        text-align: center;
+    }
+
+    .auth-story .eyebrow {
+        margin-bottom: 14px;
+    }
+
+    .auth-story h1 {
+        font-size: clamp(50px, 14vw, 76px);
+    }
+
+    .auth-story p {
+        margin: auto;
+    }
+
+    .auth-page--limon .auth-card {
+        width: min(460px, 100%);
+        margin: auto;
+    }
+}
+
+
+
+/* HOME LIMONENSE — ACTIVOS VISUALES Y ARQUITECTURA CARIBEÑA */
+.hero-section--limon {
+    position: relative;
+    isolation: isolate;
+}
+
+.hero-section--limon::before {
+    content: '';
+    position: absolute;
+    top: 32px;
+    left: -80px;
+    width: 210px;
+    height: 210px;
+    border: 1px solid rgba(169, 80, 56, 0.25);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.hero-visual--limon .hero-image {
+    background-image: url('/limon-hero.jpg');
+    background-position: center;
+    filter: saturate(0.9) contrast(1.08);
+}
+
+.hero-visual--limon::before {
+    border-color: var(--color-turquoise);
+    border-radius: 8px 58px 8px 58px;
+}
+
+.intro-section--limon {
+    background: var(--color-cacao);
+}
+
+.intro-section--limon::before {
+    opacity: 0.16;
+    background-image: repeating-linear-gradient(90deg, transparent 0 15px, var(--color-gold) 16px 17px, transparent 18px 34px);
+    mask-image: linear-gradient(90deg, transparent, black 20%, black 80%, transparent);
+}
+
+.featured-section--limon .dish-photo--one {
+    background-image: url('/limon-food.jpg');
+    background-position: center;
+    filter: saturate(0.9) contrast(1.04);
+}
+
+.featured-section--limon .dish-color--dark {
+    background-image: url('/limon-food.jpg');
+    background-position: 70% center;
+    background-blend-mode: multiply;
+}
+
+.limon-story-section {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: stretch;
+    min-height: 560px;
+    background: var(--color-wood);
+    color: var(--paper);
+}
+
+.limon-story-image {
+    min-height: 500px;
+    background-position: center;
+    background-size: cover;
+}
+
+.limon-story-image--community {
+    background-image: url('/limon-community.jpg');
+}
+
+.limon-story-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px clamp(30px, 7vw, 110px) 80px 60px;
+}
+
+.limon-story-copy .eyebrow {
+    color: var(--color-sun);
+}
+
+.limon-story-copy h2 {
+    margin-bottom: 24px;
+    color: var(--paper);
+}
+
+.limon-story-copy h2 em {
+    color: var(--color-aqua);
+}
+
+.limon-story-copy p {
+    max-width: 440px;
+    margin-bottom: 30px;
+    color: #e4d6c3;
+    font-size: 15px;
+    line-height: 1.75;
+}
+
+.limon-story-copy .text-link {
+    align-self: flex-start;
+    border-color: var(--color-sun);
+    color: var(--paper);
+}
+
+.limon-story-copy .text-link:hover {
+    color: var(--color-sun);
+}
+
+@media (max-width: 720px) {
+    .hero-section--limon::before {
+        left: -100px;
+    }
+
+    .limon-story-section {
+        grid-template-columns: 1fr;
+    }
+
+    .limon-story-image {
+        min-height: 330px;
+    }
+
+    .limon-story-copy {
+        padding: 70px 28px 80px;
+    }
+}
