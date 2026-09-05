@@ -46,7 +46,16 @@ function Navbar() {
 					<NavLink to="/menu" onClick={closeMenu}>
 						Carta
 					</NavLink>
-					<a href="/#nosotros" onClick={closeMenu}>
+					<a
+						href="/#nosotros"
+						onClick={(e) => {
+							closeMenu()
+							if (window.location.pathname === '/') {
+								e.preventDefault()
+								document.getElementById('nosotros')?.scrollIntoView({ behavior: 'smooth' })
+							}
+						}}
+					>
 						Nuestra historia
 					</a>
 					<NavLink to="/reservar" onClick={closeMenu}>

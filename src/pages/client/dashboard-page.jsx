@@ -8,7 +8,7 @@ import {
 } from '../../shared/utils/date-helpers'
 
 export default function DashboardPage() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const { reservations, loading } = useReservations(user)
 
   const totalCount = reservations.length
@@ -29,25 +29,6 @@ export default function DashboardPage() {
 
   return (
     <main className="dashboard-page">
-      <header className="dashboard-header">
-        <Link className="brand" to="/dashboard">
-          <span className="brand-mark">DR</span>
-          <span>
-            <strong>Donde Ray</strong>
-            <small>Sabor del Caribe limonense</small>
-          </span>
-        </Link>
-
-        <nav className="dashboard-nav-links" aria-label="Navegación del cliente">
-          <Link to="/dashboard">Mi panel</Link>
-          <Link to="/reservar">Reservar mesa</Link>
-          <Link to="/mis-reservas">Mis reservas</Link>
-          <button type="button" onClick={logout}>
-            Salir
-          </button>
-        </nav>
-      </header>
-
       <section className="dashboard-content">
         <div className="dashboard-welcome">
           <div>

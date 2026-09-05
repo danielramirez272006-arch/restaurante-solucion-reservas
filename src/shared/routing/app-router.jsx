@@ -1,4 +1,4 @@
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { Link, NavLink, Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { useAuth } from '../../features/auth/use-auth'
 import AdminRoute from './admin-route'
 import PrivateRoute from './private-route'
@@ -21,11 +21,44 @@ function AdminLayout() {
   return (
     <div className="admin-shell">
       <header className="admin-header">
-        <strong>Donde Ray · Administración</strong>
-        <span>{user?.name}</span>
-        <button type="button" onClick={logout}>Cerrar sesión</button>
+        <div className="admin-header__brand">
+          <Link className="brand brand--compact" to="/admin">
+            <span className="brand-mark">DR</span>
+            <span>
+              <strong>Donde Ray</strong>
+              <small>Panel Administrativo</small>
+            </span>
+          </Link>
+        </div>
+
+        <nav className="admin-nav" aria-label="Navegación administrativa">
+          <NavLink to="/admin" end>
+            Resumen
+          </NavLink>
+          <NavLink to="/admin/reservas">
+            Reservas
+          </NavLink>
+          <NavLink to="/admin/clientes">
+            Clientes
+          </NavLink>
+        </nav>
+
+        <div className="admin-header__meta">
+          <Link to="/" className="admin-site-link">
+            <span>🌐</span> Ver web
+          </Link>
+          <span className="admin-user-badge">
+            👑 {user?.name || 'Administrador'}
+          </span>
+          <button type="button" className="button button--small button--outline" onClick={logout}>
+            Cerrar sesión
+          </button>
+        </div>
       </header>
-      <Outlet />
+
+      <div className="admin-content">
+        <Outlet />
+      </div>
     </div>
   )
 }

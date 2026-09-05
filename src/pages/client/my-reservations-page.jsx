@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../features/auth/use-auth.js';
 import { useReservations } from '../../features/client-reservations/use-reservations.js';
 import { ReservationCard } from '../../features/client-reservations/components/reservation-card.jsx';
 import { VoucherTicket } from '../../features/client-reservations/components/voucher-ticket.jsx';
 import { isFutureReservation } from '../../shared/utils/date-helpers.js';
 
 export const MyReservationsPage = () => {
+  const { user } = useAuth();
   const {
     currentUser,
     reservations,
@@ -17,7 +20,7 @@ export const MyReservationsPage = () => {
     activeVoucher,
     setActiveVoucher,
     clearVoucher
-  } = useReservations();
+  } = useReservations(user);
 
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [timeFilter, setTimeFilter] = useState('ALL'); // 'ALL', 'UPCOMING', 'PAST'
@@ -102,7 +105,7 @@ export const MyReservationsPage = () => {
         <h1 style={styles.title}>Mis Reservas</h1>
         <p style={styles.subtitle}>
           Historial y gestión de tus reservas exclusivas para el comensal{' '}
-          <strong style={{ color: '#ffd89b' }}>{currentUser?.guestName || currentUser?.id}</strong>
+          <strong style={{ color: '#ffd89b' }}>{currentUser?.name || currentUser?.guestName || currentUser?.id}</strong>
         </p>
       </header>
 
@@ -247,9 +250,9 @@ export const MyReservationsPage = () => {
               ? `No tienes reservas en estado "${activeFilter}".`
               : 'Aún no has registrado ninguna reserva en Donde Ray.'}
           </p>
-          <a href="#/reservar" style={styles.bookNowBtn}>
+          <Link to="/reservar" style={styles.bookNowBtn}>
             ✨ Crear Nueva Reserva
-          </a>
+          </Link>
         </div>
       ) : (
         /* Lista de Tarjetas */

@@ -16,7 +16,17 @@ function Footer() {
 
 				<div className="footer-links">
 					<Link to="/menu">Carta</Link>
-					<Link to="/#nosotros">Nuestra historia</Link>
+					<a
+						href="/#nosotros"
+						onClick={(e) => {
+							if (window.location.pathname === '/') {
+								e.preventDefault()
+								document.getElementById('nosotros')?.scrollIntoView({ behavior: 'smooth' })
+							}
+						}}
+					>
+						Nuestra historia
+					</a>
 					<Link to="/reservar">Reservar mesa</Link>
 				</div>
 

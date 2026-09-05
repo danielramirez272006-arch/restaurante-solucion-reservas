@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useAuth } from '../../features/auth/use-auth.js'
 import { useReservations } from '../../features/client-reservations/use-reservations.js'
 import { AvailabilityCalendar } from '../../features/client-reservations/components/availability-calendar.jsx'
 import { BookingForm } from '../../features/client-reservations/components/booking-form.jsx'
@@ -6,6 +7,7 @@ import { VoucherTicket } from '../../features/client-reservations/components/vou
 import { MAX_CAPACITY_PER_SLOT } from '../../shared/utils/reservation-rules.js'
 
 export const BookReservationPage = () => {
+  const { user } = useAuth()
   const {
     currentUser,
     selectedDate,
@@ -19,7 +21,7 @@ export const BookReservationPage = () => {
     activeVoucher,
     setActiveVoucher,
     clearVoucher,
-  } = useReservations()
+  } = useReservations(user)
 
   const [selectedTime, setSelectedTime] = useState('')
   const [guestsCount, setGuestsCount] = useState(2)

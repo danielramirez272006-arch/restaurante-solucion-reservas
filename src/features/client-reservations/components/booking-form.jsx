@@ -27,7 +27,7 @@ export const BookingForm = ({
   apiError = null
 }) => {
   const [formData, setFormData] = useState({
-    guestName: currentUser?.guestName || '',
+    guestName: currentUser?.name || currentUser?.guestName || '',
     email: currentUser?.email || '',
     phone: currentUser?.phone || '',
     type: 'Cena',
@@ -40,7 +40,7 @@ export const BookingForm = ({
     setPrevUser(currentUser);
     setFormData((prev) => ({
       ...prev,
-      guestName: prev.guestName || currentUser?.guestName || '',
+      guestName: prev.guestName || currentUser?.name || currentUser?.guestName || '',
       email: prev.email || currentUser?.email || '',
       phone: prev.phone || currentUser?.phone || ''
     }));
@@ -50,7 +50,7 @@ export const BookingForm = ({
   const validationResult = useMemo(() => {
     const dataToValidate = {
       ...formData,
-      guestName: formData.guestName || currentUser?.guestName || '',
+      guestName: formData.guestName || currentUser?.name || currentUser?.guestName || '',
       email: formData.email || currentUser?.email || '',
       phone: formData.phone || currentUser?.phone || '',
       date: selectedDate,
@@ -83,7 +83,7 @@ export const BookingForm = ({
 
     const fullPayload = {
       ...formData,
-      guestName: (formData.guestName || currentUser?.guestName || '').trim(),
+      guestName: (formData.guestName || currentUser?.name || currentUser?.guestName || '').trim(),
       email: (formData.email || currentUser?.email || '').trim(),
       phone: (formData.phone || currentUser?.phone || '').trim(),
       date: selectedDate,
