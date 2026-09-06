@@ -2,11 +2,12 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTodayDateString, getNextDays } from '../../utils/date-helpers.js';
 import { mockFetch } from '../../services/mock-api.js';
+import { queryAIConcierge, getAIConfig, saveAIConfig } from '../../../services/ai-concierge-service.js';
 
 // Lista de categorías rápidas en el carrusel superior
 const QUICK_CATEGORIES = [
  { id: 'asistida', label: ' Reservar Paso a Paso' },
- { id: 'aforo_vivo', label: ' Aforo en Vivo' },
+ { id: 'aforo_vivo', label: ' Cupos en Vivo' },
  { id: 'recom', label: ' Platos y Especialidades' },
  { id: 'quiz', label: ' Test de Antojo' },
  { id: 'precios', label: ' Precios & Presupuesto' },
@@ -29,10 +30,10 @@ const QUICK_CATEGORIES = [
 const INITIAL_MESSAGE = {
  id: 'welcome',
  sender: 'bot',
- text: '¡Wapin mi gente! Pura vida y One Love. Soy Ray, anfitrión de Donde Ray Bar & Grill aquí en Puerto Viejo de Limón. ¿Cómo puedo consentirte hoy con una buena mesa o nuestros platos a la leña?',
+ text: '¡Wapin mi gente! Pura vida. Soy Ray, tu concierge gastronómico en Donde Ray aquí en Puerto Viejo de Talamanca. ¿Cómo te puedo ayudar hoy a organizar tu mesa o recomendarte nuestras especialidades de alta cocina al fogón?',
  actions: [
  { label: ' Reservar Paso a Paso', actionId: 'asistida' },
- { label: ' Consultar Aforo en Vivo', actionId: 'aforo_vivo' },
+ { label: ' Consultar Cupos en Vivo', actionId: 'aforo_vivo' },
  { label: ' Platos Recomendados', actionId: 'recom' },
  { label: ' ¿Qué se te antoja hoy?', actionId: 'quiz' }
  ]
@@ -55,6 +56,10 @@ export const ChatbotConcierge = () => {
  const [inputVal, setInputVal] = useState('');
  const [messages, setMessages] = useState([INITIAL_MESSAGE]);
  const [isTyping, setIsTyping] = useState(false);
+ const [showAIConfig, setShowAIConfig] = useState(false);
+ const [aiConfig, setAiConfig] = useState(getAIConfig());
+ const [tempApiKey, setTempApiKey] = useState(aiConfig.apiKey);
+ const [tempEndpoint, setTempEndpoint] = useState(aiConfig.endpoint);
 
  // Estado del flujo de reserva paso a paso dentro del chat
  const [bookingWizard, setBookingWizard] = useState({
@@ -63,6 +68,17 @@ export const ChatbotConcierge = () => {
  date: null,
  time: null
  });
+
+ // Cerrar con tecla Escape
+ useEffect(() => {
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape' && isOpen) {
+      setIsOpen(false);
+    }
+  };
+  window.addEventListener('keydown', handleKeyDown);
+  return () => window.removeEventListener('keydown', handleKeyDown);
+ }, [isOpen]);
 
  const messagesEndRef = useRef(null);
  const navigate = useNavigate();
@@ -785,7 +801,7 @@ export const ChatbotConcierge = () => {
  return { intent: 'reservar' };
  }
 
- // 27. Despedidas y Agradecimientos (evaluar antes de saludos generales)
+// 27. Despedidas y Agradecimientos (evaluar antes de saludos generales)
  if (
  text.includes('gracias') || text.includes('excelente') || text.includes('perfecto') ||
  text.includes('genial') || text.includes('listo') || text.includes('ok') ||
@@ -807,214 +823,315 @@ export const ChatbotConcierge = () => {
  return { intent: 'unknown' };
  };
 
- const handleSend = () => {
- const text = inputVal.trim();
- if (!text) return;
- setInputVal('');
+  const handleSend = async () => {
+    const text = inputVal.trim();
+    if (!text) return;
+    setInputVal('');
 
- const { intent, extra } = detectIntentFromText(text);
- handleIntent(intent, text, extra);
- };
+    // 1. Mostrar mensaje del usuario en pantalla
+    const userMsg = { id: String(Date.now()), sender: 'user', text };
+    setMessages((prev) => [...prev, userMsg]);
+    setIsTyping(true);
 
- // Manejador del Wizard de Reserva paso a paso
- const handleWizardStep = (step, val) => {
- if (step === 'guests') {
- setBookingWizard((prev) => ({ ...prev, guests: val }));
- const nextDays = getNextDays(5);
- addBotMessage(
- `Mesa para ${val} ${val === 1 ? 'persona' : 'personas'} anotada. ¿Qué día prefieres visitarnos?`,
- nextDays.map((d) => ({
- label: `${d.label} (${d.weekday.slice(0, 3)})`,
- wizardStep: 'date',
- val: d.dateString
- }))
- );
- } else if (step === 'date') {
- setBookingWizard((prev) => ({ ...prev, date: val }));
- addBotMessage(
- `Fecha seleccionada: ${val}. ¿Qué turno prefieres?`,
- [
- { label: ' Almuerzo · 13:00', wizardStep: 'time', val: '13:00' },
- { label: ' Almuerzo · 14:00', wizardStep: 'time', val: '14:00' },
- { label: ' Cena · 19:00', wizardStep: 'time', val: '19:00' },
- { label: ' Cena · 20:00', wizardStep: 'time', val: '20:00' },
- { label: ' Cena · 21:00', wizardStep: 'time', val: '21:00' }
- ]
- );
- } else if (step === 'time') {
- const targetGuests = bookingWizard.guests || 2;
- const targetDate = bookingWizard.date || getTodayDateString();
- const targetTime = val;
+    // 2. Si hay conexión de IA configurada, consultar al modelo
+    if (aiConfig.apiKey) {
+      try {
+        const aiResult = await queryAIConcierge(text, [...messages, userMsg]);
+        if (aiResult && aiResult.text) {
+          setIsTyping(false);
+          addBotMessage(aiResult.text, [
+            { label: '📅 Reservar Mesa Ahora →', to: '/reservar' },
+            { label: '📖 Ver Menú de Autor', to: '/menu' },
+            { label: '📊 Consultar Cupos de Hoy', actionId: 'aforo_vivo' }
+          ]);
+          return;
+        }
+      } catch (err) {
+        console.warn('AI error:', err);
+      }
+    }
 
- addBotMessage(
- `¡Perfecto! Todo listo para tu reserva:\n\n` +
- `• Personas: ${targetGuests}\n` +
- `• Fecha: ${targetDate}\n` +
- `• Horario: ${targetTime}\n\n` +
- `Haz clic abajo para abrir el formulario con estos datos prellenados y confirmar:`,
- [
- {
- label: `Confirmar Mesa (${targetGuests} pers. / ${targetTime}) →`,
- to: `/reservar?date=${targetDate}&time=${targetTime}&guests=${targetGuests}`
- }
- ]
- );
- }
- };
+    // 3. Fallback al motor semántico local entrenado de Donde Ray
+    const { intent, extra } = detectIntentFromText(text);
+    handleIntent(intent, text, extra);
+  };
 
- const handleActionClick = (action) => {
- if (action.to) {
- setIsOpen(false);
- navigate(action.to);
- return;
- }
+  // Manejador del Wizard de Reserva paso a paso
+  const handleWizardStep = (step, val) => {
+    if (step === 'guests') {
+      setBookingWizard((prev) => ({ ...prev, guests: val }));
+      const nextDays = getNextDays(5);
+      addBotMessage(
+        `Mesa para ${val} ${val === 1 ? 'persona' : 'personas'} anotada. ¿Qué día prefieres visitarnos?`,
+        nextDays.map((d) => ({
+          label: `${d.label} (${d.weekday.slice(0, 3)})`,
+          wizardStep: 'date',
+          val: d.dateString
+        }))
+      );
+    } else if (step === 'date') {
+      setBookingWizard((prev) => ({ ...prev, date: val }));
+      addBotMessage(
+        `Fecha seleccionada: ${val}. ¿Qué turno prefieres?`,
+        [
+          { label: ' Almuerzo · 13:00', wizardStep: 'time', val: '13:00' },
+          { label: ' Almuerzo · 14:00', wizardStep: 'time', val: '14:00' },
+          { label: ' Cena · 19:00', wizardStep: 'time', val: '19:00' },
+          { label: ' Cena · 20:00', wizardStep: 'time', val: '20:00' },
+          { label: ' Cena · 21:00', wizardStep: 'time', val: '21:00' }
+        ]
+      );
+    } else if (step === 'time') {
+      const targetGuests = bookingWizard.guests || 2;
+      const targetDate = bookingWizard.date || getTodayDateString();
+      const targetTime = val;
 
- if (action.wizardStep) {
- handleWizardStep(action.wizardStep, action.val);
- return;
- }
+      addBotMessage(
+        `¡Perfecto! Todo listo para tu reserva:\n\n` +
+        `• Personas: ${targetGuests}\n` +
+        `• Fecha: ${targetDate}\n` +
+        `• Horario: ${targetTime}\n\n` +
+        `Haz clic abajo para abrir el formulario con estos datos prellenados y confirmar:`,
+        [
+          {
+            label: `Confirmar Mesa (${targetGuests} pers. / ${targetTime}) →`,
+            to: `/reservar?date=${targetDate}&time=${targetTime}&guests=${targetGuests}`
+          }
+        ]
+      );
+    }
+  };
 
- if (action.actionId) {
- handleIntent(action.actionId);
- }
- };
+  const handleActionClick = (action) => {
+    if (action.to) {
+      setIsOpen(false);
+      navigate(action.to);
+      return;
+    }
 
- return (
- <>
- {/* Botón Flotante Concierge */}
- <div className="chatbot-fab-container">
- {!isOpen && (
- <button
- type="button"
- className="chatbot-fab-btn"
- onClick={() => setIsOpen(true)}
- aria-label="Abrir asistente concierge de Donde Ray"
- >
- <span className="chatbot-fab-avatar">DR</span>
- <span className="chatbot-fab-text">Asistente Ray</span>
- <span className="chatbot-fab-pulse" />
- </button>
- )}
- </div>
+    if (action.wizardStep) {
+      handleWizardStep(action.wizardStep, action.val);
+      return;
+    }
 
- {/* Ventana Flotante de Chat */}
- {isOpen && (
- <aside className="chatbot-window" aria-label="Ventana de chat con Concierge Ray">
- {/* Encabezado */}
- <header className="chatbot-header">
- <div className="chatbot-header-info">
- <span className="chatbot-avatar-mark">DR</span>
- <div>
- <strong className="chatbot-header-title">Ray · Concierge</strong>
- <span className="chatbot-header-subtitle">Donde Ray · Puerto Viejo, Limón</span>
- </div>
- </div>
- <button
- type="button"
- className="chatbot-close-btn"
- onClick={() => setIsOpen(false)}
- aria-label="Cerrar chat"
- >
- 
- </button>
- </header>
+    if (action.actionId) {
+      handleIntent(action.actionId);
+    }
+  };
 
- {/* Barra de Acceso Rápido con scroll horizontal */}
- <div className="chatbot-quick-chips" aria-label="Temas rápidos">
- {QUICK_CATEGORIES.map((qa) => (
- <button
- key={qa.id}
- type="button"
- className="chatbot-chip-btn"
- onClick={() => handleActionClick({ actionId: qa.id })}
- >
- {qa.label}
- </button>
- ))}
- </div>
+  return (
+    <>
+      {/* Botón Flotante Concierge con Emblema Toucan */}
+      <div className="chatbot-fab-container">
+        {!isOpen && (
+          <button
+            type="button"
+            className="chatbot-fab-btn"
+            onClick={() => setIsOpen(true)}
+            aria-label="Abrir asistente concierge de Donde Ray"
+          >
+            <img 
+              src="/brand-logo.png" 
+              alt="Donde Ray Logo" 
+              style={{ width: '34px', height: '34px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #fae4a8' }}
+            />
+            <span className="chatbot-fab-text">Asistente Ray</span>
+            <span className="chatbot-fab-pulse" />
+          </button>
+        )}
+      </div>
 
- {/* Área de Mensajes */}
- <div className="chatbot-messages">
- {messages.map((m) => (
- <div
- key={m.id}
- className={`chatbot-msg-row ${
- m.sender === 'user' ? 'chatbot-msg-row--user' : 'chatbot-msg-row--bot'
- }`}
- >
- {m.sender === 'bot' && (
- <span className="chatbot-msg-avatar">DR</span>
- )}
- <div className="chatbot-bubble-wrap">
- <div
- className={`chatbot-bubble ${
- m.sender === 'user' ? 'chatbot-bubble--user' : 'chatbot-bubble--bot'
- }`}
- >
- <p style={{ margin: 0, whiteSpace: 'pre-line' }}>{m.text}</p>
- </div>
+      {/* Ventana Flotante de Chat */}
+      {isOpen && (
+        <aside className="chatbot-window" aria-label="Ventana de chat con Concierge Ray">
+          {/* Encabezado con Botón Cerrar Visible y Configuración de IA */}
+          <header className="chatbot-header">
+            <div className="chatbot-header-info">
+              <img 
+                src="/brand-logo.png" 
+                alt="Donde Ray" 
+                className="chatbot-avatar-img"
+              />
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <strong className="chatbot-header-title">Ray · Concierge AI</strong>
+                  <span className="chatbot-ai-badge">
+                    {aiConfig.apiKey ? 'AI Externa' : 'AI Limonense'}
+                  </span>
+                </div>
+                <span className="chatbot-header-subtitle">Alta Cocina · Puerto Viejo, Limón</span>
+              </div>
+            </div>
 
- {/* Acciones interactivas de 1 clic en el mensaje */}
- {m.actions && m.actions.length > 0 && (
- <div className="chatbot-action-buttons">
- {m.actions.map((act, idx) => (
- <button
- key={idx}
- type="button"
- className="chatbot-btn-action"
- onClick={() => handleActionClick(act)}
- >
- {act.label}
- </button>
- ))}
- </div>
- )}
- </div>
- </div>
- ))}
+            <div className="chatbot-header-actions">
+              <button
+                type="button"
+                className="chatbot-config-btn"
+                onClick={() => setShowAIConfig(!showAIConfig)}
+                title="Configuración de Inteligencia Artificial"
+                aria-label="Configurar API de IA"
+              >
+                ⚙
+              </button>
+              <button
+                type="button"
+                className="chatbot-close-btn"
+                onClick={() => setIsOpen(false)}
+                aria-label="Cerrar chat"
+                title="Cerrar chat (Esc)"
+              >
+                ✕
+              </button>
+            </div>
+          </header>
 
- {isTyping && (
- <div className="chatbot-msg-row chatbot-msg-row--bot">
- <span className="chatbot-msg-avatar">DR</span>
- <div className="chatbot-bubble chatbot-bubble--bot chatbot-typing">
- <span className="chatbot-typing-dot" />
- <span className="chatbot-typing-dot" />
- <span className="chatbot-typing-dot" />
- </div>
- </div>
- )}
- <div ref={messagesEndRef} />
- </div>
+          {/* Panel de Configuración de API Externa / Local de IA */}
+          {showAIConfig && (
+            <div className="chatbot-config-panel">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label>Conexión AI Externa (OpenAI / Gemini / Ollama)</label>
+                <button 
+                  type="button" 
+                  onClick={() => setShowAIConfig(false)}
+                  style={{ background: 'none', border: 'none', color: '#c8860a', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold' }}
+                >
+                  ✕ Cerrar
+                </button>
+              </div>
+              <p style={{ margin: 0, fontSize: '11px', color: 'rgba(240, 230, 204, 0.75)', lineHeight: 1.4 }}>
+                Ingresa tu API Key para activar el modelo generativo externo. Si lo dejas vacío, Ray opera con el motor de conocimiento local entrenado de Donde Ray.
+              </p>
+              <input 
+                type="password" 
+                placeholder="sk-... (API Key OpenAI o compatible)" 
+                value={tempApiKey}
+                onChange={(e) => setTempApiKey(e.target.value)}
+              />
+              <input 
+                type="url" 
+                placeholder="https://api.openai.com/v1/chat/completions" 
+                value={tempEndpoint}
+                onChange={(e) => setTempEndpoint(e.target.value)}
+              />
+              <button
+                type="button"
+                className="chatbot-config-save-btn"
+                onClick={() => {
+                  saveAIConfig({ apiKey: tempApiKey, endpoint: tempEndpoint });
+                  setAiConfig(getAIConfig());
+                  setShowAIConfig(false);
+                  addBotMessage(' ¡Configuración de IA actualizada! Listo para atenderte con las respuestas del modelo.');
+                }}
+              >
+                Guardar Conexión AI
+              </button>
+            </div>
+          )}
 
- {/* Formulario de Entrada */}
- <form
- className="chatbot-form"
- onSubmit={(e) => {
- e.preventDefault();
- handleSend();
- }}
- >
- <input
- type="text"
- placeholder="Escribe tu consulta o pide una recomendación..."
- value={inputVal}
- onChange={(e) => setInputVal(e.target.value)}
- className="chatbot-input"
- aria-label="Mensaje para el concierge"
- />
- <button
- type="submit"
- className="chatbot-send-btn"
- disabled={!inputVal.trim()}
- aria-label="Enviar mensaje"
- >
- →
- </button>
- </form>
- </aside>
- )}
- </>
- );
+          {/* Barra de Acceso Rápido con scroll horizontal */}
+          <div className="chatbot-quick-chips" aria-label="Temas rápidos">
+            {QUICK_CATEGORIES.map((qa) => (
+              <button
+                key={qa.id}
+                type="button"
+                className="chatbot-chip-btn"
+                onClick={() => handleActionClick({ actionId: qa.id })}
+              >
+                {qa.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Área de Mensajes */}
+          <div className="chatbot-messages">
+            {messages.map((m) => (
+              <div
+                key={m.id}
+                className={`chatbot-msg-row ${
+                  m.sender === 'user' ? 'chatbot-msg-row--user' : 'chatbot-msg-row--bot'
+                }`}
+              >
+                {m.sender === 'bot' && (
+                  <img 
+                    src="/brand-logo.png" 
+                    alt="Ray" 
+                    className="chatbot-msg-avatar"
+                  />
+                )}
+                <div className="chatbot-bubble-wrap">
+                  <div
+                    className={`chatbot-bubble ${
+                      m.sender === 'user' ? 'chatbot-bubble--user' : 'chatbot-bubble--bot'
+                    }`}
+                  >
+                    <p style={{ margin: 0, whiteSpace: 'pre-line' }}>{m.text}</p>
+                  </div>
+
+                  {/* Acciones interactivas de 1 clic en el mensaje */}
+                  {m.actions && m.actions.length > 0 && (
+                    <div className="chatbot-action-buttons">
+                      {m.actions.map((act, idx) => (
+                        <button
+                          key={idx}
+                          type="button"
+                          className="chatbot-btn-action"
+                          onClick={() => handleActionClick(act)}
+                        >
+                          {act.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+
+            {isTyping && (
+              <div className="chatbot-msg-row chatbot-msg-row--bot">
+                <img 
+                  src="/brand-logo.png" 
+                  alt="Ray" 
+                  className="chatbot-msg-avatar"
+                />
+                <div className="chatbot-bubble chatbot-bubble--bot chatbot-typing">
+                  <span className="chatbot-typing-dot" />
+                  <span className="chatbot-typing-dot" />
+                  <span className="chatbot-typing-dot" />
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Formulario de Entrada */}
+          <form
+            className="chatbot-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSend();
+            }}
+          >
+            <input
+              type="text"
+              placeholder="Escribe tu consulta o pide una recomendación..."
+              value={inputVal}
+              onChange={(e) => setInputVal(e.target.value)}
+              className="chatbot-input"
+              aria-label="Mensaje para el concierge"
+            />
+            <button
+              type="submit"
+              className="chatbot-send-btn"
+              disabled={!inputVal.trim()}
+              aria-label="Enviar mensaje"
+            >
+              →
+            </button>
+          </form>
+        </aside>
+      )}
+    </>
+  );
 };
 
 export default ChatbotConcierge;
