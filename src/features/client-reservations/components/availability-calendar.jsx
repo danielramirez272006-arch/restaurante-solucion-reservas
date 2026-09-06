@@ -1,34 +1,162 @@
-import { useMemo, useState } from 'react'
-import { formatDateToSpanish, formatTime12h, getMaxReservationDateString, getTodayDateString, isTimePassed } from '../../../shared/utils/date-helpers.js'
-import { MAX_CAPACITY_PER_SLOT } from '../../../shared/utils/reservation-rules.js'
+import { useMemo } from 'react';
+import {
+  getTodayDateString,
+  getMaxReservationDateString,
+  formatDateToSpanish,
+  formatTime12h,
+  isTimePassed,
+  getNextDays
+} from '../../../shared/utils/date-helpers.js';
+import { MAX_CAPACITY_PER_SLOT } from '../../../shared/utils/reservation-rules.js';
 
-const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
-const MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
-const toKey = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+export const AvailabilityCalendar = ({
+  selectedDate,
+  onDateChange,
+  selectedTime,
+  onTimeSelect,
+  slotsAvailability = [],
+  limitReached = false,
+  limitCount = 0,
+  isLoading = false
+}) => {
+  const minDate = useMemo(() => getTodayDateString(), []);
+  const maxDate = useMemo(() => getMaxReservationDateString(60), []);
+  const quickDays = useMemo(() => getNextDays(7), []);
 
-export const AvailabilityCalendar = ({ selectedDate, onDateChange, selectedTime, onTimeSelect, slotsAvailability = [], limitReached = false, limitCount = 0, isLoading = false }) => {
-  const today = useMemo(() => getTodayDateString(), [])
-  const maxDate = useMemo(() => getMaxReservationDateString(60), [])
-  const selected = selectedDate ? new Date(`${selectedDate}T12:00:00`) : new Date()
-  const [visibleMonth, setVisibleMonth] = useState(new Date(selected.getFullYear(), selected.getMonth(), 1))
-  const firstDay = (new Date(visibleMonth.getFullYear(), visibleMonth.getMonth(), 1).getDay() + 6) % 7
-  const daysInMonth = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 0).getDate()
-  const cells = Array.from({ length: firstDay + daysInMonth }, (_, index) => index < firstDay ? null : new Date(visibleMonth.getFullYear(), visibleMonth.getMonth(), index - firstDay + 1))
-  const canGoBack = `${visibleMonth.getFullYear()}-${String(visibleMonth.getMonth() + 1).padStart(2, '0')}` > today.slice(0, 7)
-  const canGoForward = `${visibleMonth.getFullYear()}-${String(visibleMonth.getMonth() + 1).padStart(2, '0')}` < maxDate.slice(0, 7)
+  return (
+    <div className="reservation-panel">
+      {/* Encabezado del Panel */}
+      <div className="reservation-panel-header">
+        <span className="eyebrow" style={{ marginBottom: '8px' }}>Paso 1</span>
+        <h3>Fecha y Horario</h3>
+        <p>Consulta la disponibilidad de aforo en tiempo real para tu servicio en Donde Ray.</p>
+      </div>
 
-  const chooseDate = (date) => {
-    const key = toKey(date)
-    if (key < today || key > maxDate) return
-    onDateChange(key)
-  }
+      {/* Selector Rápido de Próximos 7 Días */}
+      <div className="reservation-field-group">
+        <span className="reservation-field-label">Días Próximos</span>
+        <div className="quick-days-list">
+          {quickDays.map((day) => {
+            const isDaySelected = selectedDate === day.dateString;
+            return (
+              <button
+                key={day.dateString}
+                type="button"
+                onClick={() => onDateChange(day.dateString)}
+                className={`quick-day-card ${isDaySelected ? 'quick-day-card--active' : ''}`}
+                title={`${day.weekday}, ${day.dateString}`}
+              >
+                <span className="quick-day-val">{day.label}</span>
+                <span className="quick-day-sub">
+                  {day.weekday ? day.weekday.slice(0, 3) : ''}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-  return <section className="ray-calendar">
-    <div className="ray-calendar__header"><div><span className="mockup-kicker mockup-kicker--dark">Tu próxima mesa</span><h3>Elegí el día</h3><p>{selectedDate ? formatDateToSpanish(selectedDate) : 'Una fecha para compartir'}</p></div><span className="ray-calendar__bird" aria-hidden="true">⌁</span></div>
-    <div className="ray-calendar__month"><button type="button" disabled={!canGoBack} onClick={() => setVisibleMonth(new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() - 1, 1))}>←</button><strong>{MONTHS[visibleMonth.getMonth()]} {visibleMonth.getFullYear()}</strong><button type="button" disabled={!canGoForward} onClick={() => setVisibleMonth(new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 1))}>→</button></div>
-    <div className="ray-calendar__weekdays">{WEEKDAYS.map((day) => <span key={day}>{day}</span>)}</div>
-    <div className="ray-calendar__days">{cells.map((date, index) => date ? <button key={toKey(date)} type="button" className={`${selectedDate === toKey(date) ? 'is-selected' : ''} ${toKey(date) === today ? 'is-today' : ''}`} disabled={toKey(date) < today || toKey(date) > maxDate} onClick={() => chooseDate(date)}><span>{date.getDate()}</span>{toKey(date) === today && <small>Hoy</small>}</button> : <span className="ray-calendar__empty" key={`empty-${index}`} />)}</div>
-    {limitReached && <div className="ray-calendar__alert">Ya registraste {limitCount} reservas para esta fecha. Elegí otro día para continuar.</div>}
-    <div className="ray-calendar__slots"><div className="ray-calendar__slots-heading"><h4>Horarios disponibles</h4><span>Máximo {MAX_CAPACITY_PER_SLOT} personas por turno</span></div>{isLoading ? <div className="ray-calendar__loading">Preparando la mesa...</div> : <div className="ray-calendar__slot-grid">{slotsAvailability.map((slot) => { const past = isTimePassed(selectedDate, slot.time); const blocked = !slot.isAvailable || past || limitReached; const percent = Math.min(100, Math.round((slot.bookedGuests / MAX_CAPACITY_PER_SLOT) * 100)); return <button key={slot.time} type="button" disabled={blocked} className={`ray-slot ${selectedTime === slot.time ? 'is-selected' : ''} ${blocked ? 'is-blocked' : ''}`} onClick={() => onTimeSelect(slot.time)}><strong>{formatTime12h(slot.time)}</strong><span className="ray-slot__bar"><i style={{ width: `${percent}%` }} /></span><small>{past ? 'Pasado' : slot.remainingCapacity <= 0 ? 'Agotado' : `${slot.remainingCapacity} disponibles`}</small></button> })}</div>}</div>
-  </section>
-}
+      {/* Selector de fecha con input date nativo */}
+      <div className="reservation-field-group">
+        <label htmlFor="reservation-date-input" className="reservation-field-label">
+          Otras Fechas en Calendario
+        </label>
+        <div className="date-selector-row">
+          <input
+            id="reservation-date-input"
+            type="date"
+            value={selectedDate}
+            min={minDate}
+            max={maxDate}
+            onChange={(e) => onDateChange(e.target.value)}
+            className="reservation-input"
+            style={{ width: 'auto', minWidth: '170px' }}
+          />
+          <span className="date-badge-editorial">
+            {formatDateToSpanish(selectedDate) || 'Selecciona un día'}
+          </span>
+        </div>
+      </div>
+
+      {/* Alerta de Límite de 5 Reservas por Usuario (Regla 2) */}
+      {limitReached && (
+        <div className="reservation-alert-warning" role="alert">
+          <div>
+            <strong>Límite diario de comensal alcanzado</strong>
+            <span>
+              Ya registraste {limitCount} reservas para esta fecha. Para garantizar acceso equitativo a todos los visitantes, el límite es de 5 reservas por día. Por favor elige otra fecha.
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Franjas Horarias Disponibles (Reglas 1 y 4) */}
+      <div className="time-slots-wrapper">
+        <div>
+          <span className="time-period-header">Turnos Disponibles</span>
+          <p style={{ margin: '0 0 10px', fontSize: '12px', color: 'var(--muted)' }}>
+            Aforo estricto de {MAX_CAPACITY_PER_SLOT} personas por turno.
+          </p>
+        </div>
+
+        {isLoading ? (
+          <div className="state-panel" style={{ background: 'var(--paper)', border: '1px solid var(--line)' }}>
+            <span className="loading-dot" />
+            <span>Consultando aforo disponible...</span>
+          </div>
+        ) : (
+          <div className="time-slots-grid">
+            {slotsAvailability.map((slot) => {
+              const isSelected = selectedTime === slot.time;
+              const isPast = isTimePassed(selectedDate, slot.time);
+              const isBlocked = !slot.isAvailable || isPast || limitReached;
+
+              const occupancyPercent = Math.min(
+                100,
+                Math.round((slot.bookedGuests / MAX_CAPACITY_PER_SLOT) * 100)
+              );
+
+              return (
+                <button
+                  key={slot.time}
+                  type="button"
+                  onClick={() => !isBlocked && onTimeSelect(slot.time)}
+                  disabled={isBlocked}
+                  aria-pressed={isSelected}
+                  title={
+                    isPast
+                      ? 'Este horario ya transcurrió'
+                      : slot.reason || `${slot.remainingCapacity} cupos disponibles de ${MAX_CAPACITY_PER_SLOT}`
+                  }
+                  className={`slot-card ${isSelected ? 'slot-card--selected' : ''} ${
+                    isBlocked ? 'slot-card--disabled' : ''
+                  }`}
+                >
+                  <span className="slot-time-text">{formatTime12h(slot.time)}</span>
+                  <span className="slot-capacity-text">
+                    {isPast
+                      ? 'Finalizado'
+                      : isBlocked && !slot.isAvailable
+                      ? 'Aforo Completo'
+                      : `${slot.remainingCapacity} cupos libres`}
+                  </span>
+                  <div className="slot-meter-track">
+                    <div
+                      className="slot-meter-fill"
+                      style={{
+                        width: `${occupancyPercent}%`,
+                        background: isSelected ? 'var(--gold)' : occupancyPercent >= 80 ? '#b17a3c' : 'var(--green)'
+                      }}
+                    />
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default AvailabilityCalendar;

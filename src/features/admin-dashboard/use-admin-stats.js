@@ -9,7 +9,7 @@ export function buildStats(reservations, users) {
 		confirmed: reservations.filter((item) => (item.estado || item.status) === 'Confirmada').length,
 		rejected: reservations.filter((item) => (item.estado || item.status) === 'Rechazada').length,
 		today: reservations.filter((item) => (item.fecha || item.date || '').slice(0, 10) === TODAY).length,
-		clients: users.filter((item) => item.role !== 'admin').length,
+		clients: users.length,
 	}
 }
 

@@ -65,7 +65,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
       doc.setTextColor(200, 200, 200);
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(9);
-      doc.text('Experiencia Gastronómica Exclusiva', 74, 30, { align: 'center' });
+      doc.text('Sabor Afrocaribeño & Bar • Puerto Viejo de Talamanca', 74, 30, { align: 'center' });
 
       // Línea separadora
       doc.setDrawColor(80, 80, 80);
@@ -155,7 +155,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
       <div style={styles.modalContent}>
         {/* Ticket Header */}
         <div style={styles.ticketHeader}>
-          <div style={styles.restaurantTag}>DONDE RAY RESTAURANTE</div>
+          <div style={styles.restaurantTag}>DONDE RAY • PUERTO VIEJO</div>
           <h2 style={styles.ticketTitle}>Voucher de Reserva</h2>
           <p style={styles.ticketSubtitle}>
             Presenta este comprobante digital o su código QR al llegar al restaurante
@@ -166,7 +166,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
             style={styles.closeIconBtn}
             aria-label="Cerrar modal"
           >
-            ✕
+            
           </button>
         </div>
 
@@ -215,13 +215,13 @@ export const VoucherTicket = ({ reservation, onClose }) => {
             <div style={styles.infoRow}>
               <span style={styles.infoLabel}>Invitados:</span>
               <span style={styles.infoValue}>
-                👥 {guests} {guests === 1 ? 'persona' : 'personas'}
+                 {guests} {guests === 1 ? 'persona' : 'personas'}
               </span>
             </div>
 
             <div style={styles.infoRow}>
               <span style={styles.infoLabel}>Ocasión:</span>
-              <span style={styles.infoValue}>🏷️ {type || 'Cena'}</span>
+              <span style={styles.infoValue}> {type || 'Cena'}</span>
             </div>
 
             <div style={styles.infoRow}>
@@ -244,7 +244,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
 
         {/* Nota informativa */}
         <div style={styles.policyNotice}>
-          💡 <strong>Importante:</strong> Tu reserva se encuentra en estado{' '}
+           <strong>Importante:</strong> Tu reserva se encuentra en estado{' '}
           <strong style={{ color: '#ffd89b' }}>{status || 'Pendiente'}</strong>. El restaurante
           gestiona un cupo estricto de máximo 20 comensales por franja para brindarte una atención
           personalizada.
@@ -258,7 +258,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
             disabled={downloading}
             style={styles.downloadBtn}
           >
-            {downloading ? 'Generando PDF...' : '📄 Descargar PDF'}
+            {downloading ? 'Generando PDF...' : ' Descargar PDF'}
           </button>
 
           <a
@@ -267,7 +267,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
             rel="noopener noreferrer"
             style={styles.calendarBtn}
           >
-            📅 Google Calendar
+             Google Calendar
           </a>
 
           <button
@@ -275,7 +275,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
             onClick={() => window.print()}
             style={styles.printBtn}
           >
-            🖨️ Imprimir
+             Imprimir
           </button>
 
           <button type="button" onClick={onClose} style={styles.closeBtn}>
@@ -324,16 +324,16 @@ const styles = {
     fontSize: '11px',
     fontWeight: '800',
     letterSpacing: '2.5px',
-    color: '#b17a3c',
+    color: '#d97706',
     textTransform: 'uppercase',
     marginBottom: '6px'
   },
   ticketTitle: {
     margin: 0,
-    fontSize: '24px',
-    fontFamily: 'Newsreader, Georgia, serif',
-    fontWeight: '500',
-    color: '#202820'
+    fontSize: '26px',
+    fontFamily: 'var(--font-display, "Fraunces", serif)',
+    fontWeight: '700',
+    color: '#1c271e'
   },
   ticketSubtitle: {
     margin: '4px 0 0',
@@ -408,15 +408,15 @@ const styles = {
   reservationCode: {
     fontSize: '11px',
     fontWeight: '700',
-    color: '#b17a3c',
+    color: '#b45309',
     letterSpacing: '1px'
   },
   statusPill: {
     fontSize: '10px',
     fontWeight: '700',
-    background: '#fffbeb',
-    color: '#b17a3c',
-    border: '1px solid #fcd34d',
+    background: '#fef3c7',
+    color: '#b45309',
+    border: '1px solid #f59e0b',
     padding: '2px 8px',
     borderRadius: '10px',
     textTransform: 'uppercase'
@@ -445,7 +445,7 @@ const styles = {
     textAlign: 'right'
   },
   infoValueHighlight: {
-    color: '#304b3d',
+    color: '#0f5132',
     fontWeight: '700',
     textAlign: 'right'
   },
@@ -478,7 +478,7 @@ const styles = {
   },
   downloadBtn: {
     flex: '1 1 140px',
-    background: '#304b3d',
+    background: '#0f5132',
     border: 'none',
     color: '#f8f5ed',
     borderRadius: '10px',
@@ -486,7 +486,7 @@ const styles = {
     fontSize: '12px',
     fontWeight: '700',
     cursor: 'pointer',
-    boxShadow: '0 4px 14px rgba(48, 75, 61, 0.25)',
+    boxShadow: '0 4px 14px rgba(15, 81, 50, 0.3)',
     textAlign: 'center'
   },
   calendarBtn: {

@@ -1,7 +1,9 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+import { mockFetch } from '../../shared/services/mock-api.js'
 
-async function request(path, options = {} ) {
-  const response = await fetch(`${API_URL}${path}`, {
+const API_URL = import.meta.env.VITE_API_URL || ''
+
+async function request(path, options = {}) {
+  const response = await mockFetch(`${API_URL}${path}`, {
     headers: { 'Content-Type': 'application/json' },
     ...options,
   })

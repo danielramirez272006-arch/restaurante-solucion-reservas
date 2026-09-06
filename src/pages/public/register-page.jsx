@@ -3,42 +3,23 @@ import RegisterForm from '../../features/auth/components/register-form'
 
 export default function RegisterPage() {
   return (
-    <main className="auth-page auth-page--limon">
-      <div className="auth-story">
-        <span className="eyebrow">Una mesa para compartir</span>
-        <h1>
-          Vení a formar
-
-
-          <em>parte de la mesa.</em>
-        </h1>
-        <p>
-          Creá tu cuenta para reservar fácilmente y mantener tus visitas de Donde
-          Ray siempre a mano.
-        </p>
-      </div>
-
+    <main className="auth-page">
       <div className="auth-card">
-        <Link className="brand" to="/" style={{ marginBottom: '24px' }}>
+        <div className="rasta-pill" style={{ marginBottom: '14px', alignSelf: 'flex-start' }}>
+          <span className="rasta-dot rasta-dot--green" />
+          <span className="rasta-dot rasta-dot--yellow" />
+          <span className="rasta-dot rasta-dot--red" />
+          <span>Puerto Viejo · Limón</span>
+        </div>
+        <Link className="brand" to="/" style={{ marginBottom: '20px' }}>
           <span className="brand-mark">DR</span>
-          <span>
-            <strong>Donde Ray</strong>
-            <small>sabor del Caribe limonense</small>
-          </span>
+          <span><strong>Donde Ray</strong><small>Bar & Sabor Caribeño · Limón</small></span>
         </Link>
-
-        <p className="eyebrow">Nueva cuenta</p>
-        <h2>Reservá tu próxima mesa.</h2>
-        <p className="auth-copy">
-          Registrate para solicitar reservas y consultar tus visitas al Caribe.
-        </p>
-
+        <p className="eyebrow" style={{ marginBottom: '8px' }}>Nueva Cuenta</p>
+        <h1>Asegura tu mesa frente al mar</h1>
+        <p className="auth-copy">Crea tu cuenta para reservar mesas con anticipación y consultar tus visitas a Donde Ray.</p>
         <RegisterForm />
-
-        <p className="auth-switch">
-          ¿Ya tenés una cuenta?{' '}
-          <Link to="/login">Iniciar sesión</Link>
-        </p>
+        <p className="auth-switch">¿Ya tienes una cuenta? <Link to="/login">Iniciar sesión</Link></p>
       </div>
     </main>
   )

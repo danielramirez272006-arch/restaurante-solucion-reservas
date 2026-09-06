@@ -1,4 +1,4 @@
-import { Link, NavLink, Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes, NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../../features/auth/use-auth'
 import AdminRoute from './admin-route'
 import PrivateRoute from './private-route'
@@ -21,42 +21,37 @@ function AdminLayout() {
   return (
     <div className="admin-shell">
       <header className="admin-header">
-        <div className="admin-header__brand">
-          <Link className="brand brand--compact" to="/admin">
-            <span className="brand-mark">DR</span>
-            <span>
-              <strong>Donde Ray</strong>
-              <small>Panel Administrativo</small>
-            </span>
+        <div className="admin-header-left">
+          <Link className="brand" to="/admin">
+            <span className="brand-mark" style={{ background: 'var(--green)', color: '#fff', border: '1px solid var(--gold)' }}>DR</span>
+            <span><strong style={{ color: '#f8f5ed' }}>Donde Ray</strong><small style={{ color: '#ffd685' }}>Gestión Caribeña · Limón</small></span>
           </Link>
+          <nav className="admin-nav" aria-label="Navegación de administración">
+            <NavLink to="/admin" end className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
+              Resumen
+            </NavLink>
+            <NavLink to="/admin/reservas" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
+              Reservas
+            </NavLink>
+            <NavLink to="/admin/clientes" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
+              Clientes
+            </NavLink>
+            <Link to="/" className="admin-nav-link" target="_blank" rel="noopener noreferrer">
+              ↗ Ver Sitio
+            </Link>
+          </nav>
         </div>
-
-        <nav className="admin-nav" aria-label="Navegación administrativa">
-          <NavLink to="/admin" end>
-            Resumen
-          </NavLink>
-          <NavLink to="/admin/reservas">
-            Reservas
-          </NavLink>
-          <NavLink to="/admin/clientes">
-            Clientes
-          </NavLink>
-        </nav>
-
-        <div className="admin-header__meta">
-          <Link to="/" className="admin-site-link">
-            <span>🌐</span> Ver web
-          </Link>
-          <span className="admin-user-badge">
-            👑 {user?.name || 'Administrador'}
-          </span>
-          <button type="button" className="button button--small button--outline" onClick={logout}>
+        <div className="admin-header-right">
+          <div className="admin-user-info">
+            <span className="admin-user-role">Admin</span>
+            <strong className="admin-user-name">{user?.name || 'Administrador'}</strong>
+          </div>
+          <button type="button" className="admin-logout-btn" onClick={logout}>
             Cerrar sesión
           </button>
         </div>
       </header>
-
-      <div className="admin-content">
+      <div className="admin-body">
         <Outlet />
       </div>
     </div>

@@ -1,13 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../features/auth/use-auth.js';
 import { useReservations } from '../../features/client-reservations/use-reservations.js';
 import { ReservationCard } from '../../features/client-reservations/components/reservation-card.jsx';
 import { VoucherTicket } from '../../features/client-reservations/components/voucher-ticket.jsx';
 import { isFutureReservation } from '../../shared/utils/date-helpers.js';
 
 export const MyReservationsPage = () => {
-  const { user } = useAuth();
   const {
     currentUser,
     reservations,
@@ -20,7 +17,7 @@ export const MyReservationsPage = () => {
     activeVoucher,
     setActiveVoucher,
     clearVoucher
-  } = useReservations(user);
+  } = useReservations();
 
   const [activeFilter, setActiveFilter] = useState('ALL');
   const [timeFilter, setTimeFilter] = useState('ALL'); // 'ALL', 'UPCOMING', 'PAST'
@@ -98,14 +95,14 @@ export const MyReservationsPage = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="reservation-shell">
       {/* Header */}
-      <header style={styles.header}>
-        <span style={styles.badge}>CLIENTE • DONDE RAY</span>
-        <h1 style={styles.title}>Mis Reservas</h1>
-        <p style={styles.subtitle}>
-          Historial y gestión de tus reservas exclusivas para el comensal{' '}
-          <strong style={{ color: '#ffd89b' }}>{currentUser?.name || currentUser?.guestName || currentUser?.id}</strong>
+      <header className="page-intro reservation-intro">
+        <span className="eyebrow">Mis Reservas · Donde Ray</span>
+        <h1>Tus mesas<br /><em>y experiencias.</em></h1>
+        <p className="lead">
+          Historial y gestión de tus reservas exclusivas registradas a nombre de{' '}
+          <strong style={{ color: 'var(--ink)' }}>{currentUser?.guestName || currentUser?.id}</strong>.
         </p>
       </header>
 
@@ -130,7 +127,7 @@ export const MyReservationsPage = () => {
               ...(timeFilter === 'UPCOMING' ? styles.pillBtnActive : {})
             }}
           >
-            ⏳ Próximas ({counts.upcoming})
+            Próximas ({counts.upcoming})
           </button>
           <button
             type="button"
@@ -140,7 +137,7 @@ export const MyReservationsPage = () => {
               ...(timeFilter === 'PAST' ? styles.pillBtnActive : {})
             }}
           >
-            📁 Historial / Pasadas
+            Historial
           </button>
         </div>
 
@@ -151,7 +148,7 @@ export const MyReservationsPage = () => {
             style={styles.exportBtn}
             title="Descargar listado en archivo Excel / CSV"
           >
-            📥 Exportar a CSV
+            Exportar CSV ↓
           </button>
         )}
       </div>
@@ -215,7 +212,7 @@ export const MyReservationsPage = () => {
             title="Recargar reservas"
             style={styles.refreshBtn}
           >
-            🔄
+            
           </button>
         </div>
       </div>
@@ -223,7 +220,7 @@ export const MyReservationsPage = () => {
       {/* Mensaje de Error */}
       {error && (
         <div style={styles.errorAlert} role="alert">
-          <span>⚠️ {error}</span>
+          <span> {error}</span>
           <button type="button" onClick={loadUserReservations} style={styles.retryBtn}>
             Reintentar
           </button>
@@ -239,7 +236,7 @@ export const MyReservationsPage = () => {
       ) : filteredReservations.length === 0 ? (
         /* Estado Vacío */
         <div style={styles.emptyCard}>
-          <div style={styles.emptyIcon}>🍽️</div>
+          <div style={styles.emptyIcon}></div>
           <h3 style={styles.emptyTitle}>No se encontraron reservas</h3>
           <p style={styles.emptyText}>
             {searchTerm
@@ -250,9 +247,9 @@ export const MyReservationsPage = () => {
               ? `No tienes reservas en estado "${activeFilter}".`
               : 'Aún no has registrado ninguna reserva en Donde Ray.'}
           </p>
-          <Link to="/reservar" style={styles.bookNowBtn}>
-            ✨ Crear Nueva Reserva
-          </Link>
+          <a href="#/reservar" style={styles.bookNowBtn}>
+             Crear Nueva Reserva
+          </a>
         </div>
       ) : (
         /* Lista de Tarjetas */
@@ -297,21 +294,21 @@ const styles = {
   },
   badge: {
     fontSize: '11px',
-    fontWeight: '700',
+    fontWeight: '800',
     letterSpacing: '2px',
-    color: '#b17a3c',
-    background: 'rgba(177, 122, 60, 0.1)',
+    color: '#b45309',
+    background: 'rgba(217, 119, 6, 0.12)',
     padding: '6px 14px',
     borderRadius: '20px',
-    border: '1px solid rgba(177, 122, 60, 0.25)',
+    border: '1px solid rgba(217, 119, 6, 0.3)',
     textTransform: 'uppercase'
   },
   title: {
     margin: 0,
     fontSize: 'clamp(32px, 4vw, 44px)',
-    fontFamily: 'Newsreader, Georgia, serif',
-    fontWeight: '500',
-    color: '#202820'
+    fontFamily: 'var(--font-display, "Fraunces", serif)',
+    fontWeight: '700',
+    color: '#1c271e'
   },
   subtitle: {
     margin: 0,
@@ -332,7 +329,9 @@ const styles = {
   },
   pillBtn: {
     background: '#ffffff',
-    border: '1px solid #d6d1c5',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: '#d6d1c5',
     borderRadius: '20px',
     padding: '8px 16px',
     fontSize: '12px',
@@ -343,11 +342,11 @@ const styles = {
     boxShadow: '0 2px 6px rgba(32, 40, 32, 0.03)'
   },
   pillBtnActive: {
-    background: '#304b3d',
-    borderColor: '#304b3d',
+    background: '#0f3d2e',
+    borderColor: '#0f3d2e',
     color: '#ffffff',
     fontWeight: '700',
-    boxShadow: '0 4px 12px rgba(48, 75, 61, 0.2)'
+    boxShadow: '0 4px 12px rgba(15, 61, 46, 0.25)'
   },
   exportBtn: {
     background: 'rgba(48, 75, 61, 0.08)',
@@ -475,9 +474,9 @@ const styles = {
   emptyTitle: {
     margin: 0,
     fontSize: '22px',
-    fontFamily: 'Newsreader, Georgia, serif',
-    color: '#202820',
-    fontWeight: '500'
+    fontFamily: 'var(--font-display, "Fraunces", serif)',
+    color: '#1c271e',
+    fontWeight: '700'
   },
   emptyText: {
     margin: 0,
@@ -487,14 +486,14 @@ const styles = {
   },
   bookNowBtn: {
     marginTop: '10px',
-    background: '#304b3d',
+    background: '#0f5132',
     color: '#f8f5ed',
     borderRadius: '10px',
     padding: '14px 28px',
     fontSize: '13px',
-    fontWeight: '600',
+    fontWeight: '700',
     textDecoration: 'none',
-    boxShadow: '0 4px 14px rgba(48, 75, 61, 0.25)'
+    boxShadow: '0 4px 14px rgba(15, 81, 50, 0.3)'
   },
   grid: {
     display: 'grid',

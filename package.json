@@ -4,12 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0 --port 3000",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-spring/web": "^10.1.2",
+    "canvg": "^4.0.3",
+    "framer-motion": "^13.2.0",
     "jspdf": "^2.5.1",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.8",
@@ -21,11 +24,14 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.1.0",
+    "autoprefixer": "^10.4.20",
     "eslint": "^10.9.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.4",
     "globals": "^17.11.0",
     "json-server": "^1.0.0-beta.15",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
     "vite": "^8.2.2"
   }
 }

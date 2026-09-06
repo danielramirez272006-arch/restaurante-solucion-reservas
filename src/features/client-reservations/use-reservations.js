@@ -25,7 +25,6 @@ const getActiveUser = () => {
         return {
           id: parsed.id || parsed.userId,
           guestName: parsed.name || parsed.guestName || '',
-          name: parsed.name || parsed.guestName || '',
           email: parsed.email || '',
           phone: parsed.phone || ''
         };
@@ -39,25 +38,13 @@ const getActiveUser = () => {
   return {
     id: 'u-client',
     guestName: 'Cliente Demo',
-    name: 'Cliente Demo',
     email: 'user@demo.com',
     phone: '+57 301 000 0000'
   };
 };
 
 export const useReservations = (customUser = null) => {
-  const currentUser = useMemo(() => {
-    if (customUser) {
-      return {
-        id: customUser.id || customUser.userId,
-        guestName: customUser.name || customUser.guestName || '',
-        name: customUser.name || customUser.guestName || '',
-        email: customUser.email || '',
-        phone: customUser.phone || ''
-      };
-    }
-    return getActiveUser();
-  }, [customUser]);
+  const currentUser = useMemo(() => customUser || getActiveUser(), [customUser]);
 
   const [reservations, setReservations] = useState([]);
   const [selectedDate, setSelectedDate] = useState(getTodayDateString());
