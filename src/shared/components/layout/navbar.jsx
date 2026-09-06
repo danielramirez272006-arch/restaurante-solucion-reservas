@@ -16,15 +16,11 @@ function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-[#0d1f17] border-b border-[#c8860a]/25 shadow-md">
-      {/* Pan-African Roots Accent Header Line */}
+      {/* Gold & Emerald Fine Dining Accent Line */}
       <div 
-        className="h-[3px] w-full flex" 
+        className="h-[2px] w-full bg-gradient-to-r from-[#15573f] via-[#c8860a] to-[#15573f]" 
         aria-hidden="true"
-      >
-        <div className="flex-1 bg-[#15573f]" />
-        <div className="flex-1 bg-[#c8860a]" />
-        <div className="flex-1 bg-[#7c2d12]" />
-      </div>
+      />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 h-20 flex items-center justify-between">
         {/* Brand Logo & Tagline */}
@@ -33,16 +29,19 @@ function Navbar() {
           onClick={closeMenu}
           className="flex items-center gap-3.5 group text-decoration-none"
         >
-          {/* Artisan Brand Mark */}
-          <span className="w-11 h-11 rounded-sm bg-[#152e22] border-2 border-[#c8860a] text-[#c8860a] font-display text-lg font-bold flex items-center justify-center shadow-sm group-hover:bg-[#c8860a] group-hover:text-[#0d1f17] transition-colors">
-            DR
-          </span>
+          {/* Official Artisan Brand Logo */}
+          <img 
+            src="/brand-logo.png" 
+            alt="Donde Ray Emblema"
+            className="w-12 h-12 rounded-full border-2 border-[#c8860a] object-cover shadow-md group-hover:border-[#fae4a8] transition-all"
+            style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }}
+          />
           <div className="flex flex-col">
             <span className="font-display text-xl sm:text-2xl font-bold text-[#f0e6cc] tracking-tight group-hover:text-[#c8860a] transition-colors">
               Donde Ray
             </span>
             <span className="font-label text-[10px] tracking-[0.2em] uppercase text-[#c8860a]/90 font-semibold">
-              Bar & Fogon · Puerto Viejo
+              Alta Cocina & Fogón de Autor
             </span>
           </div>
         </Link>
@@ -70,10 +69,10 @@ function Navbar() {
             Inicio
           </NavLink>
           <NavLink to="/menu" className="nav-link-cultural" onClick={closeMenu}>
-            Carta Caribeña
+            Menú de Autor
           </NavLink>
           <a href="/#nosotros" className="nav-link-cultural" onClick={closeMenu}>
-            Cultura Ray
+            Nuestra Casa
           </a>
 
           {isAuthenticated ? (
@@ -131,10 +130,10 @@ function Navbar() {
             Inicio
           </NavLink>
           <NavLink to="/menu" className="nav-link-cultural text-base" onClick={closeMenu}>
-            Carta Caribeña
+            Menú de Autor
           </NavLink>
           <a href="/#nosotros" className="nav-link-cultural text-base" onClick={closeMenu}>
-            Cultura Ray
+            Nuestra Casa
           </a>
 
           {isAuthenticated ? (

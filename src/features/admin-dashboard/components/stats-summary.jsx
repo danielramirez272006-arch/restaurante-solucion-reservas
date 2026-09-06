@@ -3,7 +3,7 @@ const cards = [
   ['confirmed', 'Confirmadas', 'confirmed', '02', 'Mesas listas para el servicio'],
   ['rejected', 'Rechazadas', 'rejected', '03', 'Canceladas o sin aforo'],
   ['today', 'Reservas de hoy', 'today', '04', 'Turnos de almuerzo y cena'],
-  ['clients', 'Clientes registrados', 'clients', '05', 'Base histórica de comensales']
+  ['clients', 'Clientes registrados', 'clients', '05', 'Base histórica de clientes']
 ];
 
 export default function StatsSummary({ stats, loading }) {

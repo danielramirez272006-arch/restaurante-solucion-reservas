@@ -94,7 +94,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
         ['Titular:', guestName || 'N/A'],
         ['Fecha:', formatDateToSpanish(date) || date],
         ['Horario:', formatTime12h(time) || time],
-        ['Comensales:', `${guests} ${guests === 1 ? 'persona' : 'personas'}`],
+        ['Personas:', `${guests} ${guests === 1 ? 'persona' : 'personas'}`],
         ['Ocasión:', type || 'General'],
         ['Teléfono:', phone || 'N/A'],
         ['Correo:', email || 'N/A'],
@@ -198,7 +198,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
           {/* Información Detallada */}
           <div style={styles.infoList}>
             <div style={styles.infoRow}>
-              <span style={styles.infoLabel}>Comensal:</span>
+              <span style={styles.infoLabel}>Titular:</span>
               <span style={styles.infoValue}>{guestName}</span>
             </div>
 
@@ -246,8 +246,8 @@ export const VoucherTicket = ({ reservation, onClose }) => {
         <div style={styles.policyNotice}>
            <strong>Importante:</strong> Tu reserva se encuentra en estado{' '}
           <strong style={{ color: '#ffd89b' }}>{status || 'Pendiente'}</strong>. El restaurante
-          gestiona un cupo estricto de máximo 20 comensales por franja para brindarte una atención
-          personalizada.
+          gestiona un cupo estricto de máximo 20 personas por turno para brindarte una atención
+          personalizada y tranquila.
         </div>
 
         {/* Botones de Acción */}

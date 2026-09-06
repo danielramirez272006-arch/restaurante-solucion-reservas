@@ -20,13 +20,13 @@ export default function DashboardPage() {
       {/* Encabezado Editorial de Cliente */}
       <header className="page-heading">
         <div>
-          <span className="eyebrow">Área del Comensal · Playa Chiquita</span>
+          <span className="eyebrow">Portal de Clientes · Puerto Viejo</span>
           <h1>
             Hola, {user?.name?.split(' ')[0] || 'Cliente'}.<br />
             <em>Tu mesa te espera.</em>
           </h1>
           <p className="lede">
-            Supervisa tus visitas a Donde Ray, accede a tus comprobantes con código QR y asegura tu lugar en nuestra mesa caribeña.
+            Supervisa tus visitas a Donde Ray, accede a tus comprobantes con código QR y asegura tu lugar en nuestra mesa de alta cocina.
           </p>
         </div>
         <div className="dashboard-actions">
@@ -89,7 +89,7 @@ export default function DashboardPage() {
               <div>
                 <strong className="next-visit-date">{formatDateToSpanish(nextReservation.date)}</strong>
                 <span className="next-visit-meta">
-                   {formatTime12h(nextReservation.time)} &nbsp;·&nbsp;  {nextReservation.guests} {nextReservation.guests === 1 ? 'comensal' : 'comensales'} &nbsp;·&nbsp;  {nextReservation.type || 'Cena'} &nbsp;·&nbsp;  Playa Chiquita
+                   {formatTime12h(nextReservation.time)} &nbsp;·&nbsp;  {nextReservation.guests} {nextReservation.guests === 1 ? 'persona' : 'personas'} &nbsp;·&nbsp;  {nextReservation.type || 'Cena'} &nbsp;·&nbsp;  Playa Chiquita
                 </span>
               </div>
               <span className={`status-pill ${String(nextReservation.status || nextReservation.estado || '').toLowerCase()}`}>
@@ -131,9 +131,9 @@ export default function DashboardPage() {
       <section className="client-shortcuts-strip">
         <article className="shortcut-card">
           <span className="card-number">01</span>
-          <h3>La Carta Caribeña</h3>
-          <p>Rondón de mariscos, pesca en mantequilla de coco y cacao orgánico de Talamanca.</p>
-          <Link className="text-link" to="/menu">Explorar carta <span>↗</span></Link>
+          <h3>Menú de Autor</h3>
+          <p>Rondón de mariscos al caldero, pesca fresca del día y cacao orgánico de Talamanca.</p>
+          <Link className="text-link" to="/menu">Ver menú <span>↗</span></Link>
         </article>
         <article className="shortcut-card">
           <span className="card-number">02</span>

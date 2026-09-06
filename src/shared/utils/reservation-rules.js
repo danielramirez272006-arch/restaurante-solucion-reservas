@@ -90,7 +90,7 @@ export const getSlotsAvailability = (dateReservations = [], timeSlots = [], requ
 
     let reason = null;
     if (isFull) {
-      reason = 'Franja completa (20/20 comensales)';
+      reason = 'Turno completo (20/20 personas)';
     } else if (!fitsInCapacity) {
       reason = `Solo quedan ${remainingCapacity} ${remainingCapacity === 1 ? 'cupo' : 'cupos'} disponibles`;
     }

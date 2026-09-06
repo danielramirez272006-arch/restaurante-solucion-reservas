@@ -14,7 +14,7 @@ export default function ManageClientsPage() {
       <header className="page-heading">
         <div>
           <span className="eyebrow">Donde Ray · Administración</span>
-          <h1>Directorio de <em>comensales.</em></h1>
+          <h1>Directorio de <em>clientes.</em></h1>
           <p className="lede">
             Consulta la base histórica de clientes, su frecuencia de visita y detalles de contacto.
           </p>

@@ -92,7 +92,7 @@ export default function DashboardPage() {
           <div className="capacity-summary-badge">
             <span>Ocupación global:</span>
             <strong>{occupancyPercentage}%</strong>
-            <small>({totalGuestsToday} de {totalMaxCapacityToday} comensales)</small>
+            <small>({totalGuestsToday} de {totalMaxCapacityToday} personas)</small>
           </div>
         </div>
 
@@ -122,7 +122,7 @@ export default function DashboardPage() {
                   />
                 </div>
                 <div className="slot-meta">
-                  <span>{booked} / {MAX_CAPACITY_PER_SLOT} comensales</span>
+                  <span>{booked} / {MAX_CAPACITY_PER_SLOT} personas</span>
                   <span>{percent}%</span>
                 </div>
               </div>
@@ -153,7 +153,7 @@ export default function DashboardPage() {
                 <div key={r.id} className="pending-item-card">
                   <div className="pending-item-info">
                     <div className="pending-item-header">
-                      <strong>{r.guestName || r.cliente || r.name || 'Comensal'}</strong>
+                      <strong>{r.guestName || r.cliente || r.name || 'Cliente'}</strong>
                       <span className="status-pill pendiente">Pendiente</span>
                     </div>
                     <div className="pending-item-meta">
@@ -209,7 +209,7 @@ export default function DashboardPage() {
           <div className="panel-heading">
             <div>
               <span className="eyebrow">Servicio del Día</span>
-              <h2>Comensales de hoy <em>({todayReservations.length})</em></h2>
+              <h2>Mesas de hoy <em>({todayReservations.length})</em></h2>
             </div>
             <Link className="text-link" to={`/admin/reservas?date=${todayStr}`}>
               Ver detalle <span>↗</span>

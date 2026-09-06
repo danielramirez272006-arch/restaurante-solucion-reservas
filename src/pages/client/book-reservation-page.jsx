@@ -79,8 +79,8 @@ export const BookReservationPage = () => {
       {/* Políticas destacadas editoriales */}
       <div className="reservation-policies-strip">
         <div className="reservation-policy-item">
-          <span className="reservation-policy-label">Aforo Garantizado</span>
-          <span className="reservation-policy-value">Máximo {MAX_CAPACITY_PER_SLOT} comensales por turno</span>
+          <span className="reservation-policy-label">Cupo Garantizado</span>
+          <span className="reservation-policy-value">Máximo {MAX_CAPACITY_PER_SLOT} personas por turno</span>
         </div>
         <div className="reservation-policy-item">
           <span className="reservation-policy-label">Estado Inicial</span>

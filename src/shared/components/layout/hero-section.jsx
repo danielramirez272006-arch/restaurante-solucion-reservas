@@ -96,7 +96,7 @@ export default function HeroSection() {
           </div>
 
           <span className="font-label text-xs tracking-[0.2em] text-[#c8860a] uppercase font-semibold mb-3">
-            Bar, Fogon & Raíces Afrocostarricenses
+            Alta Cocina Afrocaribeña & Fogón de Autor
           </span>
 
           {/* Headline with Smoke-Rise Rising Lettering */}
@@ -138,7 +138,7 @@ export default function HeroSection() {
             </div>
             <div>
               <strong className="block text-sm font-label font-bold text-[#e59c19] uppercase tracking-wider mb-1">
-                Aforo Reservado · 20 Comensales por Turno
+                Cupo Exclusivo · 20 Personas por Turno
               </strong>
               <p className="text-xs text-[#f0e6cc]/80 leading-normal m-0 font-body">
                 Para honrar el fuego lento y una atención fraterna, gestionamos cupos limitados. Te invitamos a apartar tu mesa con anticipación.
@@ -156,7 +156,7 @@ export default function HeroSection() {
               to="/menu"
               className="inline-flex items-center gap-2 text-sm font-label font-semibold tracking-wider text-[#f0e6cc] hover:text-[#c8860a] transition-colors py-3 px-4 border-b border-transparent hover:border-[#c8860a]"
             >
-              <span>Explorar la carta caribeña</span>
+              <span>Descubrir el menú de autor</span>
               <span aria-hidden="true">↗</span>
             </Link>
           </div>
@@ -176,7 +176,7 @@ export default function HeroSection() {
               <div className="overflow-hidden rounded relative aspect-[4/5]">
                 <img
                   src={heroImg}
-                  alt="Bar y restaurante caribeño Donde Ray en Puerto Viejo Limón"
+                  alt="Restaurante Fino Donde Ray en Puerto Viejo Limón"
                   className="w-full h-full object-cover brightness-95 hover:scale-105 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                 />
@@ -185,7 +185,7 @@ export default function HeroSection() {
 
               {/* Caption Tag */}
               <div className="mt-3 px-2 py-1.5 flex items-center justify-between text-xs font-label text-[#d8caa7]">
-                <span className="uppercase tracking-[0.16em]">Roots & Caribbean Vibes</span>
+                <span className="uppercase tracking-[0.16em]">Alta Cocina & Fogón de Autor</span>
                 <span className="text-[#c8860a] font-bold">Puerto Viejo · Limon</span>
               </div>
             </div>

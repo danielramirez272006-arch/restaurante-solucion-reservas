@@ -121,7 +121,7 @@ export const ChatbotConcierge = () => {
 
  setIsTyping(false);
  addBotMessage(
- ` Aforo en tiempo real para hoy (${today}):\n\n${lines.join('\n')}\n\nEl aforo máximo por franja horaria es de 20 comensales. ¿Deseas asegurar tu mesa para hoy?`,
+ ` Aforo en tiempo real para hoy (${today}):\n\n${lines.join('\n')}\n\nEl cupo máximo por turno es de 20 personas. ¿Deseas asegurar tu mesa para hoy?`,
  [
  { label: 'Asegurar Mi Mesa Hoy →', to: `/reservar?date=${today}` },
  { label: 'Elegir Otra Fecha', actionId: 'asistida' }
@@ -242,7 +242,7 @@ export const ChatbotConcierge = () => {
  } else {
  setBookingWizard({ active: true, guests: null, date: null, time: null });
  addBotMessage(
- '¡Genial! Vamos a preparar tu reserva paso a paso en segundos.\n\nPrimero: ¿Para cuántos comensales te gustaría la mesa?',
+ '¡Genial! Vamos a preparar tu reserva paso a paso en segundos.\n\nPrimero: ¿Para cuántas personas te gustaría la mesa?',
  [
  { label: ' 1 persona', wizardStep: 'guests', val: 1 },
  { label: ' 2 personas (Pareja)', wizardStep: 'guests', val: 2 },
@@ -326,7 +326,7 @@ export const ChatbotConcierge = () => {
  '• Turno Almuerzo: 12:00 a 15:00\n' +
  '• Turno Cena: 18:00 a 22:00\n\n' +
  ' Lunes y Martes: Cerrado por descanso de cocina y recolección de ingredientes frescos.\n' +
- ' Aforo: Máximo 20 comensales por turno para garantizar una atención íntima y relajada.',
+ ' Cupo: Máximo 20 personas por turno para garantizar una atención íntima y relajada.',
  [
  { label: ' Consultar Aforo de Hoy', actionId: 'aforo_vivo' },
  { label: ' Reservar Mi Turno →', to: '/reservar' }
@@ -440,7 +440,7 @@ export const ChatbotConcierge = () => {
  case 'wifi':
  addBotMessage(
  ' Conectividad y WiFi:\n\n' +
- 'Contamos con conexión WiFi satelital de alta velocidad (Starlink) gratuita para todos nuestros comensales, ideal para coordinar traslados o compartir tus fotos caribeñas.',
+ 'Contamos con conexión WiFi satelital de alta velocidad (Starlink) gratuita para todos nuestros clientes y visitas, ideal para coordinar traslados o compartir tu experiencia.',
  [
  { label: ' Reservar Mesa →', to: '/reservar' }
  ]
@@ -848,7 +848,7 @@ export const ChatbotConcierge = () => {
 
  addBotMessage(
  `¡Perfecto! Todo listo para tu reserva:\n\n` +
- `• Comensales: ${targetGuests} personas\n` +
+ `• Personas: ${targetGuests}\n` +
  `• Fecha: ${targetDate}\n` +
  `• Horario: ${targetTime}\n\n` +
  `Haz clic abajo para abrir el formulario con estos datos prellenados y confirmar:`,

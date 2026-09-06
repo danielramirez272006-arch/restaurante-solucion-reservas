@@ -109,7 +109,7 @@ export const BookingForm = ({
       <div className="reservation-panel-header">
         <span className="eyebrow" style={{ marginBottom: '8px' }}>Paso 2</span>
         <h3>Detalles de la Reserva</h3>
-        <p>Completa la información del comensal principal para asegurar tu mesa.</p>
+        <p>Completa la información de contacto para asegurar tu mesa frente al mar.</p>
       </div>
 
       {/* Resumen dinámico de selección */}
@@ -145,10 +145,10 @@ export const BookingForm = ({
         </div>
       )}
 
-      {/* Campo: Número de Comensales */}
+      {/* Campo: Número de Personas */}
       <div className="reservation-field-group">
         <label className="reservation-field-label">
-          Comensales (Aforo máximo {MAX_CAPACITY_PER_SLOT})
+          Personas (Cupo máximo: {MAX_CAPACITY_PER_SLOT})
         </label>
         <div className="guest-selector">
           <button
@@ -156,7 +156,7 @@ export const BookingForm = ({
             className="guest-step-btn"
             onClick={() => onGuestsChange(Math.max(1, guestsCount - 1))}
             disabled={guestsCount <= 1}
-            aria-label="Disminuir comensales"
+            aria-label="Disminuir personas"
           >
             −
           </button>
@@ -168,7 +168,7 @@ export const BookingForm = ({
             className="guest-step-btn"
             onClick={() => onGuestsChange(Math.min(MAX_CAPACITY_PER_SLOT, guestsCount + 1))}
             disabled={guestsCount >= MAX_CAPACITY_PER_SLOT}
-            aria-label="Aumentar comensales"
+            aria-label="Aumentar personas"
           >
             +
           </button>
@@ -244,7 +244,7 @@ export const BookingForm = ({
         <input
           id="guest-email-input"
           type="email"
-          placeholder="comensal@donderay.com"
+          placeholder="tu@correo.com"
           value={formData.email}
           onChange={(e) => handleChange('email', e.target.value)}
           onBlur={() => handleBlur('email')}

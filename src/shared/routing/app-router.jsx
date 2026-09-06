@@ -23,8 +23,13 @@ function AdminLayout() {
       <header className="admin-header">
         <div className="admin-header-left">
           <Link className="brand" to="/admin">
-            <span className="brand-mark" style={{ background: 'var(--green)', color: '#fff', border: '1px solid var(--gold)' }}>DR</span>
-            <span><strong style={{ color: '#f8f5ed' }}>Donde Ray</strong><small style={{ color: '#ffd685' }}>Gestión Caribeña · Limón</small></span>
+            <img 
+              src="/brand-logo.png" 
+              alt="Donde Ray Logo" 
+              className="w-10 h-10 rounded-full border border-[#c8860a] object-cover shadow-sm"
+              style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1.5px solid #c8860a', objectFit: 'cover' }}
+            />
+            <span><strong style={{ color: '#f8f5ed' }}>Donde Ray</strong><small style={{ color: '#ffd685' }}>Alta Cocina &amp; Fogón · Puerto Viejo</small></span>
           </Link>
           <nav className="admin-nav" aria-label="Navegación de administración">
             <NavLink to="/admin" end className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
@@ -36,8 +41,8 @@ function AdminLayout() {
             <NavLink to="/admin/clientes" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
               Clientes
             </NavLink>
-            <Link to="/" className="admin-nav-link" target="_blank" rel="noopener noreferrer">
-              ↗ Ver Sitio
+            <Link to="/" className="admin-nav-link">
+              ← Ver Sitio
             </Link>
           </nav>
         </div>

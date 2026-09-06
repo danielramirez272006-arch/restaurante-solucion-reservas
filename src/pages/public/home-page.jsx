@@ -127,7 +127,7 @@ export default function HomePage() {
               to="/menu"
               className="inline-flex items-center gap-2 text-sm font-label font-bold tracking-wider text-[#e59c19] hover:text-[#f0e6cc] transition-colors"
             >
-              <span>Ver carta caribeña completa</span>
+              <span>Ver menú de autor completo</span>
               <span aria-hidden="true">↗</span>
             </Link>
           </div>
@@ -224,7 +224,7 @@ export default function HomePage() {
                 </div>
                 <div className="pt-4 border-t border-[#c8860a]/20 flex items-center justify-between text-xs font-label text-[#f0e6cc]/70">
                   <span>Horneado al momento</span>
-                  <span className="text-[#c8860a] font-bold">Sabor Callejero</span>
+                  <span className="text-[#c8860a] font-bold">Boca de Autor</span>
                 </div>
               </div>
             </div>
@@ -299,7 +299,7 @@ export default function HomePage() {
                 to="/menu"
                 className="text-sm font-label uppercase tracking-wider text-[#f0e6cc] hover:text-[#c8860a] transition-colors py-2 px-3"
               >
-                Ver carta de bebidas ↗
+                Ver bodega & coctelería ↗
               </Link>
             </div>
           </div>
