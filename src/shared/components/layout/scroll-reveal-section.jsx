@@ -58,6 +58,7 @@ export default function ScrollRevealSection({
 }
 
 // Staggered child item variant to accompany sections
+// eslint-disable-next-line react-refresh/only-export-components
 export const scrollItemVariants = {
   hidden: {
     opacity: 0,
