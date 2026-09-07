@@ -153,7 +153,7 @@ export const getNextDays = (count = 7) => {
 
 /**
  * Genera la URL para agregar la reserva directamente a Google Calendar
- * @param {Object} reservation 
+ * @param {Object} reservation
  * @returns {string}
  */
 export const createGoogleCalendarUrl = (reservation) => {
@@ -176,7 +176,7 @@ export const createGoogleCalendarUrl = (reservation) => {
     `Notas: ${reservation.notes || 'Ninguna'}.\n` +
     `Estado: ${reservation.status || 'Pendiente'}.`
   );
-  const location = encodeURIComponent('Restaurante Donde Ray');
+  const location = encodeURIComponent('Restaurante Donde Ray, Playa Chiquita, Puerto Viejo de Talamanca, Limón, Costa Rica');
 
   const startIso = formatCalTime(startDate);
   const endIso = formatCalTime(endDate);

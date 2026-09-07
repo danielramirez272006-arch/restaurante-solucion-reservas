@@ -43,7 +43,7 @@ export default function LoginForm() {
       <button className="button button-accent" type="submit" disabled={loading}>{loading ? 'Verificando acceso...' : 'Iniciar sesión'}</button>
 
       <div className="demo-hint">
-        <span>⚡ <strong>Acceso rápido de prueba:</strong></span>
+        <span> <strong>Acceso rápido de prueba:</strong></span>
         <div className="demo-buttons-row">
           <button
             type="button"
@@ -51,7 +51,7 @@ export default function LoginForm() {
             onClick={() => handleDemoFill('user@demo.com', '1234')}
             disabled={loading}
           >
-            👤 Cliente Demo
+             Cliente Demo
           </button>
           <button
             type="button"
@@ -59,7 +59,7 @@ export default function LoginForm() {
             onClick={() => handleDemoFill('admin@demo.com', '1234')}
             disabled={loading}
           >
-            👑 Admin Demo
+             Admin Demo
           </button>
         </div>
       </div>

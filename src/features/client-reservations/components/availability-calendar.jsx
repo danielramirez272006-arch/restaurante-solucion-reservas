@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   getTodayDateString,
   getMaxReservationDateString,
@@ -8,6 +8,12 @@ import {
   getNextDays
 } from '../../../shared/utils/date-helpers.js';
 import { MAX_CAPACITY_PER_SLOT } from '../../../shared/utils/reservation-rules.js';
+
+const WEEKDAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+const MONTHS = [
+  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+];
 
 export const AvailabilityCalendar = ({
   selectedDate,
@@ -19,26 +25,132 @@ export const AvailabilityCalendar = ({
   limitCount = 0,
   isLoading = false
 }) => {
-  const minDate = useMemo(() => getTodayDateString(), []);
+  const today = useMemo(() => getTodayDateString(), []);
   const maxDate = useMemo(() => getMaxReservationDateString(60), []);
   const quickDays = useMemo(() => getNextDays(7), []);
 
-  return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <div style={styles.iconCircle}>📅</div>
-        <div>
-          <h3 style={styles.title}>Fecha y Horario</h3>
-          <p style={styles.subtitle}>
-            Consulta la disponibilidad en tiempo real para tu experiencia en "Donde Ray"
-          </p>
+  // Control del mes visible en el calendario interactivo
+  const [showFullCalendar, setShowFullCalendar] = useState(false);
+  const initialDate = selectedDate ? new Date(`${selectedDate}T12:00:00`) : new Date();
+  const [visibleMonth, setVisibleMonth] = useState(
+    new Date(initialDate.getFullYear(), initialDate.getMonth(), 1)
+  );
+
+  // Días del mes visible
+  const year = visibleMonth.getFullYear();
+  const month = visibleMonth.getMonth();
+  const firstDayIndex = (new Date(year, month, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const calendarDays = useMemo(() => {
+    const cells = [];
+    for (let i = 0; i < firstDayIndex; i++) {
+      cells.push(null);
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      cells.push({ dayNumber: d, dateStr });
+    }
+    return cells;
+  }, [year, month, firstDayIndex, daysInMonth]);
+
+  const canGoBack = `${year}-${String(month + 1).padStart(2, '0')}` > today.slice(0, 7);
+  const canGoForward = `${year}-${String(month + 1).padStart(2, '0')}` < maxDate.slice(0, 7);
+
+  // Separar franjas en Almuerzo y Cena
+  const lunchSlots = slotsAvailability.filter((s) => {
+    const hour = parseInt(s.time.split(':')[0], 10);
+    return hour < 17;
+  });
+
+  const dinnerSlots = slotsAvailability.filter((s) => {
+    const hour = parseInt(s.time.split(':')[0], 10);
+    return hour >= 17;
+  });
+
+  const handleSelectDay = (dateString) => {
+    if (dateString < today || dateString > maxDate) return;
+    onDateChange(dateString);
+  };
+
+  const renderSlotCard = (slot) => {
+    const isSelected = selectedTime === slot.time;
+    const isPast = isTimePassed(selectedDate, slot.time);
+    const isBlocked = !slot.isAvailable || isPast || limitReached;
+    const booked = slot.bookedGuests || 0;
+    const remaining = Math.max(0, MAX_CAPACITY_PER_SLOT - booked);
+    const occupancyPercent = Math.min(100, Math.round((booked / MAX_CAPACITY_PER_SLOT) * 100));
+
+    return (
+      <button
+        key={slot.time}
+        type="button"
+        onClick={() => !isBlocked && onTimeSelect(slot.time)}
+        disabled={isBlocked}
+        aria-pressed={isSelected}
+        className={`luxury-slot-card ${isSelected ? 'luxury-slot-card--selected' : ''} ${
+          isBlocked ? 'luxury-slot-card--disabled' : ''
+        }`}
+      >
+        <div className="luxury-slot-header">
+          <strong className="luxury-slot-time">{formatTime12h(slot.time)}</strong>
+          {isSelected && <span className="luxury-slot-check">✓</span>}
         </div>
+
+        <span className="luxury-slot-status">
+          {isPast
+            ? 'Servicio cerrado'
+            : isBlocked && !slot.isAvailable
+            ? 'Aforo completo'
+            : remaining <= 4
+            ? `Últimos ${remaining} lugares`
+            : `${remaining} lugares disponibles`}
+        </span>
+
+        <div className="luxury-slot-bar">
+          <div
+            className="luxury-slot-fill"
+            style={{
+              width: `${occupancyPercent}%`,
+              background: isSelected
+                ? '#e59c19'
+                : occupancyPercent >= 80
+                ? '#c8860a'
+                : '#1b533f'
+            }}
+          />
+        </div>
+      </button>
+    );
+  };
+
+  return (
+    <div className="luxury-calendar-card">
+      {/* Encabezado con estética de Restaurante Fino */}
+      <div className="luxury-panel-header">
+        <div className="luxury-panel-badge">
+          <span>Servicio Exclusivo</span>
+        </div>
+        <h3 className="luxury-panel-title">Fecha & Turno de Servicio</h3>
+        <p className="luxury-panel-subtitle">
+          Selecciona tu fecha de visita y el horario de servicio en nuestro salón o terraza.
+        </p>
       </div>
 
-      {/* Selector Rápido de Próximos 7 Días */}
-      <div style={styles.quickDaysSection}>
-        <span style={styles.quickDaysLabel}>Acceso rápido:</span>
-        <div style={styles.quickDaysRow}>
+      {/* Días Próximos - Selector Rápido */}
+      <div className="luxury-section-group">
+        <div className="luxury-group-label-row">
+          <span className="luxury-group-label">Acceso Rápido · Próximos Servicios</span>
+          <button
+            type="button"
+            className="luxury-toggle-cal-btn"
+            onClick={() => setShowFullCalendar(!showFullCalendar)}
+          >
+            {showFullCalendar ? 'Ocultar calendario anual ▴' : 'Ver calendario mensual ▾'}
+          </button>
+        </div>
+
+        <div className="luxury-quick-strip">
           {quickDays.map((day) => {
             const isDaySelected = selectedDate === day.dateString;
             return (
@@ -46,436 +158,153 @@ export const AvailabilityCalendar = ({
                 key={day.dateString}
                 type="button"
                 onClick={() => onDateChange(day.dateString)}
-                style={{
-                  ...styles.quickDayBtn,
-                  ...(isDaySelected ? styles.quickDayBtnActive : {})
-                }}
+                className={`luxury-quick-chip ${isDaySelected ? 'luxury-quick-chip--active' : ''}`}
               >
-                <span style={styles.quickDayText}>{day.label}</span>
-                <span style={styles.quickDaySub}>
-                  {day.weekday ? day.weekday.slice(0, 3) : ''}
-                </span>
+                <span className="luxury-quick-chip__sub">{day.weekday.slice(0, 3)}</span>
+                <span className="luxury-quick-chip__val">{day.label}</span>
+                {day.dateString === today && (
+                  <span className="luxury-quick-chip__today-dot" title="Hoy" />
+                )}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Selector de fecha con input date nativo para cualquier otra fecha */}
-      <div style={styles.dateSelectorGroup}>
-        <label htmlFor="reservation-date-input" style={styles.label}>
-          O elige otra fecha en el calendario:
-        </label>
-        <div style={styles.dateInputWrapper}>
-          <input
-            id="reservation-date-input"
-            type="date"
-            value={selectedDate}
-            min={minDate}
-            max={maxDate}
-            onChange={(e) => onDateChange(e.target.value)}
-            style={styles.dateInput}
-          />
-          <span style={styles.dateBadge}>
-            {formatDateToSpanish(selectedDate) || 'Selecciona un día'}
-          </span>
-        </div>
-      </div>
-
-      {/* Alerta de Límite de 5 Reservas por Usuario (Regla 2) */}
-      {limitReached && (
-        <div style={styles.warningAlert} role="alert">
-          <span style={styles.alertIcon}>⚠️</span>
-          <div>
-            <strong>Límite por usuario alcanzado</strong>
-            <p style={styles.alertText}>
-              Ya registraste {limitCount} reservas para esta fecha. Según la política del restaurante,
-              no puedes registrar más de 5 reservas por día. Por favor elige otra fecha.
-            </p>
+      {/* Calendario Mensual Completo (Colapsable o Desplegado) */}
+      {showFullCalendar && (
+        <div className="luxury-month-picker">
+          <div className="luxury-month-nav">
+            <button
+              type="button"
+              disabled={!canGoBack}
+              onClick={() => setVisibleMonth(new Date(year, month - 1, 1))}
+              className="luxury-month-arrow"
+              aria-label="Mes anterior"
+            >
+              ←
+            </button>
+            <strong className="luxury-month-title">
+              {MONTHS[month]} {year}
+            </strong>
+            <button
+              type="button"
+              disabled={!canGoForward}
+              onClick={() => setVisibleMonth(new Date(year, month + 1, 1))}
+              className="luxury-month-arrow"
+              aria-label="Mes siguiente"
+            >
+              →
+            </button>
           </div>
-        </div>
-      )}
 
-      {/* Franjas horarias con barras de progreso de capacidad (Regla 1 y Regla 4) */}
-      <div style={styles.slotsSection}>
-        <div style={styles.slotsHeader}>
-          <span style={styles.slotsLabel}>Horarios disponibles:</span>
-          <span style={styles.capacityLegend}>
-            Capacidad máx: {MAX_CAPACITY_PER_SLOT} comensales por turno
-          </span>
-        </div>
-
-        {isLoading ? (
-          <div style={styles.loadingBox}>
-            <div style={styles.spinner} />
-            <span>Verificando disponibilidad de mesas...</span>
+          <div className="luxury-weekdays-row">
+            {WEEKDAYS.map((w) => (
+              <span key={w} className="luxury-weekday">
+                {w}
+              </span>
+            ))}
           </div>
-        ) : (
-          <div style={styles.slotsGrid}>
-            {slotsAvailability.map((slot) => {
-              const isSelected = selectedTime === slot.time;
-              const isPast = isTimePassed(selectedDate, slot.time);
-              const isBlocked = !slot.isAvailable || isPast || limitReached;
 
-              const occupancyPercent = Math.min(
-                100,
-                Math.round((slot.bookedGuests / MAX_CAPACITY_PER_SLOT) * 100)
-              );
-
-              let buttonStyle = { ...styles.slotButton };
-              let tagStyle = { ...styles.slotBadge };
-
-              if (isSelected) {
-                buttonStyle = { ...buttonStyle, ...styles.slotButtonSelected };
-              } else if (isBlocked) {
-                buttonStyle = { ...buttonStyle, ...styles.slotButtonDisabled };
+          <div className="luxury-days-grid">
+            {calendarDays.map((cell, idx) => {
+              if (!cell) {
+                return <span key={`empty-${idx}`} className="luxury-day-empty" />;
               }
 
-              // Color de la barra de ocupación
-              let progressColor = '#10b981'; // verde
-              if (occupancyPercent >= 90) progressColor = '#ef4444'; // rojo
-              else if (occupancyPercent >= 60) progressColor = '#f59e0b'; // ámbar
-
-              const isLowAvailability =
-                slot.remainingCapacity > 0 &&
-                slot.remainingCapacity <= 4 &&
-                !isPast &&
-                !isBlocked;
+              const isSelected = selectedDate === cell.dateStr;
+              const isToday = cell.dateStr === today;
+              const isDisabled = cell.dateStr < today || cell.dateStr > maxDate;
 
               return (
                 <button
-                  key={slot.time}
+                  key={cell.dateStr}
                   type="button"
-                  onClick={() => !isBlocked && onTimeSelect(slot.time)}
-                  disabled={isBlocked}
-                  aria-pressed={isSelected}
-                  title={
-                    isPast
-                      ? 'Este horario ya ha transcurrido'
-                      : slot.reason || `${slot.remainingCapacity} cupos disponibles de ${MAX_CAPACITY_PER_SLOT}`
-                  }
-                  style={buttonStyle}
+                  disabled={isDisabled}
+                  onClick={() => handleSelectDay(cell.dateStr)}
+                  className={`luxury-day-btn ${isSelected ? 'luxury-day-btn--selected' : ''} ${
+                    isToday ? 'luxury-day-btn--today' : ''
+                  }`}
                 >
-                  <div style={styles.slotTime}>{formatTime12h(slot.time)}</div>
-
-                  {/* Barra de Progreso de Ocupación Visual */}
-                  {!isPast && (
-                    <div style={styles.progressBarContainer}>
-                      <div
-                        style={{
-                          ...styles.progressBarFill,
-                          width: `${occupancyPercent}%`,
-                          backgroundColor: progressColor
-                        }}
-                      />
-                    </div>
-                  )}
-
-                  <div style={styles.slotMeta}>
-                    {isPast ? (
-                      <span style={{ ...tagStyle, ...styles.badgePast }}>Horario pasado</span>
-                    ) : slot.remainingCapacity <= 0 ? (
-                      <span style={{ ...tagStyle, ...styles.badgeFull }}>Agotado (20/20)</span>
-                    ) : isLowAvailability ? (
-                      <span style={{ ...tagStyle, ...styles.badgeUrgent }}>
-                        ¡Solo {slot.remainingCapacity} {slot.remainingCapacity === 1 ? 'cupo' : 'cupos'}!
-                      </span>
-                    ) : !slot.isAvailable ? (
-                      <span style={{ ...tagStyle, ...styles.badgeNoFit }}>
-                        Solo {slot.remainingCapacity} libres
-                      </span>
-                    ) : (
-                      <span style={{ ...tagStyle, ...styles.badgeAvailable }}>
-                        {slot.remainingCapacity} disponibles
-                      </span>
-                    )}
-                  </div>
+                  <span>{cell.dayNumber}</span>
+                  {isToday && <small className="luxury-day-badge">Hoy</small>}
                 </button>
               );
             })}
           </div>
+        </div>
+      )}
+
+      {/* Banner de Fecha Elegida */}
+      <div className="luxury-selected-banner">
+        <div className="luxury-selected-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+        </div>
+        <div className="luxury-selected-info">
+          <span className="luxury-selected-label">Mesa para el día:</span>
+          <strong className="luxury-selected-date">
+            {formatDateToSpanish(selectedDate) || 'Selecciona una fecha'}
+          </strong>
+        </div>
+        <span className="luxury-selected-venue">Salón de Alta Cocina</span>
+      </div>
+
+      {/* Alerta de Límite Diario */}
+      {limitReached && (
+        <div className="luxury-alert-warning" role="alert">
+          <strong>Límite Diario de Reservas Alcanzado</strong>
+          <p>
+            Ya registraste {limitCount} reservas para esta fecha. Para garantizar disponibilidad para todas las personas, por favor selecciona otra fecha.
+          </p>
+        </div>
+      )}
+
+      {/* Turnos de Servicio */}
+      <div className="luxury-slots-section">
+        {isLoading ? (
+          <div className="luxury-loading-box">
+            <div className="luxury-spinner" />
+            <span>Consultando disponibilidad en cocina...</span>
+          </div>
+        ) : (
+          <>
+            {/* Almuerzo */}
+            {lunchSlots.length > 0 && (
+              <div className="luxury-service-group">
+                <div className="luxury-service-title">
+                  <span className="luxury-service-dot" />
+                  <strong>Servicio de Almuerzo & Mediodía</strong>
+                  <small>12:00 PM — 03:00 PM</small>
+                </div>
+                <div className="luxury-slots-grid">
+                  {lunchSlots.map(renderSlotCard)}
+                </div>
+              </div>
+            )}
+
+            {/* Cena */}
+            {dinnerSlots.length > 0 && (
+              <div className="luxury-service-group">
+                <div className="luxury-service-title">
+                  <span className="luxury-service-dot luxury-service-dot--evening" />
+                  <strong>Servicio de Cena & Fogón Nocturno</strong>
+                  <small>06:00 PM — 10:00 PM</small>
+                </div>
+                <div className="luxury-slots-grid">
+                  {dinnerSlots.map(renderSlotCard)}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
   );
 };
 
-const styles = {
-  container: {
-    background: '#ffffff',
-    border: '1px solid #d6d1c5',
-    borderRadius: '16px',
-    padding: '28px',
-    boxShadow: '0 10px 30px rgba(32, 40, 32, 0.05)',
-    color: '#202820',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '24px'
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '14px',
-    borderBottom: '1px solid #e8e4db',
-    paddingBottom: '16px'
-  },
-  iconCircle: {
-    fontSize: '22px',
-    background: 'rgba(48, 75, 61, 0.08)',
-    color: '#304b3d',
-    width: '46px',
-    height: '46px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '12px',
-    border: '1px solid rgba(48, 75, 61, 0.18)'
-  },
-  title: {
-    margin: 0,
-    fontSize: '22px',
-    fontWeight: '500',
-    fontFamily: 'Newsreader, Georgia, serif',
-    color: '#202820'
-  },
-  subtitle: {
-    margin: '3px 0 0',
-    fontSize: '13px',
-    color: '#73786f'
-  },
-  quickDaysSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px'
-  },
-  quickDaysLabel: {
-    fontSize: '11px',
-    fontWeight: '600',
-    color: '#73786f',
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em'
-  },
-  quickDaysRow: {
-    display: 'flex',
-    gap: '8px',
-    overflowX: 'auto',
-    paddingBottom: '6px'
-  },
-  quickDayBtn: {
-    flex: '0 0 auto',
-    background: '#f4f1e9',
-    border: '1px solid #d6d1c5',
-    borderRadius: '10px',
-    padding: '10px 14px',
-    color: '#202820',
-    cursor: 'pointer',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '2px',
-    transition: 'all 0.2s ease',
-    minWidth: '76px'
-  },
-  quickDayBtnActive: {
-    background: '#304b3d',
-    borderColor: '#304b3d',
-    color: '#ffffff',
-    boxShadow: '0 4px 12px rgba(48, 75, 61, 0.25)'
-  },
-  quickDayText: {
-    fontSize: '13px',
-    fontWeight: '700'
-  },
-  quickDaySub: {
-    fontSize: '10px',
-    textTransform: 'capitalize',
-    opacity: 0.8
-  },
-  dateSelectorGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px'
-  },
-  label: {
-    fontSize: '12px',
-    fontWeight: '600',
-    color: '#73786f',
-    textTransform: 'uppercase',
-    letterSpacing: '0.04em'
-  },
-  dateInputWrapper: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: '12px'
-  },
-  dateInput: {
-    background: '#ffffff',
-    border: '1px solid #d6d1c5',
-    borderRadius: '8px',
-    color: '#202820',
-    padding: '10px 14px',
-    fontSize: '13px',
-    outline: 'none',
-    cursor: 'pointer'
-  },
-  dateBadge: {
-    fontSize: '13px',
-    color: '#b17a3c',
-    background: 'rgba(177, 122, 60, 0.08)',
-    padding: '8px 14px',
-    borderRadius: '8px',
-    border: '1px solid rgba(177, 122, 60, 0.25)',
-    fontWeight: '500',
-    textTransform: 'capitalize'
-  },
-  warningAlert: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    gap: '12px',
-    background: '#fef2f2',
-    border: '1px solid #fca5a5',
-    padding: '14px 18px',
-    borderRadius: '10px',
-    color: '#991b1b'
-  },
-  alertIcon: {
-    fontSize: '20px'
-  },
-  alertText: {
-    margin: '4px 0 0',
-    fontSize: '13px',
-    lineHeight: '1.4'
-  },
-  slotsSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px'
-  },
-  slotsHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: '8px'
-  },
-  slotsLabel: {
-    fontSize: '12px',
-    fontWeight: '600',
-    color: '#202820',
-    textTransform: 'uppercase',
-    letterSpacing: '0.06em'
-  },
-  capacityLegend: {
-    fontSize: '12px',
-    color: '#73786f'
-  },
-  loadingBox: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '10px',
-    padding: '24px',
-    background: '#f4f1e9',
-    borderRadius: '10px',
-    fontSize: '13px',
-    color: '#73786f'
-  },
-  spinner: {
-    width: '18px',
-    height: '18px',
-    border: '2px solid rgba(48, 75, 61, 0.2)',
-    borderTop: '2px solid #304b3d',
-    borderRadius: '50%',
-    animation: 'spin 0.8s linear infinite'
-  },
-  slotsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
-    gap: '12px'
-  },
-  slotButton: {
-    background: '#faf9f6',
-    border: '1px solid #d6d1c5',
-    borderRadius: '12px',
-    padding: '14px 10px',
-    cursor: 'pointer',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '6px',
-    transition: 'all 0.2s ease',
-    outline: 'none',
-    position: 'relative',
-    color: '#202820'
-  },
-  slotButtonSelected: {
-    background: '#304b3d',
-    borderColor: '#304b3d',
-    boxShadow: '0 6px 18px rgba(48, 75, 61, 0.28)',
-    transform: 'translateY(-2px)',
-    color: '#ffffff'
-  },
-  slotButtonDisabled: {
-    opacity: 0.6,
-    cursor: 'not-allowed',
-    background: '#f0ece3',
-    borderColor: '#e2ded5',
-    color: '#8c9187'
-  },
-  slotTime: {
-    fontSize: '15px',
-    fontWeight: '700',
-    color: 'inherit'
-  },
-  progressBarContainer: {
-    width: '80%',
-    height: '4px',
-    backgroundColor: 'rgba(0, 0, 0, 0.08)',
-    borderRadius: '2px',
-    overflow: 'hidden',
-    margin: '2px 0'
-  },
-  progressBarFill: {
-    height: '100%',
-    transition: 'width 0.3s ease, background-color 0.3s ease'
-  },
-  slotMeta: {
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  slotBadge: {
-    fontSize: '10px',
-    fontWeight: '600',
-    padding: '3px 8px',
-    borderRadius: '6px',
-    textTransform: 'uppercase',
-    letterSpacing: '0.3px'
-  },
-  badgeAvailable: {
-    background: 'rgba(48, 75, 61, 0.1)',
-    color: '#26543d',
-    border: '1px solid rgba(48, 75, 61, 0.25)'
-  },
-  badgeFull: {
-    background: '#fee2e2',
-    color: '#b91c1c',
-    border: '1px solid #fca5a5'
-  },
-  badgeNoFit: {
-    background: '#fef3c7',
-    color: '#b45309',
-    border: '1px solid #fcd34d'
-  },
-  badgeUrgent: {
-    background: '#fffbeb',
-    color: '#b17a3c',
-    border: '1px solid #b17a3c',
-    fontWeight: '700'
-  },
-  badgePast: {
-    background: '#e5e7eb',
-    color: '#6b7280',
-    border: '1px solid #d1d5db'
-  }
-};
+export default AvailabilityCalendar;

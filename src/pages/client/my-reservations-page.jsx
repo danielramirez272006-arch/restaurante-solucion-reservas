@@ -84,25 +84,27 @@ export const MyReservationsPage = () => {
       `"${(r.notes || '').replace(/"/g, '""')}"`
     ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const encodedUri = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
     link.setAttribute('download', `mis-reservas-donde-ray-${currentUser?.id || 'cliente'}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(encodedUri);
   };
 
   return (
-    <div style={styles.container}>
+    <div className="reservation-shell">
       {/* Header */}
-      <header style={styles.header}>
-        <span style={styles.badge}>CLIENTE • DONDE RAY</span>
-        <h1 style={styles.title}>Mis Reservas</h1>
-        <p style={styles.subtitle}>
-          Historial y gestión de tus reservas exclusivas para el comensal{' '}
-          <strong style={{ color: '#ffd89b' }}>{currentUser?.guestName || currentUser?.id}</strong>
+      <header className="page-intro reservation-intro">
+        <span className="eyebrow">Mis Reservas · Donde Ray</span>
+        <h1>Tus mesas<br /><em>y experiencias.</em></h1>
+        <p className="lead">
+          Historial y gestión de tus reservas exclusivas registradas a nombre de{' '}
+          <strong style={{ color: '#fae4a8' }}>{currentUser?.guestName || currentUser?.id}</strong>.
         </p>
       </header>
 
@@ -127,7 +129,7 @@ export const MyReservationsPage = () => {
               ...(timeFilter === 'UPCOMING' ? styles.pillBtnActive : {})
             }}
           >
-            ⏳ Próximas ({counts.upcoming})
+            Próximas ({counts.upcoming})
           </button>
           <button
             type="button"
@@ -137,7 +139,7 @@ export const MyReservationsPage = () => {
               ...(timeFilter === 'PAST' ? styles.pillBtnActive : {})
             }}
           >
-            📁 Historial / Pasadas
+            Historial
           </button>
         </div>
 
@@ -148,7 +150,7 @@ export const MyReservationsPage = () => {
             style={styles.exportBtn}
             title="Descargar listado en archivo Excel / CSV"
           >
-            📥 Exportar a CSV
+            Exportar CSV ↓
           </button>
         )}
       </div>
@@ -211,8 +213,9 @@ export const MyReservationsPage = () => {
             onClick={loadUserReservations}
             title="Recargar reservas"
             style={styles.refreshBtn}
+            aria-label="Recargar lista"
           >
-            🔄
+            ↻
           </button>
         </div>
       </div>
@@ -220,7 +223,7 @@ export const MyReservationsPage = () => {
       {/* Mensaje de Error */}
       {error && (
         <div style={styles.errorAlert} role="alert">
-          <span>⚠️ {error}</span>
+          <span>{error}</span>
           <button type="button" onClick={loadUserReservations} style={styles.retryBtn}>
             Reintentar
           </button>
@@ -236,19 +239,19 @@ export const MyReservationsPage = () => {
       ) : filteredReservations.length === 0 ? (
         /* Estado Vacío */
         <div style={styles.emptyCard}>
-          <div style={styles.emptyIcon}>🍽️</div>
+          <div style={styles.emptyIcon}>✦</div>
           <h3 style={styles.emptyTitle}>No se encontraron reservas</h3>
           <p style={styles.emptyText}>
             {searchTerm
               ? 'No hay reservas que coincidan con tu búsqueda.'
               : timeFilter === 'UPCOMING'
-              ? 'No tienes reservas próximas por el momento.'
-              : activeFilter !== 'ALL'
-              ? `No tienes reservas en estado "${activeFilter}".`
-              : 'Aún no has registrado ninguna reserva en Donde Ray.'}
+                ? 'No tienes reservas próximas por el momento.'
+                : activeFilter !== 'ALL'
+                  ? `No tienes reservas en estado "${activeFilter}".`
+                  : 'Aún no has registrado ninguna reserva en Donde Ray.'}
           </p>
           <a href="#/reservar" style={styles.bookNowBtn}>
-            ✨ Crear Nueva Reserva
+            Crear Nueva Reserva →
           </a>
         </div>
       ) : (
@@ -280,7 +283,7 @@ const styles = {
     maxWidth: '1200px',
     margin: '0 auto',
     padding: '40px 20px 80px',
-    color: '#202820',
+    color: '#f0e6cc',
     display: 'flex',
     flexDirection: 'column',
     gap: '24px'
@@ -294,33 +297,34 @@ const styles = {
   },
   badge: {
     fontSize: '11px',
-    fontWeight: '700',
+    fontWeight: '800',
     letterSpacing: '2px',
-    color: '#b17a3c',
-    background: 'rgba(177, 122, 60, 0.1)',
+    color: '#fae4a8',
+    background: 'rgba(200, 134, 10, 0.15)',
     padding: '6px 14px',
     borderRadius: '20px',
-    border: '1px solid rgba(177, 122, 60, 0.25)',
+    border: '1px solid rgba(200, 134, 10, 0.35)',
     textTransform: 'uppercase'
   },
   title: {
     margin: 0,
     fontSize: 'clamp(32px, 4vw, 44px)',
-    fontFamily: 'Newsreader, Georgia, serif',
-    fontWeight: '500',
-    color: '#202820'
+    fontFamily: 'var(--font-display, "Fraunces", serif)',
+    fontWeight: '700',
+    color: '#f0e6cc'
   },
   subtitle: {
     margin: 0,
     fontSize: '15px',
-    color: '#73786f'
+    color: 'rgba(240, 230, 204, 0.75)'
   },
   subBar: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: '12px'
+    gap: '12px',
+    marginBottom: '8px'
   },
   timeFilterGroup: {
     display: 'flex',
@@ -328,32 +332,34 @@ const styles = {
     flexWrap: 'wrap'
   },
   pillBtn: {
-    background: '#ffffff',
-    border: '1px solid #d6d1c5',
+    background: 'rgba(17, 38, 29, 0.75)',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'rgba(200, 134, 10, 0.28)',
     borderRadius: '20px',
-    padding: '8px 16px',
-    fontSize: '12px',
+    padding: '8px 18px',
+    fontSize: '13px',
     fontWeight: '500',
-    color: '#202820',
+    color: 'rgba(240, 230, 204, 0.85)',
     cursor: 'pointer',
     transition: 'all 0.2s',
-    boxShadow: '0 2px 6px rgba(32, 40, 32, 0.03)'
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)'
   },
   pillBtnActive: {
-    background: '#304b3d',
-    borderColor: '#304b3d',
-    color: '#ffffff',
+    background: 'linear-gradient(135deg, #c8860a 0%, #a66a04 100%)',
+    borderColor: '#fae4a8',
+    color: '#0d1f17',
     fontWeight: '700',
-    boxShadow: '0 4px 12px rgba(48, 75, 61, 0.2)'
+    boxShadow: '0 4px 14px rgba(200, 134, 10, 0.35)'
   },
   exportBtn: {
-    background: 'rgba(48, 75, 61, 0.08)',
-    border: '1px solid rgba(48, 75, 61, 0.25)',
-    borderRadius: '8px',
-    padding: '8px 16px',
-    fontSize: '12px',
+    background: 'rgba(200, 134, 10, 0.12)',
+    border: '1px solid rgba(200, 134, 10, 0.35)',
+    borderRadius: '20px',
+    padding: '8px 18px',
+    fontSize: '13px',
     fontWeight: '600',
-    color: '#304b3d',
+    color: '#fae4a8',
     cursor: 'pointer',
     transition: 'all 0.2s'
   },
@@ -363,11 +369,11 @@ const styles = {
     alignItems: 'center',
     flexWrap: 'wrap',
     gap: '16px',
-    background: '#ffffff',
-    border: '1px solid #d6d1c5',
+    background: '#11261d',
+    border: '1px solid rgba(200, 134, 10, 0.3)',
     borderRadius: '14px',
     padding: '14px 18px',
-    boxShadow: '0 4px 16px rgba(32, 40, 32, 0.04)'
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35)'
   },
   tabsRow: {
     display: 'flex',
@@ -376,8 +382,8 @@ const styles = {
   },
   tabBtn: {
     background: 'transparent',
-    border: 'none',
-    color: '#73786f',
+    border: '1px solid transparent',
+    color: 'rgba(240, 230, 204, 0.7)',
     borderRadius: '8px',
     padding: '8px 14px',
     fontSize: '13px',
@@ -386,9 +392,9 @@ const styles = {
     transition: 'all 0.2s'
   },
   tabBtnActive: {
-    background: '#f4f1e9',
-    color: '#202820',
-    border: '1px solid #d6d1c5',
+    background: 'rgba(200, 134, 10, 0.18)',
+    color: '#fae4a8',
+    border: '1px solid rgba(200, 134, 10, 0.45)',
     fontWeight: '700'
   },
   searchWrapper: {
@@ -396,33 +402,39 @@ const styles = {
     alignItems: 'center',
     gap: '8px',
     flex: '1 1 260px',
-    maxWidth: '360px'
+    maxWidth: '380px'
   },
   searchInput: {
     flex: 1,
-    background: '#f4f1e9',
-    border: '1px solid #d6d1c5',
+    background: '#0d1e16',
+    border: '1px solid rgba(200, 134, 10, 0.3)',
     borderRadius: '8px',
-    color: '#202820',
+    color: '#f0e6cc',
     padding: '10px 14px',
     fontSize: '13px',
-    outline: 'none'
+    outline: 'none',
+    boxSizing: 'border-box'
   },
   refreshBtn: {
-    background: '#f4f1e9',
-    border: '1px solid #d6d1c5',
+    background: 'rgba(200, 134, 10, 0.15)',
+    border: '1px solid rgba(200, 134, 10, 0.35)',
     borderRadius: '8px',
-    color: '#202820',
+    color: '#fae4a8',
     padding: '9px 12px',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    fontSize: '14px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s'
   },
   errorAlert: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    background: '#fef2f2',
-    border: '1px solid #fca5a5',
-    color: '#991b1b',
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+    color: '#fca5a5',
     padding: '12px 16px',
     borderRadius: '10px',
     fontSize: '13px'
@@ -432,7 +444,7 @@ const styles = {
     border: 'none',
     color: '#ffffff',
     borderRadius: '6px',
-    padding: '4px 10px',
+    padding: '6px 12px',
     fontSize: '12px',
     cursor: 'pointer'
   },
@@ -443,59 +455,59 @@ const styles = {
     justifyContent: 'center',
     gap: '12px',
     padding: '60px 20px',
-    color: '#73786f'
+    color: 'rgba(240, 230, 204, 0.75)'
   },
   spinner: {
     width: '32px',
     height: '32px',
-    border: '3px solid rgba(48, 75, 61, 0.2)',
-    borderTop: '3px solid #304b3d',
+    border: '3px solid rgba(200, 134, 10, 0.2)',
+    borderTop: '3px solid #c8860a',
     borderRadius: '50%',
     animation: 'spin 0.8s linear infinite'
   },
   emptyCard: {
-    background: '#ffffff',
-    border: '1px dashed #d6d1c5',
-    borderRadius: '20px',
+    background: '#11261d',
+    border: '1px dashed rgba(200, 134, 10, 0.35)',
+    borderRadius: '16px',
     padding: '60px 20px',
     textAlign: 'center',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     gap: '12px',
-    boxShadow: '0 6px 20px rgba(32, 40, 32, 0.03)'
+    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)'
   },
   emptyIcon: {
     fontSize: '48px',
-    opacity: 0.8
+    opacity: 0.9
   },
   emptyTitle: {
     margin: 0,
     fontSize: '22px',
-    fontFamily: 'Newsreader, Georgia, serif',
-    color: '#202820',
-    fontWeight: '500'
+    fontFamily: 'var(--font-display, "Fraunces", serif)',
+    color: '#fae4a8',
+    fontWeight: '700'
   },
   emptyText: {
     margin: 0,
     fontSize: '14px',
-    color: '#73786f',
+    color: 'rgba(240, 230, 204, 0.75)',
     maxWidth: '400px'
   },
   bookNowBtn: {
     marginTop: '10px',
-    background: '#304b3d',
-    color: '#f8f5ed',
-    borderRadius: '10px',
-    padding: '14px 28px',
+    background: 'linear-gradient(135deg, #c8860a 0%, #a66a04 100%)',
+    color: '#0d1f17',
+    borderRadius: '8px',
+    padding: '12px 24px',
     fontSize: '13px',
-    fontWeight: '600',
+    fontWeight: '700',
     textDecoration: 'none',
-    boxShadow: '0 4px 14px rgba(48, 75, 61, 0.25)'
+    boxShadow: '0 4px 14px rgba(200, 134, 10, 0.35)'
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
     gap: '24px'
   }
 };
