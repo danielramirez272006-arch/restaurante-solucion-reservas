@@ -6,6 +6,7 @@ import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg.png';
 import cevicheImg from '../../assets/images/public/ceviche-coco.png';
 import barImg from '../../assets/images/bar_caribeno_noche_1788651853426.png';
 import heroImg from '../../assets/images/caribbean_hero_bar_1788651748042..png';
+import panBonImg from '../../assets/limon-community.png';
 
 const CATEGORIES = [
   { id: 'all', label: 'Toda la Carta' },
@@ -95,7 +96,7 @@ const MENU_ITEMS = [
     tag: 'Postre de la Casa',
     price: '₡6.800',
     badge: 'Dulce Tradición',
-    image: '/limon-community.jpg',
+    image: panBonImg,
     description:
       'Bizcocho denso de especias caribeñas, pasas y frutas maceradas en ron oscuro Centenario, sellado en mantequilla clarificada y servido con helado cremoso de coco tostado y reducción de cacao amargo.',
     notes: 'El broche de oro perfecto para una velada memorable.'

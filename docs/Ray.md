@@ -111,3 +111,25 @@ npm run lint
 ```
 
 El repositorio actual tiene `db.json` vacio. Mientras no existan datos en la API, el panel muestra los estados vacios correspondientes.
+
+## Registro de cambios recientes
+
+### Menu y recursos visuales
+
+- Se resolvio el merge que habia dejado dos implementaciones superpuestas de `MenuPage` en `src/pages/public/menu-page.jsx`.
+- Se mantuvo el catalogo filtrable por categorias y se dejo el Pati como primer platillo visible.
+- Se actualizaron las imagenes del Pati, ceviche, pescado entero, barra caribena y Pan Bon con los recursos disponibles en `src/assets/`.
+- El ceviche utiliza `src/assets/images/public/ceviche-coco.png`.
+- Pan Bon utiliza `src/assets/limon-community.png`.
+- Se actualizo el nombre del platillo a `Pescado Entero del Litoral al Escabeche Caribeño`.
+- Se corrigieron imports que seguian apuntando a archivos `.jpg` eliminados o reemplazados por archivos `.png`.
+
+### Footer
+
+- Se corrigio el marquee del footer en `src/App.css` para mantener los lemas en una sola linea, ocultar el desbordamiento y desplazarlos horizontalmente.
+- Se agrego soporte para `prefers-reduced-motion`.
+
+### Validacion
+
+- Se ejecutaron correctamente `npm run lint` y `npm run build` despues de los cambios.
+- El build solo conserva la advertencia informativa de Vite sobre chunks grandes; no presenta errores de compilacion.
