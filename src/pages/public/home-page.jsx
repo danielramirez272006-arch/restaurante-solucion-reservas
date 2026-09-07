@@ -35,7 +35,7 @@ const COCKTAILS = [
 
 export default function HomePage() {
   return (
-    <main className="overflow-hidden"><div className="beach-scene" aria-hidden="true" />
+    <main className="home-page overflow-hidden"><div className="beach-scene" aria-hidden="true" />
       {/* 1. HERO SECTION (Dark Roots #0d1f17 with Jungle Texture & Ember Particles) */}
       <HeroSection />
 

@@ -3,7 +3,9 @@ const cards = [
   ['confirmed', 'Confirmadas', 'confirmed', '02', 'Mesas listas para el servicio'],
   ['rejected', 'Rechazadas', 'rejected', '03', 'Canceladas o sin aforo'],
   ['today', 'Reservas de hoy', 'today', '04', 'Turnos de almuerzo y cena'],
-  ['clients', 'Clientes registrados', 'clients', '05', 'Base histórica de comensales']
+  ['clients', 'Clientes registrados', 'clients', '05', 'Base histórica de comensales'],
+  ['reservationsProgress', 'Meta de reservaciones', 'goal', '06', 'Progreso hacia 50 visitas'],
+  ['averageRating', 'Score general', 'rating', '07', 'Promedio basado en comentarios']
 ];
 
 export default function StatsSummary({ stats, loading }) {
@@ -15,7 +17,7 @@ export default function StatsSummary({ stats, loading }) {
             <span className="card-number">{number}</span>
             <span className="stat-label">{label}</span>
           </div>
-          <strong className="stat-value">{loading ? '...' : (stats?.[key] ?? 0)}</strong>
+          <strong className="stat-value">{loading ? '...' : (key === 'reservationsProgress' ? `${stats?.[key] ?? 0}%` : key === 'averageRating' ? `${stats?.[key] ?? 0} / 5` : (stats?.[key] ?? 0))}</strong>
           <small className="stat-caption">{hint}</small>
         </article>
       ))}

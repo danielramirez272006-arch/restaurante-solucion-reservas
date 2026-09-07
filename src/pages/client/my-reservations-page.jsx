@@ -84,14 +84,16 @@ export const MyReservationsPage = () => {
       `"${(r.notes || '').replace(/"/g, '""')}"`
     ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const encodedUri = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
     link.setAttribute('download', `mis-reservas-donde-ray-${currentUser?.id || 'cliente'}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(encodedUri);
   };
 
   return (
@@ -243,10 +245,10 @@ export const MyReservationsPage = () => {
             {searchTerm
               ? 'No hay reservas que coincidan con tu búsqueda.'
               : timeFilter === 'UPCOMING'
-              ? 'No tienes reservas próximas por el momento.'
-              : activeFilter !== 'ALL'
-              ? `No tienes reservas en estado "${activeFilter}".`
-              : 'Aún no has registrado ninguna reserva en Donde Ray.'}
+                ? 'No tienes reservas próximas por el momento.'
+                : activeFilter !== 'ALL'
+                  ? `No tienes reservas en estado "${activeFilter}".`
+                  : 'Aún no has registrado ninguna reserva en Donde Ray.'}
           </p>
           <a href="#/reservar" style={styles.bookNowBtn}>
             Crear Nueva Reserva →

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import StatsSummary from '../../features/admin-dashboard/components/stats-summary';
+import ReviewsSummary from '../../features/admin-dashboard/components/reviews-summary';
 import { useAdminStats } from '../../features/admin-dashboard/use-admin-stats';
 import { useAdminReservations } from '../../features/admin-reservations/use-admin-reservations';
 import ReservationDetailModal from '../../features/admin-reservations/components/reservation-detail-modal';
@@ -81,6 +82,7 @@ export default function DashboardPage() {
 
       {/* Resumen de KPIs Principales (01 al 05) */}
       <StatsSummary stats={statsState.stats} loading={statsState.loading} />
+      <ReviewsSummary stats={statsState.stats} />
 
       {/* Monitor de Aforo en Vivo de Hoy */}
       <section className="panel" aria-label="Monitor de aforo de hoy">
