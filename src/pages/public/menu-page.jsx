@@ -6,7 +6,6 @@ import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg';
 import barImg from '../../assets/images/bar_caribeno_noche_1788651853426.jpg';
 import heroImg from '../../assets/images/caribbean_hero_bar_1788651748042.jpg';
 
-<<<<<<< HEAD
 const menuSections = [
 	{
 		title: 'Antojitos caribeños',
@@ -36,7 +35,6 @@ const menuSections = [
 
 function MenuPage() {
 	return <main className="page-shell menu-page"><div className="page-intro"><span className="eyebrow">La carta · Caribe costarricense</span><h1>Sabores de la costa<br /><em>en nuestra mesa.</em></h1><p className="lead">Recetas con memoria, coco, chile y fuego. Una selección inspirada en la cocina caribeña de Costa Rica, preparada para compartir.</p></div><div className="menu-list">{menuSections.map((section) => <section className="menu-section" key={section.title}><h2>{section.title}</h2>{section.items.map(([name, description]) => <Card className="menu-item" key={name}><div><h3>{name}</h3><p>{description}</p></div><span className="menu-line" /></Card>)}</section>)}</div><div className="menu-footer-note"><span>La carta puede variar según disponibilidad</span><Link className="text-link" to="/reservas">Consultar reserva <span>→</span></Link></div></main>
-=======
 const CATEGORIES = [
   { id: 'all', label: 'Toda la Carta' },
   { id: 'entradas', label: 'Entradas de Autor' },
@@ -230,7 +228,6 @@ export function MenuPage() {
       </section>
     </main>
   );
->>>>>>> 0f16b775d0122e712d919ae6690f9b1dc36336e0
 }
 
 export default MenuPage;
