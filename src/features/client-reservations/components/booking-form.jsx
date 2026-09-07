@@ -109,7 +109,7 @@ export const BookingForm = ({
       <div className="reservation-panel-header">
         <span className="eyebrow" style={{ marginBottom: '8px' }}>Paso 2</span>
         <h3>Detalles de la Reserva</h3>
-        <p>Completa la información del comensal principal para asegurar tu mesa.</p>
+        <p>Completa la información de contacto para asegurar tu mesa frente al mar.</p>
       </div>
 
       {/* Resumen dinámico de selección */}
@@ -156,7 +156,7 @@ export const BookingForm = ({
             className="guest-step-btn"
             onClick={() => onGuestsChange(Math.max(1, guestsCount - 1))}
             disabled={guestsCount <= 1}
-            aria-label="Disminuir comensales"
+            aria-label="Disminuir personas"
           >
             −
           </button>
@@ -168,7 +168,7 @@ export const BookingForm = ({
             className="guest-step-btn"
             onClick={() => onGuestsChange(Math.min(MAX_CAPACITY_PER_SLOT, guestsCount + 1))}
             disabled={guestsCount >= MAX_CAPACITY_PER_SLOT}
-            aria-label="Aumentar comensales"
+            aria-label="Aumentar personas"
           >
             +
           </button>
@@ -209,7 +209,7 @@ export const BookingForm = ({
             value={formData.guestName}
             onChange={(e) => handleChange('guestName', e.target.value)}
             onBlur={() => handleBlur('guestName')}
-            className="reservation-input"
+            className={`reservation-input ${touched.guestName && validationErrors.guestName ? 'is-invalid' : ''}`.trim()}
             style={{
               borderColor: touched.guestName && validationErrors.guestName ? '#dc2626' : undefined
             }}
@@ -231,7 +231,7 @@ export const BookingForm = ({
             value={formData.phone}
             onChange={(e) => handleChange('phone', e.target.value)}
             onBlur={() => handleBlur('phone')}
-            className="reservation-input"
+            className={`reservation-input ${touched.phone && validationErrors.phone ? 'is-invalid' : ''}`.trim()}
             style={{
               borderColor: touched.phone && validationErrors.phone ? '#dc2626' : undefined
             }}
@@ -250,11 +250,11 @@ export const BookingForm = ({
         <input
           id="guest-email-input"
           type="email"
-          placeholder="comensal@donderay.com"
+          placeholder="tu@correo.com"
           value={formData.email}
           onChange={(e) => handleChange('email', e.target.value)}
           onBlur={() => handleBlur('email')}
-          className="reservation-input"
+          className={`reservation-input ${touched.email && validationErrors.email ? 'is-invalid' : ''}`.trim()}
           style={{
             borderColor: touched.email && validationErrors.email ? '#dc2626' : undefined
           }}

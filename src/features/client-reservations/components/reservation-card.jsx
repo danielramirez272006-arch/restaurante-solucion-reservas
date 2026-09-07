@@ -165,7 +165,7 @@ export const ReservationCard = ({
               disabled={savingEdit}
               style={styles.saveBtn}
             >
-              {savingEdit ? 'Guardando...' : '💾 Guardar Cambios'}
+              {savingEdit ? 'Guardando...' : ' Guardar Cambios'}
             </button>
             <button
               type="button"
@@ -184,7 +184,7 @@ export const ReservationCard = ({
           {/* Contenido Principal: Fecha, Hora, Personas */}
           <div style={styles.mainInfo}>
             <div style={styles.dateBlock}>
-              <span style={styles.icon}>📅</span>
+              <span style={styles.icon}></span>
               <div>
                 <div style={styles.dateText}>{formatDateToSpanish(date)}</div>
                 <div style={styles.timeText}>{formatTime12h(time)}</div>
@@ -193,9 +193,9 @@ export const ReservationCard = ({
 
             <div style={styles.chipsRow}>
               <span style={styles.chip}>
-                👥 {guests} {guests === 1 ? 'Persona' : 'Personas'}
+                 {guests} {guests === 1 ? 'Persona' : 'Personas'}
               </span>
-              <span style={styles.chip}>🏷️ {type || 'Cena'}</span>
+              <span style={styles.chip}> {type || 'Cena'}</span>
             </div>
           </div>
 
@@ -226,7 +226,7 @@ export const ReservationCard = ({
               onClick={() => onViewVoucher && onViewVoucher(reservation)}
               style={styles.voucherButton}
             >
-              🎟️ Ver Voucher
+               Ver Voucher
             </button>
 
             {status === 'Pendiente' && onReschedule && (
@@ -235,7 +235,7 @@ export const ReservationCard = ({
                 onClick={() => setIsEditing(true)}
                 style={styles.rescheduleButton}
               >
-                ✏️ Reagendar
+                 Reagendar
               </button>
             )}
 
@@ -291,11 +291,11 @@ const styles = {
   idValue: {
     fontSize: '14px',
     fontWeight: '700',
-    color: '#b17a3c'
+    color: '#b45309'
   },
   statusBadge: {
     fontSize: '11px',
-    fontWeight: '600',
+    fontWeight: '700',
     padding: '4px 12px',
     borderRadius: '20px',
     textTransform: 'uppercase',
@@ -319,17 +319,17 @@ const styles = {
     borderRadius: '8px'
   },
   dateText: {
-    fontFamily: 'Newsreader, Georgia, serif',
+    fontFamily: 'var(--font-display, "Fraunces", serif)',
     fontSize: '20px',
-    fontWeight: '400',
+    fontWeight: '600',
     color: '#202820',
     letterSpacing: '-0.02em',
     textTransform: 'capitalize'
   },
   timeText: {
     fontSize: '13px',
-    color: '#304b3d',
-    fontWeight: '600'
+    color: '#0f5132',
+    fontWeight: '700'
   },
   chipsRow: {
     display: 'flex',
@@ -388,16 +388,16 @@ const styles = {
   },
   voucherButton: {
     flex: 2,
-    background: '#304b3d',
+    background: '#0f5132',
     border: 'none',
     color: '#f8f5ed',
     borderRadius: '8px',
     padding: '10px 12px',
     fontSize: '12px',
-    fontWeight: '600',
+    fontWeight: '700',
     cursor: 'pointer',
     textAlign: 'center',
-    boxShadow: '0 2px 8px rgba(48, 75, 61, 0.2)'
+    boxShadow: '0 2px 8px rgba(15, 81, 50, 0.25)'
   },
   rescheduleButton: {
     flex: 2,

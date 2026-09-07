@@ -1,3 +1,316 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap');
-:root { font-family: 'DM Sans', sans-serif; font-synthesis: none; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
-body { margin: 0; min-width: 320px; }
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400;1,9..144,600;1,9..144,700&family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --limon-dark: #0d1f17;
+  --limon-gold: #c8860a;
+  --limon-amber: #e59c19;
+  --limon-earth: #1c0f05;
+  --limon-cream: #f0e6cc;
+  --limon-red: #7c2d12;
+  --limon-jungle: #0f3d2e;
+  --limon-leaf: #1b533f;
+  --limon-charcoal: #1a1009;
+  --limon-sand: #ebe1c5;
+  --limon-border: #d8caa7;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Outfit', system-ui, sans-serif;
+  --font-label: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  font-family: var(--font-body);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background-color: var(--limon-dark);
+  color: var(--limon-cream);
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   Background System & Textures
+   ========================================================================== */
+
+/* Alternating Section Backgrounds */
+.section-roots {
+  background-color: #0d1f17;
+  color: #f0e6cc;
+}
+
+.section-earth {
+  background-color: #1c0f05;
+  color: #f0e6cc;
+}
+
+.section-paper {
+  background-color: #f0e6cc;
+  color: #1a1009;
+}
+
+/* Hero Jungle Parallax & Candlelight Texture */
+.hero-jungle-texture {
+  position: relative;
+  background-color: #0d1f17;
+  overflow: hidden;
+}
+
+.hero-jungle-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  background-image: url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M60 0 C65 25 90 35 120 40 C95 55 85 80 80 120 C65 95 40 85 0 80 C25 65 35 40 60 0 Z' fill='none' stroke='%231b533f' stroke-width='1.5'/%3E%3Cpath d='M20 20 C35 30 40 45 40 60 C30 45 15 40 20 20 Z' fill='%230f3d2e' fill-opacity='0.5'/%3E%3Cpath d='M100 80 C85 90 80 105 80 120 C90 105 105 100 100 80 Z' fill='%230f3d2e' fill-opacity='0.5'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  z-index: 1;
+}
+
+.hero-jungle-texture::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 65% 35%, rgba(200, 134, 10, 0.14) 0%, rgba(13, 31, 23, 0.8) 55%, #0d1f17 100%);
+  animation: candlelight 8s ease-in-out infinite;
+  z-index: 2;
+}
+
+/* Woven Fabric Pattern */
+.bg-woven-pattern {
+  background-image: 
+    radial-gradient(rgba(200, 134, 10, 0.08) 1px, transparent 1px),
+    radial-gradient(rgba(27, 83, 63, 0.12) 1px, transparent 1px);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+
+/* ==========================================================================
+   Typography Rules & Cultural Styling
+   ========================================================================== */
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-label {
+  font-family: var(--font-label);
+}
+
+.label-tracking {
+  font-family: var(--font-label);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.font-oblique-8 {
+  font-style: oblique 8deg;
+}
+
+/* ==========================================================================
+   Nav Link Interaction (Underline draws from center outward)
+   ========================================================================== */
+
+.nav-link-cultural {
+  position: relative;
+  color: #f0e6cc;
+  text-decoration: none;
+  padding: 6px 4px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: color 0.25s ease;
+}
+
+.nav-link-cultural::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--limon-gold);
+  transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1), left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateX(-50%);
+}
+
+.nav-link-cultural:hover {
+  color: var(--limon-gold);
+}
+
+.nav-link-cultural:hover::after,
+.nav-link-cultural.active::after {
+  width: 100%;
+}
+
+.nav-link-cultural.active {
+  color: var(--limon-gold);
+}
+
+/* ==========================================================================
+   Cultural Artisan Buttons
+   ========================================================================== */
+
+.btn-artisan-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--limon-gold);
+  color: #0d1f17;
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(229, 156, 25, 0.8);
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-artisan-gold:hover {
+  background-color: var(--limon-amber);
+  color: #0d1f17;
+  box-shadow: 0 4px 16px rgba(200, 134, 10, 0.45);
+}
+
+/* CTA Heartbeat Pulse Animation */
+.btn-heartbeat-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #c8860a 0%, #b45309 100%);
+  color: #0d1f17;
+  font-family: var(--font-label);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 16px 32px;
+  border-radius: 4px;
+  border: 1px solid rgba(245, 158, 11, 0.7);
+  text-decoration: none;
+  cursor: pointer;
+  animation: heartbeat 2.6s ease-in-out infinite;
+  transition: transform 0.2s ease;
+}
+
+.btn-heartbeat-cta:hover {
+  animation-play-state: paused;
+  transform: scale(1.03);
+  box-shadow: 0 8px 32px rgba(200, 134, 10, 0.6), 0 0 0 2px rgba(229, 156, 25, 0.9);
+}
+
+/* ==========================================================================
+   Ember & Fire Particles
+   ========================================================================== */
+
+.ember-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.ember-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #e59c19;
+  box-shadow: 0 0 8px #c8860a, 0 0 14px #e59c19;
+  opacity: 0;
+  animation: ember-float 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* ==========================================================================
+   Decorative Dividers (Replacing generic emojis)
+   ========================================================================== */
+
+/* Custom CSS Woven Pattern Line (Replaces sparkle/star emojis) */
+.divider-woven-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.divider-woven-line::before,
+.divider-woven-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 134, 10, 0.6), transparent);
+}
+
+.divider-woven-diamond {
+  width: 8px;
+  height: 8px;
+  background-color: var(--limon-gold);
+  transform: rotate(45deg);
+  box-shadow: 0 0 8px rgba(200, 134, 10, 0.6);
+  flex-shrink: 0;
+}
+
+/* Custom CSS Dot-Dash Location Divider (Replaces map pins/locations) */
+.dot-dash-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot-dash-indicator::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--limon-gold);
+  box-shadow: 0 0 6px rgba(200, 134, 10, 0.7);
+}
+
+.dot-dash-indicator::after {
+  content: '';
+  width: 16px;
+  height: 2px;
+  background-color: var(--limon-gold);
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+   Scroll Intersection Entrance (Fade Up with Slight 2deg Rotation)
+   ========================================================================== */
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px) rotate(2deg);
+  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0) rotate(0deg);
+}
+
+/* Chatbot Floating Bob */
+.chatbot-fab-container {
+  animation: bob 3s ease-in-out infinite;
+}
