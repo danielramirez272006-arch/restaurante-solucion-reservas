@@ -1,7 +1,9 @@
-const API_URL = 'http://localhost:3001'
+import { mockFetch } from './mock-api.js'
+
+const API_URL = import.meta.env.VITE_API_URL || ''
 
 export async function apiRequest(path, options = {}) {
-	const response = await fetch(`${API_URL}${path}`, {
+	const response = await mockFetch(`${API_URL}${path}`, {
 		headers: { 'Content-Type': 'application/json', ...options.headers },
 		...options,
 	})

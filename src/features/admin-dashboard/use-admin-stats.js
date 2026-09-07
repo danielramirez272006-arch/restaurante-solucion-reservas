@@ -5,9 +5,9 @@ const TODAY = new Date().toISOString().slice(0, 10)
 
 export function buildStats(reservations, users) {
 	return {
-		pending: reservations.filter((item) => item.estado === 'Pendiente').length,
-		confirmed: reservations.filter((item) => item.estado === 'Confirmada').length,
-		rejected: reservations.filter((item) => item.estado === 'Rechazada').length,
+		pending: reservations.filter((item) => (item.estado || item.status) === 'Pendiente').length,
+		confirmed: reservations.filter((item) => (item.estado || item.status) === 'Confirmada').length,
+		rejected: reservations.filter((item) => (item.estado || item.status) === 'Rechazada').length,
 		today: reservations.filter((item) => (item.fecha || item.date || '').slice(0, 10) === TODAY).length,
 		clients: users.length,
 	}

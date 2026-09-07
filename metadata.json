@@ -1,0 +1,6 @@
+{
+  "name": "Restaurante Donde Ray",
+  "description": "Sistema de gestión y reservas para Donde Ray: bar y restaurante de auténtica cultura afrocaribeña limonense, raíces rastafari y fogón en Puerto Viejo de Talamanca",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

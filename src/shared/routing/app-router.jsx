@@ -1,4 +1,4 @@
-import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes, NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../../features/auth/use-auth'
 import AdminRoute from './admin-route'
 import PrivateRoute from './private-route'
@@ -21,11 +21,44 @@ function AdminLayout() {
   return (
     <div className="admin-shell">
       <header className="admin-header">
-        <strong>Donde Ray · Administración</strong>
-        <span>{user?.name}</span>
-        <button type="button" onClick={logout}>Cerrar sesión</button>
+        <div className="admin-header-left">
+          <Link className="brand" to="/admin">
+            <img 
+              src="/brand-logo.png" 
+              alt="Donde Ray Logo" 
+              className="w-10 h-10 rounded-full border border-[#c8860a] object-cover shadow-sm"
+              style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1.5px solid #c8860a', objectFit: 'cover' }}
+            />
+            <span><strong style={{ color: '#f8f5ed' }}>Donde Ray</strong><small style={{ color: '#ffd685' }}>Alta Cocina &amp; Fogón · Puerto Viejo</small></span>
+          </Link>
+          <nav className="admin-nav" aria-label="Navegación de administración">
+            <NavLink to="/admin" end className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
+              Resumen
+            </NavLink>
+            <NavLink to="/admin/reservas" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
+              Reservas
+            </NavLink>
+            <NavLink to="/admin/clientes" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
+              Clientes
+            </NavLink>
+            <Link to="/" className="admin-nav-link">
+              ← Ver Sitio
+            </Link>
+          </nav>
+        </div>
+        <div className="admin-header-right">
+          <div className="admin-user-info">
+            <span className="admin-user-role">Admin</span>
+            <strong className="admin-user-name">{user?.name || 'Administrador'}</strong>
+          </div>
+          <button type="button" className="admin-logout-btn" onClick={logout}>
+            Cerrar sesión
+          </button>
+        </div>
       </header>
-      <Outlet />
+      <div className="admin-body">
+        <Outlet />
+      </div>
     </div>
   )
 }
@@ -36,16 +69,17 @@ export default function AppRouter() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/menu" element={<MenuPage />} />
+        <Route path="/reservar" element={<BookReservationPage />} />
+        <Route path="/reservas" element={<Navigate to="/reservar" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/reservas" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
 
-      <Route element={<PrivateRoute />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/reservar" element={<BookReservationPage />} />
-        <Route path="/mis-reservas" element={<MyReservationsPage />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/mis-reservas" element={<MyReservationsPage />} />
+        </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
 
       <Route element={<AdminRoute />}>
