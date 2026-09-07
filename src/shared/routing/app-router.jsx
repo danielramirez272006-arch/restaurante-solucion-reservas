@@ -11,6 +11,7 @@ import ManageReservationsPage from '../../pages/admin/manage-reservations-page'
 import ManageClientsPage from '../../pages/admin/manage-clients-page'
 import HomePage from '../../pages/public/home-page.jsx'
 import MenuPage from '../../pages/public/menu-page.jsx'
+import OurHousePage from '../../pages/public/our-house-page.jsx'
 import NotFoundPage from '../../pages/public/not-found-page.jsx'
 import LoginPage from '../../pages/public/login-page'
 import RegisterPage from '../../pages/public/register-page'
@@ -41,7 +42,7 @@ function AdminLayout() {
             <NavLink to="/admin/clientes" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
               Clientes
             </NavLink>
-            <Link to="/" className="admin-nav-link" target="_blank" rel="noopener noreferrer">
+            <Link to="/" className="admin-nav-link">
               ↗ Ver Sitio
             </Link>
           </nav>
@@ -69,6 +70,7 @@ export default function AppRouter() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/menu" element={<MenuPage />} />
+        <Route path="/nosotros" element={<OurHousePage />} />
         <Route path="/reservar" element={<BookReservationPage />} />
         <Route path="/reservas" element={<Navigate to="/reservar" replace />} />
         <Route path="/login" element={<LoginPage />} />

@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import HeroSection from '../../shared/components/layout/hero-section.jsx';
 import riceAndBeansImg from '../../assets/images/rice_and_beans_limon_1788651760839.jpg';
 import rondonImg from '../../assets/images/rondon_soup_limon_1788651773676.jpg';
-import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg.png';
-import nightBarImg from '../../assets/images/bar_caribeno_noche_1788651853426.png';
+import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg';
+import nightBarImg from '../../assets/images/bar_caribeno_noche_1788651853426.jpg';
 
 const HIGHLIGHTS = [
   {

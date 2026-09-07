@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ReservationCtaButton from '../ui/reservation-cta-button.jsx';
-import heroImg from '../../../assets/images/caribbean_hero_bar_1788651748042..png';
+import heroImg from '../../../assets/images/caribbean_hero_bar_1788651748042.jpg';
 
 // Flame SVG Icon replacing generic flame emoji
 export function FlameIcon({ className = "w-5 h-5", color = "#c8860a" }) {

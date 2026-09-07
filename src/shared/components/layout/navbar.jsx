@@ -71,9 +71,9 @@ function Navbar() {
           <NavLink to="/menu" className="nav-link-cultural" onClick={closeMenu}>
             Menú de Autor
           </NavLink>
-          <a href="/#nosotros" className="nav-link-cultural" onClick={closeMenu}>
+          <NavLink to="/nosotros" className="nav-link-cultural" onClick={closeMenu}>
             Nuestra Casa
-          </a>
+          </NavLink>
 
           {isAuthenticated ? (
             <>
