@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import rondonImg from '../../assets/images/rondon_soup_limon_1788651773676.jpg';
 import riceAndBeansImg from '../../assets/images/rice_and_beans_limon_1788651760839.jpg';
-import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg';
+import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg.png';
 import barImg from '../../assets/images/bar_caribeno_noche_1788651853426.jpg';
 import heroImg from '../../assets/images/caribbean_hero_bar_1788651748042.jpg';
 
@@ -15,6 +15,18 @@ const CATEGORIES = [
 ];
 
 const MENU_ITEMS = [
+  {
+    id: 'pati-gourmet',
+    category: 'entradas',
+    name: 'Patí Artesanal Hojaldrado & Especias Antillanas',
+    tag: 'Entrada de Autor',
+    price: '₡7.200',
+    badge: 'Horno de Leña',
+    image: patiImg,
+    description:
+      'Masa dorada fina y crujiente elaborada en casa, rellena de lomo mechado al curry caribeño, pimienta de jamaica, tomillo y toque delicado de chile panameño. Servido con alioli ligero de coco y cilantro.',
+    notes: '2 unidades presentadas sobre piedra volcánica tibia.'
+  },
   {
     id: 'rondon-real',
     category: 'fuertes',
@@ -38,18 +50,6 @@ const MENU_ITEMS = [
     description:
       'Arroz jazmín y frijoles negros infusionados en leche de coco natural, tomillo silvestre de huerta y chile panameño, servido con cuarto de pollo campesino confitado a la leña con salsa negra caribeña reducida y patacón artesanal.',
     notes: 'Receta de familia perfeccionada bajo técnica de alta cocina.'
-  },
-  {
-    id: 'pati-gourmet',
-    category: 'entradas',
-    name: 'Patí Artesanal Hojaldrado & Especias Antillanas',
-    tag: 'Entrada de Autor',
-    price: '₡7.200',
-    badge: 'Horno de Leña',
-    image: patiImg,
-    description:
-      'Masa dorada fina y crujiente elaborada en casa, rellena de lomo mechado al curry caribeño, pimienta de jamaica, tomillo y toque delicado de chile panameño. Servido con alioli ligero de coco y cilantro.',
-    notes: '2 unidades presentadas sobre piedra volcánica tibia.'
   },
   {
     id: 'ceviche-coco',
