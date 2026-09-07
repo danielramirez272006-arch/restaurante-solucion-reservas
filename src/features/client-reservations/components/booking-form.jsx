@@ -6,13 +6,13 @@ import {
 import { formatDateToSpanish, formatTime12h } from '../../../shared/utils/date-helpers.js';
 
 const OCCASION_CARDS = [
-  { id: 'Cena', label: 'Cena Gourmet', icon: '🍷' },
-  { id: 'Romántica', label: 'Cena Romántica', icon: '🕯️' },
-  { id: 'Cumpleaños', label: 'Cumpleaños', icon: '🎂' },
-  { id: 'Aniversario', label: 'Aniversario', icon: '🥂' },
-  { id: 'Negocios', label: 'Negocios', icon: '💼' },
-  { id: 'Familiar', label: 'Reunión Familiar', icon: '👨‍👩‍👧‍👦' },
-  { id: 'Otro', label: 'Casual / Otro', icon: '✨' }
+  { id: 'Cena', label: 'Cena Gourmet' },
+  { id: 'Romántica', label: 'Romántica' },
+  { id: 'Cumpleaños', label: 'Cumpleaños' },
+  { id: 'Aniversario', label: 'Aniversario' },
+  { id: 'Negocios', label: 'Negocios' },
+  { id: 'Familiar', label: 'Familiar' },
+  { id: 'Otro', label: 'Casual / Otro' }
 ];
 
 export const BookingForm = ({
@@ -33,6 +33,18 @@ export const BookingForm = ({
     type: 'Cena',
     notes: ''
   });
+
+  // Ajustar estado durante renderizado si currentUser se resuelve asíncronamente
+  const [prevUser, setPrevUser] = useState(currentUser);
+  if (currentUser !== prevUser) {
+    setPrevUser(currentUser);
+    setFormData((prev) => ({
+      ...prev,
+      guestName: prev.guestName || currentUser?.guestName || '',
+      email: prev.email || currentUser?.email || '',
+      phone: prev.phone || currentUser?.phone || ''
+    }));
+  }
 
   const [touched, setTouched] = useState({});
   const validationResult = useMemo(() => {
@@ -71,6 +83,9 @@ export const BookingForm = ({
 
     const fullPayload = {
       ...formData,
+      guestName: (formData.guestName || currentUser?.guestName || '').trim(),
+      email: (formData.email || currentUser?.email || '').trim(),
+      phone: (formData.phone || currentUser?.phone || '').trim(),
       date: selectedDate,
       time: selectedTime,
       guests: Number(guestsCount)
@@ -89,86 +104,71 @@ export const BookingForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} style={styles.formCard} noValidate>
-      <div style={styles.header}>
-        <div style={styles.iconCircle}>🍽️</div>
-        <div>
-          <h3 style={styles.title}>Detalles de la Reserva</h3>
-          <p style={styles.subtitle}>Completa la información del comensal principal</p>
-        </div>
+    <form onSubmit={handleSubmit} className="reservation-panel" noValidate>
+      {/* Encabezado del Formulario */}
+      <div className="reservation-panel-header">
+        <span className="eyebrow" style={{ marginBottom: '8px' }}>Paso 2</span>
+        <h3>Detalles de la Reserva</h3>
+        <p>Completa la información de contacto para asegurar tu mesa frente al mar.</p>
       </div>
 
       {/* Resumen dinámico de selección */}
-      <div style={styles.summaryBox}>
-        <div style={styles.summaryItem}>
-          <span style={styles.summaryLabel}>Fecha seleccionada:</span>
-          <span style={styles.summaryValue}>
-            {formatDateToSpanish(selectedDate) || 'No seleccionada'}
+      <div className="reservation-summary-strip">
+        <div className="summary-meta-item">
+          <span className="summary-meta-label">Fecha</span>
+          <span className="summary-meta-val">
+            {formatDateToSpanish(selectedDate) || 'Sin seleccionar'}
           </span>
         </div>
-        <div style={styles.summaryItem}>
-          <span style={styles.summaryLabel}>Hora seleccionada:</span>
+        <div className="summary-meta-item">
+          <span className="summary-meta-label">Turno</span>
           <span
-            style={{
-              ...styles.summaryValue,
-              color: selectedTime ? '#ffd89b' : '#f87171'
-            }}
+            className="summary-meta-val"
+            style={{ color: selectedTime ? 'var(--green)' : 'var(--gold)' }}
           >
-            {selectedTime ? formatTime12h(selectedTime) : '⚠️ Elige una franja en el horario'}
+            {selectedTime ? formatTime12h(selectedTime) : 'Selecciona un turno'}
           </span>
         </div>
-        <div style={styles.summaryItem}>
-          <span style={styles.summaryLabel}>Estado inicial:</span>
-          <span style={styles.statusBadge}>Pendiente</span>
+        <div className="summary-meta-item">
+          <span className="summary-meta-label">Estado</span>
+          <span className="status-pill-editorial">Pendiente</span>
         </div>
       </div>
 
       {/* Error de API o Regla de Negocio */}
       {apiError && (
-        <div style={styles.apiErrorBanner} role="alert">
-          <span style={{ fontSize: '18px' }}>🚫</span>
-          <span>{apiError}</span>
+        <div className="reservation-alert-warning" role="alert">
+          <div>
+            <strong>Aviso de reserva</strong>
+            <span>{apiError}</span>
+          </div>
         </div>
       )}
 
-      {/* Campo: Número de Comensales */}
-      <div style={styles.fieldGroup}>
-        <div style={styles.labelRow}>
-          <label htmlFor="guests-count-input" style={styles.label}>
-            Número de Personas (Máx. {MAX_CAPACITY_PER_SLOT}):
-          </label>
-          <span style={styles.guestsValueDisplay}>
-            👥 {guestsCount} {guestsCount === 1 ? 'Persona' : 'Personas'}
-          </span>
-        </div>
-        <div style={styles.guestsCounterWrapper}>
+      {/* Campo: Número de Personas */}
+      <div className="reservation-field-group">
+        <label className="reservation-field-label">
+          Personas (Cupo máximo: {MAX_CAPACITY_PER_SLOT})
+        </label>
+        <div className="guest-selector">
           <button
             type="button"
-            style={styles.counterBtn}
+            className="guest-step-btn"
             onClick={() => onGuestsChange(Math.max(1, guestsCount - 1))}
             disabled={guestsCount <= 1}
-            aria-label="Disminuir comensales"
+            aria-label="Disminuir personas"
           >
-            -
+            −
           </button>
-          <input
-            id="guests-count-input"
-            type="number"
-            min={1}
-            max={MAX_CAPACITY_PER_SLOT}
-            value={guestsCount}
-            onChange={(e) => {
-              const val = Math.min(MAX_CAPACITY_PER_SLOT, Math.max(1, Number(e.target.value) || 1));
-              onGuestsChange(val);
-            }}
-            style={styles.counterInput}
-          />
+          <span className="guest-count-display">
+            {guestsCount} {guestsCount === 1 ? 'persona' : 'personas'}
+          </span>
           <button
             type="button"
-            style={styles.counterBtn}
+            className="guest-step-btn"
             onClick={() => onGuestsChange(Math.min(MAX_CAPACITY_PER_SLOT, guestsCount + 1))}
             disabled={guestsCount >= MAX_CAPACITY_PER_SLOT}
-            aria-label="Aumentar comensales"
+            aria-label="Aumentar personas"
           >
             +
           </button>
@@ -176,9 +176,9 @@ export const BookingForm = ({
       </div>
 
       {/* Selector Visual de Tipo de Ocasión */}
-      <div style={styles.fieldGroup}>
-        <label style={styles.label}>Tipo de Ocasión:</label>
-        <div style={styles.occasionsGrid}>
+      <div className="reservation-field-group">
+        <label className="reservation-field-label">Tipo de Ocasión</label>
+        <div className="occasion-grid">
           {OCCASION_CARDS.map((occ) => {
             const isSelected = formData.type === occ.id;
             return (
@@ -186,24 +186,20 @@ export const BookingForm = ({
                 key={occ.id}
                 type="button"
                 onClick={() => handleChange('type', occ.id)}
-                style={{
-                  ...styles.occasionCard,
-                  ...(isSelected ? styles.occasionCardSelected : {})
-                }}
+                className={`occasion-btn ${isSelected ? 'occasion-btn--active' : ''}`}
               >
-                <span style={styles.occasionIcon}>{occ.icon}</span>
-                <span style={styles.occasionLabel}>{occ.label}</span>
+                {occ.label}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Grid de 2 columnas para Datos de Contacto */}
-      <div style={styles.rowGrid}>
+      {/* Campos de Contacto */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
         {/* Nombre completo */}
-        <div style={styles.fieldGroup}>
-          <label htmlFor="guest-name-input" style={styles.label}>
+        <div className="reservation-field-group">
+          <label htmlFor="guest-name-input" className="reservation-field-label">
             Nombre del Titular *
           </label>
           <input
@@ -213,352 +209,96 @@ export const BookingForm = ({
             value={formData.guestName}
             onChange={(e) => handleChange('guestName', e.target.value)}
             onBlur={() => handleBlur('guestName')}
-            style={{
-              ...styles.input,
-              borderColor:
-                touched.guestName && validationErrors.guestName ? '#f87171' : 'rgba(255, 255, 255, 0.15)'
-            }}
+            className={`reservation-input ${touched.guestName && validationErrors.guestName ? 'is-invalid' : ''}`.trim()}
           />
           {touched.guestName && validationErrors.guestName && (
-            <span style={styles.errorText}>{validationErrors.guestName}</span>
+            <span style={{ fontSize: '11px', color: '#dc2626' }}>{validationErrors.guestName}</span>
           )}
         </div>
 
         {/* Teléfono */}
-        <div style={styles.fieldGroup}>
-          <label htmlFor="guest-phone-input" style={styles.label}>
+        <div className="reservation-field-group">
+          <label htmlFor="guest-phone-input" className="reservation-field-label">
             Teléfono de Contacto *
           </label>
           <input
             id="guest-phone-input"
             type="tel"
-            placeholder="Ej: +57 300 123 4567"
+            placeholder="Ej: +506 8888 1234"
             value={formData.phone}
             onChange={(e) => handleChange('phone', e.target.value)}
             onBlur={() => handleBlur('phone')}
-            style={{
-              ...styles.input,
-              borderColor:
-                touched.phone && validationErrors.phone ? '#f87171' : 'rgba(255, 255, 255, 0.15)'
-            }}
+            className={`reservation-input ${touched.phone && validationErrors.phone ? 'is-invalid' : ''}`.trim()}
           />
           {touched.phone && validationErrors.phone && (
-            <span style={styles.errorText}>{validationErrors.phone}</span>
+            <span style={{ fontSize: '11px', color: '#dc2626' }}>{validationErrors.phone}</span>
           )}
         </div>
       </div>
 
       {/* Correo Electrónico */}
-      <div style={styles.fieldGroup}>
-        <label htmlFor="guest-email-input" style={styles.label}>
-          Correo Electrónico para confirmación *
+      <div className="reservation-field-group">
+        <label htmlFor="guest-email-input" className="reservation-field-label">
+          Correo Electrónico *
         </label>
         <input
           id="guest-email-input"
           type="email"
-          placeholder="cliente@ejemplo.com"
+          placeholder="tu@correo.com"
           value={formData.email}
           onChange={(e) => handleChange('email', e.target.value)}
           onBlur={() => handleBlur('email')}
-          style={{
-            ...styles.input,
-            borderColor:
-              touched.email && validationErrors.email ? '#f87171' : 'rgba(255, 255, 255, 0.15)'
-          }}
+          className={`reservation-input ${touched.email && validationErrors.email ? 'is-invalid' : ''}`.trim()}
         />
         {touched.email && validationErrors.email && (
-          <span style={styles.errorText}>{validationErrors.email}</span>
+          <span style={{ fontSize: '11px', color: '#dc2626' }}>{validationErrors.email}</span>
         )}
       </div>
 
-      {/* Peticiones especiales */}
-      <div style={styles.fieldGroup}>
-        <label htmlFor="reservation-notes-input" style={styles.label}>
-          Peticiones Especiales / Alergias (Opcional):
+      {/* Peticiones Especiales */}
+      <div className="reservation-field-group">
+        <label htmlFor="reservation-notes-input" className="reservation-field-label">
+          Peticiones Especiales (Opcional)
         </label>
         <textarea
           id="reservation-notes-input"
           rows={3}
-          placeholder="Ej: Mesa cerca a la ventana, silla para niño, opción vegetariana, decoración de aniversario..."
+          placeholder="Alergias o preferencias de ubicación en terraza o salón principal..."
           value={formData.notes}
           onChange={(e) => handleChange('notes', e.target.value)}
-          style={styles.textarea}
+          className="reservation-input reservation-textarea"
+          maxLength={300}
         />
       </div>
 
-      {/* Botón de Envío con feedback */}
+      {/* Botón de Envío */}
       <button
         type="submit"
         disabled={isSubmitting || limitReached || !selectedTime}
+        className="button button--primary"
         style={{
-          ...styles.submitButton,
-          ...(isSubmitting || limitReached || !selectedTime ? styles.submitButtonDisabled : {})
+          width: '100%',
+          padding: '16px 20px',
+          fontSize: '13px',
+          letterSpacing: '0.06em',
+          textTransform: 'uppercase',
+          marginTop: '6px',
+          cursor: isSubmitting || limitReached || !selectedTime ? 'not-allowed' : 'pointer',
+          opacity: isSubmitting || limitReached || !selectedTime ? 0.6 : 1
         }}
       >
         {isSubmitting ? (
-          <span style={styles.btnContent}>
-            <div style={styles.btnSpinner} />
-            Confirmando reserva...
-          </span>
+          'Confirmando reserva...'
         ) : !selectedTime ? (
-          '👉 Selecciona un horario arriba para continuar'
+          'Selecciona un horario para continuar'
         ) : limitReached ? (
-          '🚫 Límite de 5 reservas alcanzado para esta fecha'
+          'Límite de 5 reservas alcanzado para esta fecha'
         ) : (
-          `✨ Confirmar Reserva para ${guestsCount} ${guestsCount === 1 ? 'persona' : 'personas'}`
+          `Confirmar Reserva · ${guestsCount} ${guestsCount === 1 ? 'persona' : 'personas'} →`
         )}
       </button>
     </form>
   );
 };
 
-const styles = {
-  formCard: {
-    background: 'linear-gradient(145deg, rgba(26, 28, 36, 0.95), rgba(18, 19, 24, 0.98))',
-    border: '1px solid rgba(212, 163, 89, 0.25)',
-    borderRadius: '16px',
-    padding: '24px',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
-    color: '#f3f4f6',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px'
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '14px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-    paddingBottom: '14px'
-  },
-  iconCircle: {
-    fontSize: '24px',
-    background: 'rgba(212, 163, 89, 0.15)',
-    width: '46px',
-    height: '46px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '12px',
-    border: '1px solid rgba(212, 163, 89, 0.3)'
-  },
-  title: {
-    margin: 0,
-    fontSize: '18px',
-    fontWeight: '600',
-    color: '#ffd89b'
-  },
-  subtitle: {
-    margin: '2px 0 0',
-    fontSize: '13px',
-    color: '#9ca3af'
-  },
-  summaryBox: {
-    background: 'rgba(15, 17, 23, 0.8)',
-    borderRadius: '12px',
-    padding: '14px 16px',
-    border: '1px solid rgba(255, 255, 255, 0.06)',
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '16px',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  summaryItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '2px'
-  },
-  summaryLabel: {
-    fontSize: '11px',
-    color: '#9ca3af',
-    textTransform: 'uppercase',
-    letterSpacing: '0.4px'
-  },
-  summaryValue: {
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#f3f4f6'
-  },
-  statusBadge: {
-    display: 'inline-block',
-    fontSize: '12px',
-    fontWeight: '600',
-    color: '#f59e0b',
-    background: 'rgba(245, 158, 11, 0.15)',
-    padding: '2px 10px',
-    borderRadius: '6px',
-    border: '1px solid rgba(245, 158, 11, 0.3)',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px'
-  },
-  apiErrorBanner: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    background: 'rgba(239, 68, 68, 0.15)',
-    border: '1px solid rgba(239, 68, 68, 0.4)',
-    color: '#fca5a5',
-    padding: '12px 16px',
-    borderRadius: '10px',
-    fontSize: '13px'
-  },
-  occasionsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
-    gap: '8px'
-  },
-  occasionCard: {
-    background: 'rgba(15, 17, 23, 0.7)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '10px',
-    padding: '10px 8px',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    color: '#d1d5db',
-    fontSize: '12px',
-    fontWeight: '500',
-    transition: 'all 0.15s ease',
-    outline: 'none',
-    textAlign: 'left'
-  },
-  occasionCardSelected: {
-    background: 'linear-gradient(135deg, rgba(212, 163, 89, 0.25), rgba(180, 120, 40, 0.35))',
-    borderColor: '#ffd89b',
-    color: '#ffffff',
-    fontWeight: '700',
-    boxShadow: '0 0 10px rgba(212, 163, 89, 0.3)'
-  },
-  occasionIcon: {
-    fontSize: '18px'
-  },
-  occasionLabel: {
-    flex: 1,
-    lineHeight: '1.2'
-  },
-  rowGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-    gap: '16px'
-  },
-  fieldGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '6px'
-  },
-  labelRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  label: {
-    fontSize: '12px',
-    fontWeight: '600',
-    color: '#d1d5db',
-    textTransform: 'uppercase',
-    letterSpacing: '0.4px'
-  },
-  guestsValueDisplay: {
-    fontSize: '13px',
-    color: '#ffd89b',
-    fontWeight: '600'
-  },
-  guestsCounterWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    background: 'rgba(15, 17, 23, 0.9)',
-    border: '1px solid rgba(212, 163, 89, 0.4)',
-    borderRadius: '10px',
-    overflow: 'hidden',
-    height: '42px'
-  },
-  counterBtn: {
-    background: 'transparent',
-    border: 'none',
-    color: '#ffd89b',
-    fontSize: '20px',
-    fontWeight: 'bold',
-    width: '46px',
-    height: '100%',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'background 0.2s',
-    outline: 'none'
-  },
-  counterInput: {
-    flex: 1,
-    background: 'transparent',
-    border: 'none',
-    color: '#ffffff',
-    fontSize: '16px',
-    fontWeight: '600',
-    textAlign: 'center',
-    outline: 'none'
-  },
-  input: {
-    background: 'rgba(15, 17, 23, 0.9)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: '10px',
-    color: '#ffffff',
-    padding: '10px 14px',
-    fontSize: '14px',
-    outline: 'none',
-    transition: 'border-color 0.2s'
-  },
-  textarea: {
-    background: 'rgba(15, 17, 23, 0.9)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
-    borderRadius: '10px',
-    color: '#ffffff',
-    padding: '10px 14px',
-    fontSize: '14px',
-    outline: 'none',
-    resize: 'vertical',
-    fontFamily: 'inherit'
-  },
-  errorText: {
-    fontSize: '11px',
-    color: '#f87171',
-    fontWeight: '500'
-  },
-  submitButton: {
-    background: 'linear-gradient(135deg, #d4a359 0%, #b47828 100%)',
-    color: '#08060d',
-    border: 'none',
-    borderRadius: '12px',
-    padding: '14px 20px',
-    fontSize: '15px',
-    fontWeight: '700',
-    cursor: 'pointer',
-    transition: 'transform 0.15s, box-shadow 0.15s',
-    boxShadow: '0 4px 18px rgba(212, 163, 89, 0.35)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: '8px'
-  },
-  submitButtonDisabled: {
-    opacity: 0.5,
-    cursor: 'not-allowed',
-    background: '#374151',
-    color: '#9ca3af',
-    boxShadow: 'none'
-  },
-  btnContent: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px'
-  },
-  btnSpinner: {
-    width: '16px',
-    height: '16px',
-    border: '2px solid rgba(0, 0, 0, 0.2)',
-    borderTop: '2px solid #000',
-    borderRadius: '50%',
-    animation: 'spin 0.8s linear infinite'
-  }
-};
+export default BookingForm;
