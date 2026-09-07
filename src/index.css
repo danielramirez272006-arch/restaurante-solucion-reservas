@@ -314,3 +314,37 @@ body {
 .chatbot-fab-container {
   animation: bob 3s ease-in-out infinite;
 }
+
+/* ==========================================================================
+   Dark Luxury Custom Scrollbar System
+   ========================================================================== */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200, 134, 10, 0.4) #0a1711;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #091711;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(200, 134, 10, 0.35);
+  border-radius: 6px;
+  border: 1px solid rgba(200, 134, 10, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c8860a;
+  box-shadow: 0 0 8px rgba(200, 134, 10, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background: #091711;
+}
+

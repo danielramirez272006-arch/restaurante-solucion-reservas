@@ -429,12 +429,12 @@ export default function ManageReservationsPage() {
                     value={newResForm.type}
                     onChange={(e) => setNewResForm({ ...newResForm, type: e.target.value })}
                   >
-                    <option value="Cena">🌙 Cena</option>
-                    <option value="Almuerzo">☀️ Almuerzo</option>
-                    <option value="Cumpleaños">🎂 Cumpleaños</option>
-                    <option value="Aniversario">🥂 Aniversario</option>
-                    <option value="Negocios">💼 Negocios</option>
-                    <option value="Especial">✨ Ocasión Especial</option>
+                    <option value="Cena">Cena</option>
+                    <option value="Almuerzo">Almuerzo</option>
+                    <option value="Cumpleaños">Cumpleaños</option>
+                    <option value="Aniversario">Aniversario</option>
+                    <option value="Negocios">Negocios</option>
+                    <option value="Especial">Ocasión Especial</option>
                   </select>
                 </div>
                 <div className="modal-field-block">
