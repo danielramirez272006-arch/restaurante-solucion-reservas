@@ -15,8 +15,8 @@ export function createReservation(data) {
   const newReservation = {
     ...data,
     id: data.id || `RES-${Date.now().toString().slice(-6)}`,
-    estado: data.estado || data.status || 'Confirmada',
-    status: data.estado || data.status || 'Confirmada',
+    estado: data.estado || data.status || 'Pendiente',
+    status: data.estado || data.status || 'Pendiente',
     createdAt: new Date().toISOString()
   };
   return apiRequest('/reservations', {

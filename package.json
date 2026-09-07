@@ -13,7 +13,7 @@
     "@react-spring/web": "^10.1.2",
     "canvg": "^4.0.3",
     "framer-motion": "^13.2.0",
-    "jspdf": "^2.5.1",
+    "jspdf": "^4.2.1",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
