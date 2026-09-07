@@ -1,156 +1,344 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getTodayDateString, getNextDays } from '../../utils/date-helpers.js';
+import {
+  getTodayDateString,
+  getNextDays,
+  formatDateToSpanish,
+  formatTime12h,
+  isTimePassed,
+  RESTAURANT_TIME_SLOTS
+} from '../../utils/date-helpers.js';
 import { mockFetch } from '../../services/mock-api.js';
+import { AuthContext } from '../../context/auth-context.js';
 import { queryAIConcierge, getAIConfig, saveAIConfig } from '../../../services/ai-concierge-service.js';
 
-// Lista de categorías rápidas en el carrusel superior
+// Lista de categorías rápidas en el carrusel superior con iconos completos
 const QUICK_CATEGORIES = [
- { id: 'asistida', label: ' Reservar Paso a Paso' },
- { id: 'aforo_vivo', label: ' Cupos en Vivo' },
- { id: 'recom', label: ' Platos y Especialidades' },
- { id: 'quiz', label: ' Test de Antojo' },
- { id: 'precios', label: ' Precios & Presupuesto' },
- { id: 'contacto', label: ' Teléfono & WhatsApp' },
- { id: 'ubicacion', label: ' Ubicación & Cómo Llegar' },
- { id: 'horarios', label: ' Horarios & Turnos' },
- { id: 'cocteles', label: ' Vinos & Coctelería' },
- { id: 'dietas', label: ' Dietas & Alergias' },
- { id: 'celebrar', label: ' Celebrar & Grupos' },
- { id: 'parqueo', label: ' Parqueo Privado' },
- { id: 'ambiente', label: ' Música & Dress Code' },
- { id: 'lluvia', label: ' Clima & Lluvia' },
- { id: 'mascotas', label: ' Niños & Mascotas' },
- { id: 'pagos', label: ' Métodos de Pago' },
- { id: 'tolerancia', label: ' Tolerancia & Espera' },
- { id: 'comprobante', label: ' Voucher & QR' },
- { id: 'historia', label: ' Filosofía Donde Ray' }
+  { id: 'aforo_vivo', label: '📊 Cupos en Vivo' },
+  { id: 'consultar_reserva', label: '🔍 Consultar Mi Reserva' },
+  { id: 'asistida', label: '📅 Reservar Paso a Paso' },
+  { id: 'recom', label: '🍲 Platos & Especialidades' },
+  { id: 'quiz', label: '✨ Test de Antojo' },
+  { id: 'precios', label: '💰 Precios & Presupuesto' },
+  { id: 'contacto', label: '📞 Teléfono & WhatsApp' },
+  { id: 'ubicacion', label: '📍 Ubicación & Cómo Llegar' },
+  { id: 'horarios', label: '🕒 Horarios & Turnos' },
+  { id: 'cocteles', label: '🍷 Vinos & Coctelería' },
+  { id: 'dietas', label: '🌱 Dietas & Alergias' },
+  { id: 'celebrar', label: '🎉 Celebrar & Grupos' },
+  { id: 'parqueo', label: '🚗 Parqueo Privado' },
+  { id: 'ambiente', label: '🎶 Música & Dress Code' },
+  { id: 'comprobante', label: '🎫 Voucher & QR' },
+  { id: 'pagos', label: '💳 Métodos de Pago' },
+  { id: 'historia', label: '🌴 Filosofía Donde Ray' }
 ];
 
 const INITIAL_MESSAGE = {
- id: 'welcome',
- sender: 'bot',
- text: '¡Wapin mi gente! Pura vida. Soy Ray, tu concierge gastronómico en Donde Ray aquí en Puerto Viejo de Talamanca. ¿Cómo te puedo ayudar hoy a organizar tu mesa o recomendarte nuestras especialidades de alta cocina al fogón?',
- actions: [
- { label: ' Reservar Paso a Paso', actionId: 'asistida' },
- { label: ' Consultar Cupos en Vivo', actionId: 'aforo_vivo' },
- { label: ' Platos Recomendados', actionId: 'recom' },
- { label: ' ¿Qué se te antoja hoy?', actionId: 'quiz' }
- ]
+  id: 'welcome',
+  sender: 'bot',
+  text: '¡Wapin mi gente! Pura vida. Soy Ray, tu concierge gastronómico en Donde Ray aquí en Puerto Viejo de Talamanca. ¿Cómo te puedo ayudar hoy a organizar tu mesa, verificar cupos en vivo o consultar el estado de tu reserva?',
+  actions: [
+    { label: '📊 Consultar Cupos en Vivo', actionId: 'aforo_vivo' },
+    { label: '🔍 Consultar Mi Reserva', actionId: 'consultar_reserva' },
+    { label: '📅 Reservar Paso a Paso', actionId: 'asistida' },
+    { label: '🍲 Platos Recomendados', actionId: 'recom' },
+    { label: '✨ ¿Qué se te antoja hoy?', actionId: 'quiz' }
+  ]
 };
 
 // Normalizador fonético y de tildes para entender cualquier frase en español
 const normalizeText = (str) => {
- if (!str) return '';
- return str
- .toLowerCase()
- .normalize('NFD')
- .replace(/[\u0300-\u036f]/g, '') // Quita acentos (á->a, é->e, etc.)
- .replace(/[¿?¡!.,;:()_'"/-]/g, ' ') // Quita signos de puntuación
- .replace(/\s+/g, ' ')
- .trim();
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // Quita acentos (á->a, é->e, etc.)
+    .replace(/[¿?¡!.,;:()_'"/-]/g, ' ') // Quita signos de puntuación
+    .replace(/\s+/g, ' ')
+    .trim();
 };
 
 export const ChatbotConcierge = () => {
- const [isOpen, setIsOpen] = useState(false);
- const [inputVal, setInputVal] = useState('');
- const [messages, setMessages] = useState([INITIAL_MESSAGE]);
- const [isTyping, setIsTyping] = useState(false);
- const [showAIConfig, setShowAIConfig] = useState(false);
- const [aiConfig, setAiConfig] = useState(getAIConfig());
- const [tempApiKey, setTempApiKey] = useState(aiConfig.apiKey);
- const [tempEndpoint, setTempEndpoint] = useState(aiConfig.endpoint);
+  const [isOpen, setIsOpen] = useState(false);
+  const [inputVal, setInputVal] = useState('');
+  const [messages, setMessages] = useState([INITIAL_MESSAGE]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [showAIConfig, setShowAIConfig] = useState(false);
+  const [aiConfig, setAiConfig] = useState(getAIConfig());
+  const [tempApiKey, setTempApiKey] = useState(aiConfig.apiKey);
+  const [tempEndpoint, setTempEndpoint] = useState(aiConfig.endpoint);
+  const [awaitingReservationQuery, setAwaitingReservationQuery] = useState(false);
 
- // Estado del flujo de reserva paso a paso dentro del chat
- const [bookingWizard, setBookingWizard] = useState({
- active: false,
- guests: null,
- date: null,
- time: null
- });
+  // Usuario autenticado (si lo hay)
+  const authContext = useContext(AuthContext);
+  const currentUser = authContext?.user || null;
 
- // Cerrar con tecla Escape
- useEffect(() => {
-  const handleKeyDown = (e) => {
-    if (e.key === 'Escape' && isOpen) {
-      setIsOpen(false);
+  // Estado del flujo de reserva paso a paso dentro del chat
+  const [bookingWizard, setBookingWizard] = useState({
+    active: false,
+    guests: null,
+    date: null,
+    time: null
+  });
+
+  // Cerrar con tecla Escape
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
+  const messagesEndRef = useRef(null);
+  const navigate = useNavigate();
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      scrollToBottom();
+    }
+  }, [messages, isOpen, isTyping]);
+
+  const addBotMessage = (text, actions = null) => {
+    setIsTyping(true);
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: String(Date.now() + Math.random()),
+          sender: 'bot',
+          text,
+          actions
+        }
+      ]);
+    }, 350);
+  };
+
+  // Reiniciar la conversación
+  const handleResetChat = () => {
+    setMessages([INITIAL_MESSAGE]);
+    setBookingWizard({ active: false, guests: null, date: null, time: null });
+    setAwaitingReservationQuery(false);
+  };
+
+  // Consulta de aforo en tiempo real hacia la base de datos (JSON Server / mockFetch)
+  const handleCheckLiveCapacity = async (targetDateParam = null) => {
+    setIsTyping(true);
+    try {
+      const today = getTodayDateString();
+      const targetDate = targetDateParam || today;
+      const isToday = targetDate === today;
+
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const res = await mockFetch(`${apiUrl}/reservations?date=${encodeURIComponent(targetDate)}`);
+      const data = res.ok ? await res.json() : [];
+
+      const slotCounts = {};
+      RESTAURANT_TIME_SLOTS.forEach((s) => (slotCounts[s] = 0));
+
+      let totalGuestsBooked = 0;
+      data.forEach((r) => {
+        const st = String(r.status || r.estado || '');
+        if (st !== 'Cancelada' && st !== 'Rechazada' && slotCounts[r.time] !== undefined) {
+          const guests = Number(r.guests || r.personas || 1);
+          slotCounts[r.time] += guests;
+          totalGuestsBooked += guests;
+        }
+      });
+
+      const totalSlots = RESTAURANT_TIME_SLOTS.length;
+      const totalMaxCapacity = totalSlots * 20; // 180 personas
+      const occupancyPercentage = Math.round((totalGuestsBooked / totalMaxCapacity) * 100);
+
+      const availableSlotsList = [];
+      const lines = RESTAURANT_TIME_SLOTS.map((s) => {
+        const booked = slotCounts[s] || 0;
+        const free = Math.max(0, 20 - booked);
+        const passed = isToday && isTimePassed(targetDate, s);
+
+        if (passed) {
+          return `⚪ ${formatTime12h(s)}: Turno finalizado`;
+        }
+        if (free <= 0) {
+          return `🔴 ${formatTime12h(s)}: Aforo completo (20/20)`;
+        }
+
+        availableSlotsList.push({ time: s, free, booked });
+        if (free <= 5) {
+          return `🟡 ${formatTime12h(s)}: ${free} cupos libres (¡Últimos lugares!)`;
+        }
+        return `🟢 ${formatTime12h(s)}: ${free} cupos disponibles`;
+      });
+
+      // Acciones rápidas para reservar en los turnos disponibles
+      const actions = [];
+      availableSlotsList.slice(0, 3).forEach((item) => {
+        actions.push({
+          label: `Reservar ${formatTime12h(item.time)} (${item.free} cupos) →`,
+          to: `/reservar?date=${targetDate}&time=${item.time}`
+        });
+      });
+
+      // Botón para consultar otro día
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
+      if (isToday) {
+        actions.push({
+          label: '📅 Consultar Mañana',
+          actionId: 'aforo_manana',
+          dateVal: tomorrowStr
+        });
+      } else {
+        actions.push({
+          label: '☀️ Consultar Hoy',
+          actionId: 'aforo_vivo',
+          dateVal: today
+        });
+      }
+
+      actions.push({
+        label: '📝 Reservar Paso a Paso',
+        actionId: 'asistida'
+      });
+
+      setIsTyping(false);
+      addBotMessage(
+        `📊 Aforo en tiempo real · Donde Ray\n` +
+        `📅 Fecha: ${formatDateToSpanish(targetDate) || targetDate}\n` +
+        `👥 Ocupación general: ${totalGuestsBooked} de ${totalMaxCapacity} comensales (${occupancyPercentage}% ocupado)\n` +
+        `───────────────────────\n` +
+        `${lines.join('\n')}\n` +
+        `───────────────────────\n` +
+        `Capacidad máxima estricta de 20 personas por turno. ¿Te gustaría asegurar tu mesa?`,
+        actions
+      );
+    } catch (err) {
+      console.error('Error al consultar aforo en vivo:', err);
+      setIsTyping(false);
+      addBotMessage(
+        'Hoy contamos con turnos de almuerzo (12:00 a 15:00) y cena (18:00 a 22:00). Puedes consultar el aforo interactivo en nuestro calendario:',
+        [{ label: 'Ver Calendario Completo →', to: '/reservar' }]
+      );
     }
   };
-  window.addEventListener('keydown', handleKeyDown);
-  return () => window.removeEventListener('keydown', handleKeyDown);
- }, [isOpen]);
 
- const messagesEndRef = useRef(null);
- const navigate = useNavigate();
+  // Consulta y rastreo de reserva en tiempo real
+  const handleCheckReservationStatus = async (searchQuery = null) => {
+    setIsTyping(true);
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || '';
+      const res = await mockFetch(`${apiUrl}/reservations`);
+      const allReservations = res.ok ? await res.json() : [];
 
- const scrollToBottom = () => {
- messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
- };
+      let matches = [];
 
- useEffect(() => {
- if (isOpen) {
- scrollToBottom();
- }
- }, [messages, isOpen, isTyping]);
+      // 1. Si no especificó término de búsqueda
+      if (!searchQuery) {
+        // Revisar si el usuario está logueado y tiene reservas
+        if (currentUser?.id || currentUser?.email) {
+          matches = allReservations.filter((r) => {
+            const byId = r.userId && String(r.userId) === String(currentUser.id);
+            const byEmail = r.email && currentUser.email && r.email.toLowerCase() === currentUser.email.toLowerCase();
+            return byId || byEmail;
+          });
+        }
+      } else {
+        // Búsqueda por término (código, id, correo, nombre o teléfono)
+        const clean = normalizeText(searchQuery);
+        matches = allReservations.filter((r) => {
+          const rId = String(r.id || '').toLowerCase();
+          const idMatch = rId === clean || rId.includes(clean) || clean.includes(rId.replace('res-', ''));
+          const nameMatch = normalizeText(r.guestName || r.cliente || r.name || '').includes(clean);
+          const emailMatch = (r.email || '').toLowerCase().includes(clean);
+          const phoneMatch = (r.phone || '').replace(/\D/g, '').includes(clean.replace(/\D/g, ''));
+          return idMatch || nameMatch || emailMatch || (clean.length >= 4 && phoneMatch);
+        });
+      }
 
- const addBotMessage = (text, actions = null) => {
- setIsTyping(true);
- setTimeout(() => {
- setIsTyping(false);
- setMessages((prev) => [
- ...prev,
- {
- id: String(Date.now() + Math.random()),
- sender: 'bot',
- text,
- actions
- }
- ]);
- }, 380);
- };
+      setIsTyping(false);
 
- // Consulta de aforo en tiempo real hacia JSON Server
- const handleCheckLiveCapacity = async () => {
- setIsTyping(true);
- try {
- const today = getTodayDateString();
- const apiUrl = import.meta.env.VITE_API_URL || '';
- const res = await mockFetch(`${apiUrl}/reservations?date=${today}`);
- const data = res.ok ? await res.json() : [];
+      // Si no se proporcionó término y el usuario no tiene reservas registradas
+      if (!searchQuery && matches.length === 0) {
+        setAwaitingReservationQuery(true);
+        addBotMessage(
+          '🔎 Para localizar tu mesa en tiempo real en nuestro sistema, por favor escribe tu número de reserva (ejemplo: #res-101 o 101), tu correo electrónico o tu nombre:',
+          [
+            { label: '📂 Ir a Mis Reservas', to: '/mis-reservas' },
+            { label: '📅 Hacer una Reserva Nueva', to: '/reservar' }
+          ]
+        );
+        return;
+      }
 
- const slots = ['12:00', '13:00', '14:00', '15:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
- const slotCounts = {};
- slots.forEach((s) => (slotCounts[s] = 0));
+      // Si buscó y no encontró nada
+      if (matches.length === 0) {
+        setAwaitingReservationQuery(true);
+        addBotMessage(
+          `No localicé ninguna reserva que coincida con "${searchQuery}".\n\nPor favor verifica el código (ej. res-101) o el correo que usaste al registrarla. Puedes escribirlo de nuevo a continuación:`,
+          [
+            { label: '📂 Ver en Mis Reservas ↗', to: '/mis-reservas' },
+            { label: '📅 Crear Nueva Reserva →', to: '/reservar' }
+          ]
+        );
+        return;
+      }
 
- data.forEach((r) => {
- if (r.status !== 'Cancelada' && slotCounts[r.time] !== undefined) {
- slotCounts[r.time] += Number(r.guests || 1);
- }
- });
+      // Si encontró reservas
+      setAwaitingReservationQuery(false);
+      const count = matches.length;
+      const intro = searchQuery
+        ? `¡Localicé ${count} ${count === 1 ? 'reserva' : 'reservas'} para tu búsqueda!`
+        : `¡Hola ${currentUser?.name?.split(' ')[0] || 'amigo/a'}! Aquí tienes tus reservas activas en Donde Ray:`;
 
- const lines = slots.map((s) => {
- const booked = slotCounts[s] || 0;
- const free = Math.max(0, 20 - booked);
- const icon = free <= 0 ? '' : free <= 5 ? '🟡' : '🟢';
- return `${icon} ${s}: ${free > 0 ? `${free} cupos libres` : 'Agotado (20/20)'}`;
- });
+      const cardsText = matches.slice(0, 3).map((r) => {
+        const status = r.status || r.estado || 'Pendiente';
+        const statusIcon = status === 'Confirmada'
+          ? '🟢 Confirmada (¡Mesa lista!)'
+          : status === 'Pendiente'
+          ? '🟡 Pendiente (En revisión por el equipo de sala)'
+          : status === 'Rechazada'
+          ? '🔴 Rechazada (Sin aforo)'
+          : '⚪ Cancelada';
 
- setIsTyping(false);
- addBotMessage(
- ` Aforo en tiempo real para hoy (${today}):\n\n${lines.join('\n')}\n\nEl cupo máximo por turno es de 20 personas. ¿Deseas asegurar tu mesa para hoy?`,
- [
- { label: 'Asegurar Mi Mesa Hoy →', to: `/reservar?date=${today}` },
- { label: 'Elegir Otra Fecha', actionId: 'asistida' }
- ]
- );
- } catch {
- setIsTyping(false);
- addBotMessage(
- 'Hoy disponemos de disponibilidad en turnos de almuerzo (12:00 - 15:00) y cena (18:00 - 22:00). Cada turno tiene cupo exclusivo de 20 personas.',
- [{ label: 'Ver Calendario Completo →', to: '/reservar' }]
- );
- }
- };
+        return (
+          `📋 Reserva #${r.id}\n` +
+          `👤 Titular: ${r.guestName || r.cliente || 'Comensal'}\n` +
+          `📅 Fecha: ${formatDateToSpanish(r.date) || r.date}\n` +
+          `🕒 Horario: ${formatTime12h(r.time) || r.time}\n` +
+          `👥 Personas: ${r.guests || 2} comensales\n` +
+          `🏷️ Turno/Ocasión: ${r.type || 'Cena'}\n` +
+          `📌 Estado actual: ${statusIcon}` +
+          (r.notes ? `\n📝 Peticiones: "${r.notes}"` : '')
+        );
+      }).join('\n\n────────────────\n\n');
+
+      addBotMessage(
+        `${intro}\n\n${cardsText}\n\n¿Deseas descargar tu comprobante con código QR o necesitas realizar algún cambio?`,
+        [
+          { label: '🎟️ Ver Comprobante y QR', to: '/mis-reservas' },
+          { label: '🔄 Reagendar o Modificar', to: '/mis-reservas' },
+          { label: '📞 Contactar al Restaurante', actionId: 'contacto' },
+          { label: '📅 Nueva Reserva', to: '/reservar' }
+        ]
+      );
+    } catch (err) {
+      console.error('Error al consultar estado de reserva:', err);
+      setIsTyping(false);
+      addBotMessage(
+        'Ocurrió un inconveniente al consultar la reserva. Puedes revisarla directamente en tu sección de reservas:',
+        [{ label: 'Ir a Mis Reservas →', to: '/mis-reservas' }]
+      );
+    }
+  };
 
  // Despachador central de intenciones garantizado
  const handleIntent = (intentId, userPrompt = null, extraData = null) => {
@@ -271,9 +459,20 @@ export const ChatbotConcierge = () => {
  break;
  }
 
- case 'aforo_vivo':
- handleCheckLiveCapacity();
- break;
+  case 'aforo_vivo':
+    handleCheckLiveCapacity(extraData?.date || null);
+    break;
+
+  case 'aforo_manana': {
+    const tm = new Date();
+    tm.setDate(tm.getDate() + 1);
+    handleCheckLiveCapacity(tm.toISOString().split('T')[0]);
+    break;
+  }
+
+  case 'consultar_reserva':
+    handleCheckReservationStatus(extraData?.query || null);
+    break;
 
  case 'contacto':
  addBotMessage(
@@ -568,34 +767,40 @@ export const ChatbotConcierge = () => {
  const detectIntentFromText = (rawText) => {
  const text = normalizeText(rawText);
 
- // 1. Detección directa de número de personas para reserva ("mesa para 2", "somos 4", "para 5 personas")
- const partyMatch = text.match(/(?:mesa para|para|somos|grupo de)\s+(\d+)/) || text.match(/^(\d+)\s*(?:personas|personas\?|comensales)?$/);
- if (partyMatch && partyMatch[1]) {
- const num = parseInt(partyMatch[1], 10);
- if (num >= 1 && num <= 20) {
- return { intent: 'asistida', extra: { guests: num } };
- }
+ // 1. Consultar estado de reserva o código específico (ej: #res-101, estado de mi reserva, buscar mi reserva)
+ const codeMatch = text.match(/(?:reserva|codigo|ticket|numero|#)\s*([a-zA-Z0-9_-]+)/i) ||
+                   text.match(/#?res-?[0-9]+/i) ||
+                   (text.trim().length <= 8 && /^#?[0-9]+$/.test(text.trim()) ? [text.trim(), text.trim()] : null);
+
+ if (
+   codeMatch ||
+   text.includes('consultar mi reserva') ||
+   text.includes('estado de mi reserva') ||
+   text.includes('como va mi reserva') ||
+   text.includes('ver mi reserva') ||
+   text.includes('buscar reserva') ||
+   text.includes('consultar reserva') ||
+   text.includes('mi reserva') ||
+   (text.includes('reserva') && (text.includes('estado') || text.includes('codigo') || text.includes('estatus') || text.includes('localizar')))
+ ) {
+   const query = codeMatch ? (codeMatch[1] || codeMatch[0]).replace('#', '') : null;
+   return { intent: 'consultar_reserva', extra: { query } };
  }
 
- // 2. Contacto / Teléfono / WhatsApp / Redes
- if (
- text.includes('telefono') || text.includes('whatsapp') || text.includes('celular') ||
- text.includes('llamar') || text.includes('contacto') || text.includes('comunicar') ||
- text.includes('correo') || text.includes('email') || text.includes('instagram') ||
- text.includes('numero') || text.includes('hablar con alguien')
- ) {
- return { intent: 'contacto' };
- }
+  // 2. Detección directa de número de personas para reserva ("mesa para 2", "somos 4", "para 5 personas")
+  const partyMatch = text.match(/(?:mesa para|para|somos|grupo de)\s+(\d+)/) || text.match(/^(\d+)\s*(?:personas|personas\?|comensales)?$/);
+  if (partyMatch && partyMatch[1]) {
+    return { intent: 'asistida', extra: { guests: parseInt(partyMatch[1], 10) } };
+  }
 
- // 3. Precios / Cuánto cuesta / Presupuesto / Dinero
- if (
- text.includes('precio') || text.includes('costo') || text.includes('cuanto cuesta') ||
- text.includes('cuanto sale') || text.includes('cuanto vale') || text.includes('caro') ||
- text.includes('barato') || text.includes('presupuesto') || text.includes('tarifa') ||
- text.includes('cuenta') || text.includes('cuanto se gasta')
- ) {
- return { intent: 'precios' };
- }
+  // 3. Precios y presupuesto
+  if (
+    text.includes('precio') || text.includes('cuanto cuesta') || text.includes('costo') ||
+    text.includes('caro') || text.includes('barato') || text.includes('presupuesto') ||
+    text.includes('cuanto vale') || text.includes('tarifa')
+  ) {
+    return { intent: 'precios' };
+  }
 
  // 4. Aforo en vivo / Capacidad / Hay campo hoy
  if (
@@ -831,9 +1036,17 @@ export const ChatbotConcierge = () => {
     // 1. Mostrar mensaje del usuario en pantalla
     const userMsg = { id: String(Date.now()), sender: 'user', text };
     setMessages((prev) => [...prev, userMsg]);
+
+    // 2. Si estábamos esperando el código o dato de búsqueda de reserva
+    if (awaitingReservationQuery) {
+      setAwaitingReservationQuery(false);
+      handleCheckReservationStatus(text);
+      return;
+    }
+
     setIsTyping(true);
 
-    // 2. Si hay conexión de IA configurada, consultar al modelo
+    // 3. Si hay conexión de IA configurada, consultar al modelo
     if (aiConfig.apiKey) {
       try {
         const aiResult = await queryAIConcierge(text, [...messages, userMsg]);
@@ -841,8 +1054,9 @@ export const ChatbotConcierge = () => {
           setIsTyping(false);
           addBotMessage(aiResult.text, [
             { label: '📅 Reservar Mesa Ahora →', to: '/reservar' },
-            { label: '📖 Ver Menú de Autor', to: '/menu' },
-            { label: '📊 Consultar Cupos de Hoy', actionId: 'aforo_vivo' }
+            { label: '📊 Consultar Cupos de Hoy', actionId: 'aforo_vivo' },
+            { label: '🔍 Consultar Mi Reserva', actionId: 'consultar_reserva' },
+            { label: '📖 Ver Menú de Autor', to: '/menu' }
           ]);
           return;
         }
@@ -851,13 +1065,13 @@ export const ChatbotConcierge = () => {
       }
     }
 
-    // 3. Fallback al motor semántico local entrenado de Donde Ray
+    // 4. Fallback al motor semántico local entrenado de Donde Ray
     const { intent, extra } = detectIntentFromText(text);
     handleIntent(intent, text, extra);
   };
 
-  // Manejador del Wizard de Reserva paso a paso
-  const handleWizardStep = (step, val) => {
+  // Manejador del Wizard de Reserva paso a paso con aforo real
+  const handleWizardStep = async (step, val) => {
     if (step === 'guests') {
       setBookingWizard((prev) => ({ ...prev, guests: val }));
       const nextDays = getNextDays(5);
@@ -871,30 +1085,83 @@ export const ChatbotConcierge = () => {
       );
     } else if (step === 'date') {
       setBookingWizard((prev) => ({ ...prev, date: val }));
-      addBotMessage(
-        `Fecha seleccionada: ${val}. ¿Qué turno prefieres?`,
-        [
-          { label: ' Almuerzo · 13:00', wizardStep: 'time', val: '13:00' },
-          { label: ' Almuerzo · 14:00', wizardStep: 'time', val: '14:00' },
-          { label: ' Cena · 19:00', wizardStep: 'time', val: '19:00' },
-          { label: ' Cena · 20:00', wizardStep: 'time', val: '20:00' },
-          { label: ' Cena · 21:00', wizardStep: 'time', val: '21:00' }
-        ]
-      );
+      setIsTyping(true);
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || '';
+        const res = await mockFetch(`${apiUrl}/reservations?date=${encodeURIComponent(val)}`);
+        const reservations = res.ok ? await res.json() : [];
+
+        const slotCounts = {};
+        RESTAURANT_TIME_SLOTS.forEach((s) => (slotCounts[s] = 0));
+        reservations.forEach((r) => {
+          const st = String(r.status || r.estado || '');
+          if (st !== 'Cancelada' && st !== 'Rechazada' && slotCounts[r.time] !== undefined) {
+            slotCounts[r.time] += Number(r.guests || r.personas || 1);
+          }
+        });
+
+        const isToday = val === getTodayDateString();
+        const requiredGuests = bookingWizard.guests || 2;
+        const availableOptions = [];
+
+        RESTAURANT_TIME_SLOTS.forEach((slot) => {
+          const booked = slotCounts[slot] || 0;
+          const free = Math.max(0, 20 - booked);
+          const passed = isToday && isTimePassed(val, slot);
+          if (!passed && free >= requiredGuests) {
+            const isLunch = Number(slot.split(':')[0]) < 16;
+            availableOptions.push({
+              label: `${isLunch ? '☀️' : '🌙'} ${formatTime12h(slot)} (${free} cupos libres)`,
+              wizardStep: 'time',
+              val: slot
+            });
+          }
+        });
+
+        setIsTyping(false);
+        if (availableOptions.length === 0) {
+          addBotMessage(
+            `Aviso: Para el día ${formatDateToSpanish(val) || val} no encontramos turnos con ${requiredGuests} cupos libres suficientes. ¿Deseas probar con otra fecha cercana?`,
+            getNextDays(5).map((d) => ({
+              label: `${d.label} (${d.weekday.slice(0, 3)})`,
+              wizardStep: 'date',
+              val: d.dateString
+            }))
+          );
+        } else {
+          addBotMessage(
+            `Fecha elegida: ${formatDateToSpanish(val) || val}.\n\nTurnos con aforo disponible para ${requiredGuests} ${requiredGuests === 1 ? 'persona' : 'personas'}:`,
+            availableOptions
+          );
+        }
+      } catch (err) {
+        console.error('Error in wizard availability:', err);
+        setIsTyping(false);
+        addBotMessage(
+          `Fecha seleccionada: ${formatDateToSpanish(val) || val}. ¿Qué turno prefieres?`,
+          [
+            { label: '☀️ Almuerzo · 1:00 PM', wizardStep: 'time', val: '13:00' },
+            { label: '☀️ Almuerzo · 2:00 PM', wizardStep: 'time', val: '14:00' },
+            { label: '🌙 Cena · 7:00 PM', wizardStep: 'time', val: '19:00' },
+            { label: '🌙 Cena · 8:00 PM', wizardStep: 'time', val: '20:00' },
+            { label: '🌙 Cena · 9:00 PM', wizardStep: 'time', val: '21:00' }
+          ]
+        );
+      }
     } else if (step === 'time') {
       const targetGuests = bookingWizard.guests || 2;
       const targetDate = bookingWizard.date || getTodayDateString();
       const targetTime = val;
 
       addBotMessage(
-        `¡Perfecto! Todo listo para tu reserva:\n\n` +
-        `• Personas: ${targetGuests}\n` +
-        `• Fecha: ${targetDate}\n` +
-        `• Horario: ${targetTime}\n\n` +
+        `¡Perfecto! Todo listo para tu reserva en Donde Ray:\n\n` +
+        `• Comensales: ${targetGuests} personas\n` +
+        `• Fecha: ${formatDateToSpanish(targetDate) || targetDate}\n` +
+        `• Horario: ${formatTime12h(targetTime) || targetTime}\n\n` +
         `Haz clic abajo para abrir el formulario con estos datos prellenados y confirmar:`,
         [
           {
-            label: `Confirmar Mesa (${targetGuests} pers. / ${targetTime}) →`,
+            label: `Confirmar Mesa (${targetGuests} pers. / ${formatTime12h(targetTime)}) →`,
             to: `/reservar?date=${targetDate}&time=${targetTime}&guests=${targetGuests}`
           }
         ]
@@ -911,6 +1178,23 @@ export const ChatbotConcierge = () => {
 
     if (action.wizardStep) {
       handleWizardStep(action.wizardStep, action.val);
+      return;
+    }
+
+    if (action.actionId === 'aforo_vivo') {
+      handleCheckLiveCapacity(action.dateVal || null);
+      return;
+    }
+
+    if (action.actionId === 'aforo_manana') {
+      const tm = new Date();
+      tm.setDate(tm.getDate() + 1);
+      handleCheckLiveCapacity(tm.toISOString().split('T')[0]);
+      return;
+    }
+
+    if (action.actionId === 'consultar_reserva') {
+      handleCheckReservationStatus(action.query || null);
       return;
     }
 
@@ -964,6 +1248,19 @@ export const ChatbotConcierge = () => {
             </div>
 
             <div className="chatbot-header-actions">
+              <button
+                type="button"
+                className="chatbot-config-btn"
+                onClick={() => {
+                  setMessages([INITIAL_MESSAGE]);
+                  setBookingWizard({ active: false, guests: null, date: null, time: null });
+                  setAwaitingReservationQuery(false);
+                }}
+                title="Reiniciar conversación"
+                aria-label="Reiniciar conversación"
+              >
+                ↺
+              </button>
               <button
                 type="button"
                 className="chatbot-config-btn"
