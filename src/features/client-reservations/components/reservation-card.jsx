@@ -45,22 +45,22 @@ export const ReservationCard = ({
     switch (currentStatus) {
       case 'Confirmada':
         return {
-          background: 'rgba(16, 185, 129, 0.15)',
-          color: '#34d399',
-          border: '1px solid rgba(16, 185, 129, 0.4)'
+          background: 'rgba(48, 75, 61, 0.12)',
+          color: '#264a39',
+          border: '1px solid rgba(48, 75, 61, 0.35)'
         };
       case 'Cancelada':
         return {
-          background: 'rgba(239, 68, 68, 0.15)',
-          color: '#f87171',
-          border: '1px solid rgba(239, 68, 68, 0.4)'
+          background: '#fef2f2',
+          color: '#b91c1c',
+          border: '1px solid #fca5a5'
         };
       case 'Pendiente':
       default:
         return {
-          background: 'rgba(245, 158, 11, 0.15)',
-          color: '#fbbf24',
-          border: '1px solid rgba(245, 158, 11, 0.4)'
+          background: 'rgba(177, 122, 60, 0.12)',
+          color: '#9c6828',
+          border: '1px solid rgba(177, 122, 60, 0.35)'
         };
     }
   };
@@ -165,7 +165,7 @@ export const ReservationCard = ({
               disabled={savingEdit}
               style={styles.saveBtn}
             >
-              {savingEdit ? 'Guardando...' : '💾 Guardar Cambios'}
+              {savingEdit ? 'Guardando...' : ' Guardar Cambios'}
             </button>
             <button
               type="button"
@@ -184,7 +184,7 @@ export const ReservationCard = ({
           {/* Contenido Principal: Fecha, Hora, Personas */}
           <div style={styles.mainInfo}>
             <div style={styles.dateBlock}>
-              <span style={styles.icon}>📅</span>
+              <span style={styles.icon}></span>
               <div>
                 <div style={styles.dateText}>{formatDateToSpanish(date)}</div>
                 <div style={styles.timeText}>{formatTime12h(time)}</div>
@@ -193,9 +193,9 @@ export const ReservationCard = ({
 
             <div style={styles.chipsRow}>
               <span style={styles.chip}>
-                👥 {guests} {guests === 1 ? 'Persona' : 'Personas'}
+                 {guests} {guests === 1 ? 'Persona' : 'Personas'}
               </span>
-              <span style={styles.chip}>🏷️ {type || 'Cena'}</span>
+              <span style={styles.chip}> {type || 'Cena'}</span>
             </div>
           </div>
 
@@ -226,7 +226,7 @@ export const ReservationCard = ({
               onClick={() => onViewVoucher && onViewVoucher(reservation)}
               style={styles.voucherButton}
             >
-              🎟️ Ver Voucher
+               Ver Voucher
             </button>
 
             {status === 'Pendiente' && onReschedule && (
@@ -235,7 +235,7 @@ export const ReservationCard = ({
                 onClick={() => setIsEditing(true)}
                 style={styles.rescheduleButton}
               >
-                ✏️ Reagendar
+                 Reagendar
               </button>
             )}
 
@@ -258,22 +258,23 @@ export const ReservationCard = ({
 
 const styles = {
   card: {
-    background: 'linear-gradient(145deg, rgba(26, 28, 36, 0.95), rgba(18, 19, 24, 0.98))',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '16px',
-    padding: '20px',
+    background: '#ebe5d8',
+    border: '1px solid #d6d1c5',
+    borderRadius: '12px',
+    padding: '24px',
     display: 'flex',
     flexDirection: 'column',
     gap: '16px',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.35)',
+    boxShadow: '0 4px 18px rgba(32, 40, 32, 0.05)',
     transition: 'transform 0.2s ease, border-color 0.2s ease',
-    textAlign: 'left'
+    textAlign: 'left',
+    color: '#202820'
   },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+    borderBottom: '1px solid #d6d1c5',
     paddingBottom: '12px'
   },
   idGroup: {
@@ -282,22 +283,23 @@ const styles = {
     gap: '6px'
   },
   idLabel: {
-    fontSize: '12px',
-    color: '#9ca3af',
-    textTransform: 'uppercase'
+    fontSize: '11px',
+    color: '#73786f',
+    textTransform: 'uppercase',
+    fontWeight: '600'
   },
   idValue: {
     fontSize: '14px',
     fontWeight: '700',
-    color: '#ffd89b'
+    color: '#b45309'
   },
   statusBadge: {
-    fontSize: '12px',
+    fontSize: '11px',
     fontWeight: '700',
-    padding: '4px 10px',
-    borderRadius: '8px',
+    padding: '4px 12px',
+    borderRadius: '20px',
     textTransform: 'uppercase',
-    letterSpacing: '0.5px'
+    letterSpacing: '0.06em'
   },
   mainInfo: {
     display: 'flex',
@@ -310,21 +312,24 @@ const styles = {
     gap: '12px'
   },
   icon: {
-    fontSize: '24px',
-    background: 'rgba(212, 163, 89, 0.15)',
+    fontSize: '18px',
+    background: 'rgba(15, 81, 50, 0.1)',
+    color: '#0f5132',
     padding: '8px',
-    borderRadius: '10px'
+    borderRadius: '8px'
   },
   dateText: {
-    fontSize: '15px',
+    fontFamily: 'var(--font-display, "Fraunces", serif)',
+    fontSize: '20px',
     fontWeight: '600',
-    color: '#ffffff',
+    color: '#202820',
+    letterSpacing: '-0.02em',
     textTransform: 'capitalize'
   },
   timeText: {
     fontSize: '13px',
-    color: '#ffd89b',
-    fontWeight: '500'
+    color: '#0f5132',
+    fontWeight: '700'
   },
   chipsRow: {
     display: 'flex',
@@ -332,20 +337,22 @@ const styles = {
     flexWrap: 'wrap'
   },
   chip: {
-    background: 'rgba(255, 255, 255, 0.06)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '6px',
+    background: '#f4f1e9',
+    border: '1px solid #d6d1c5',
+    borderRadius: '4px',
     padding: '4px 10px',
     fontSize: '12px',
-    color: '#d1d5db'
+    color: '#202820',
+    fontWeight: '500'
   },
   detailsBox: {
-    background: 'rgba(15, 17, 23, 0.6)',
-    borderRadius: '10px',
-    padding: '12px',
+    background: '#f4f1e9',
+    borderRadius: '8px',
+    border: '1px solid #d6d1c5',
+    padding: '14px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
+    gap: '8px',
     fontSize: '13px'
   },
   detailRow: {
@@ -353,21 +360,22 @@ const styles = {
     gap: '8px'
   },
   detailLabel: {
-    color: '#9ca3af',
+    color: '#73786f',
     fontWeight: '500'
   },
   detailValue: {
-    color: '#e5e7eb',
+    color: '#202820',
+    fontWeight: '600',
     wordBreak: 'break-word'
   },
   notesBlock: {
     marginTop: '4px',
-    borderTop: '1px dashed rgba(255, 255, 255, 0.1)',
-    paddingTop: '6px'
+    borderTop: '1px dashed #e8e4db',
+    paddingTop: '8px'
   },
   notesText: {
     margin: '2px 0 0',
-    color: '#d1d5db',
+    color: '#555b52',
     fontStyle: 'italic',
     fontSize: '12px'
   },
@@ -375,28 +383,29 @@ const styles = {
     display: 'flex',
     gap: '8px',
     marginTop: 'auto',
-    paddingTop: '8px',
-    borderTop: '1px solid rgba(255, 255, 255, 0.08)'
+    paddingTop: '12px',
+    borderTop: '1px solid #f0ece3'
   },
   voucherButton: {
     flex: 2,
-    background: 'linear-gradient(135deg, rgba(212, 163, 89, 0.2), rgba(180, 120, 40, 0.3))',
-    border: '1px solid rgba(212, 163, 89, 0.5)',
-    color: '#ffd89b',
+    background: '#0f5132',
+    border: 'none',
+    color: '#f8f5ed',
     borderRadius: '8px',
-    padding: '8px 10px',
+    padding: '10px 12px',
     fontSize: '12px',
-    fontWeight: '600',
+    fontWeight: '700',
     cursor: 'pointer',
-    textAlign: 'center'
+    textAlign: 'center',
+    boxShadow: '0 2px 8px rgba(15, 81, 50, 0.25)'
   },
   rescheduleButton: {
     flex: 2,
-    background: 'rgba(59, 130, 246, 0.15)',
-    border: '1px solid rgba(59, 130, 246, 0.4)',
-    color: '#93c5fd',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
+    color: '#202820',
     borderRadius: '8px',
-    padding: '8px 10px',
+    padding: '10px 12px',
     fontSize: '12px',
     fontWeight: '600',
     cursor: 'pointer',
@@ -405,10 +414,10 @@ const styles = {
   cancelButton: {
     flex: 1,
     background: 'transparent',
-    border: '1px solid rgba(239, 68, 68, 0.3)',
-    color: '#f87171',
+    border: '1px solid #fca5a5',
+    color: '#dc2626',
     borderRadius: '8px',
-    padding: '8px 10px',
+    padding: '10px 12px',
     fontSize: '12px',
     fontWeight: '500',
     cursor: 'pointer'
@@ -417,16 +426,17 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
-    background: 'rgba(15, 17, 23, 0.8)',
+    background: '#f4f1e9',
     borderRadius: '10px',
-    padding: '14px',
-    border: '1px solid rgba(212, 163, 89, 0.3)'
+    padding: '16px',
+    border: '1px solid #d6d1c5'
   },
   editTitle: {
-    fontSize: '13px',
+    fontSize: '12px',
     fontWeight: '700',
-    color: '#ffd89b',
-    textTransform: 'uppercase'
+    color: '#b17a3c',
+    textTransform: 'uppercase',
+    letterSpacing: '0.04em'
   },
   editField: {
     display: 'flex',
@@ -435,26 +445,26 @@ const styles = {
   },
   editLabel: {
     fontSize: '11px',
-    color: '#9ca3af'
+    color: '#73786f',
+    fontWeight: '600'
   },
   editInput: {
-    background: 'rgba(26, 28, 36, 0.9)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
     borderRadius: '6px',
-    color: '#ffffff',
-    padding: '6px 10px',
+    color: '#202820',
+    padding: '8px 12px',
     fontSize: '13px',
     outline: 'none'
   },
   editSelect: {
-    background: 'rgba(26, 28, 36, 0.9)',
-    border: '1px solid rgba(255, 255, 255, 0.15)',
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
     borderRadius: '6px',
-    color: '#ffffff',
-    padding: '6px 10px',
+    color: '#202820',
+    padding: '8px 12px',
     fontSize: '13px',
-    outline: 'none',
-    cursor: 'pointer'
+    outline: 'none'
   },
   editError: {
     background: 'rgba(239, 68, 68, 0.2)',
@@ -470,22 +480,23 @@ const styles = {
     marginTop: '6px'
   },
   saveBtn: {
-    flex: 1,
-    background: '#10b981',
-    color: '#064e3b',
+    flex: 2,
+    background: '#304b3d',
     border: 'none',
+    color: '#f8f5ed',
     borderRadius: '6px',
-    padding: '8px 12px',
+    padding: '10px',
     fontSize: '12px',
-    fontWeight: '700',
+    fontWeight: '600',
     cursor: 'pointer'
   },
   cancelEditBtn: {
-    background: 'transparent',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    color: '#d1d5db',
+    flex: 1,
+    background: '#ffffff',
+    border: '1px solid #d6d1c5',
+    color: '#73786f',
     borderRadius: '6px',
-    padding: '8px 12px',
+    padding: '10px',
     fontSize: '12px',
     cursor: 'pointer'
   }

@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useReservations } from '../../features/client-reservations/use-reservations.js';
 import { AvailabilityCalendar } from '../../features/client-reservations/components/availability-calendar.jsx';
 import { BookingForm } from '../../features/client-reservations/components/booking-form.jsx';
@@ -6,6 +7,11 @@ import { VoucherTicket } from '../../features/client-reservations/components/vou
 import { MAX_CAPACITY_PER_SLOT } from '../../shared/utils/reservation-rules.js';
 
 export const BookReservationPage = () => {
+  const [searchParams] = useSearchParams();
+  const paramDate = searchParams.get('date');
+  const paramTime = searchParams.get('time');
+  const paramGuests = searchParams.get('guests');
+
   const {
     currentUser,
     selectedDate,
@@ -21,25 +27,29 @@ export const BookReservationPage = () => {
     clearVoucher
   } = useReservations();
 
-  const [selectedTime, setSelectedTime] = useState('');
-  const [guestsCount, setGuestsCount] = useState(2);
+  const [selectedTime, setSelectedTime] = useState(paramTime || '');
+  const [guestsCount, setGuestsCount] = useState(paramGuests ? Math.max(1, Number(paramGuests)) : 2);
   const [successBanner, setSuccessBanner] = useState(null);
 
-  // Calcular la disponibilidad de cada franja para la cantidad de comensales seleccionada
-  const slotsAvailability = calculateAvailability(guestsCount);
+  const [prevParams, setPrevParams] = useState({ date: paramDate, time: paramTime, guests: paramGuests });
+  if (paramDate !== prevParams.date || paramTime !== prevParams.time || paramGuests !== prevParams.guests) {
+    setPrevParams({ date: paramDate, time: paramTime, guests: paramGuests });
+    if (paramTime) setSelectedTime(paramTime);
+    if (paramGuests) setGuestsCount(Math.max(1, Number(paramGuests)));
+    if (paramDate) setSelectedDate(paramDate);
+  }
 
-  // Si la fecha cambia o el horario elegido ya no está disponible con la nueva cantidad de comensales, resetearlo
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (selectedTime) {
-        const currentSlot = slotsAvailability.find((s) => s.time === selectedTime);
-        if (!currentSlot || !currentSlot.isAvailable) {
-          setSelectedTime('');
-        }
-      }
-    }, 0);
-    return () => clearTimeout(timer);
-  }, [selectedDate, guestsCount, slotsAvailability, selectedTime]);
+  // Memoizar el cálculo de disponibilidad para no recrear el array en cada render
+  const slotsAvailability = useMemo(
+    () => calculateAvailability(guestsCount),
+    [calculateAvailability, guestsCount]
+  );
+
+  // Derivar si la franja horaria sigue disponible; si no, queda deseleccionada sin efectos secundarios
+  const isCurrentSlotAvailable = selectedTime
+    ? Boolean(slotsAvailability.find((s) => s.time === selectedTime)?.isAvailable)
+    : false;
+  const effectiveSelectedTime = isCurrentSlotAvailable ? selectedTime : '';
 
   const handleBookingSubmit = async (formData) => {
     setSuccessBanner(null);
@@ -55,59 +65,61 @@ export const BookReservationPage = () => {
   };
 
   return (
-    <div style={styles.pageWrapper}>
+    <div className="reservation-shell">
       {/* Banner / Header Principal */}
-      <header style={styles.pageHeader}>
-        <span style={styles.restaurantTag}>DONDE RAY RESTAURANTE</span>
-        <h1 style={styles.heading}>Reserva Tu Mesa</h1>
-        <p style={styles.leadText}>
-          Vive una experiencia gastronómica inigualable. Selecciona tu fecha, consulta la
-          disponibilidad de cupos en tiempo real y asegura tu lugar.
+      <header className="page-intro reservation-intro">
+        <span className="eyebrow">Reservas · Donde Ray</span>
+        <h1>La mesa está lista,<br /><em>solo faltas tú.</em></h1>
+        <p className="lead">
+          Alta cocina caribeña frente al mar de Puerto Viejo de Talamanca. Selecciona tu fecha, consulta el
+          aforo en tiempo real y asegura tu experiencia gastronómica sin esperas.
         </p>
-
-        {/* Políticas destacadas */}
-        <div style={styles.policiesRow}>
-          <div style={styles.policyPill}>
-            <span>👥</span>
-            <span>Máx. {MAX_CAPACITY_PER_SLOT} personas por turno</span>
-          </div>
-          <div style={styles.policyPill}>
-            <span>🛡️</span>
-            <span>Estado inicial: Pendiente</span>
-          </div>
-          <div style={styles.policyPill}>
-            <span>📅</span>
-            <span>Límite de 5 reservas por cliente al día</span>
-          </div>
-        </div>
       </header>
+
+      {/* Políticas destacadas editoriales */}
+      <div className="reservation-policies-strip">
+        <div className="reservation-policy-item">
+          <span className="reservation-policy-label">Cupo Garantizado</span>
+          <span className="reservation-policy-value">Máximo {MAX_CAPACITY_PER_SLOT} personas por turno</span>
+        </div>
+        <div className="reservation-policy-item">
+          <span className="reservation-policy-label">Estado Inicial</span>
+          <span className="reservation-policy-value">Ingreso inmediato como Pendiente</span>
+        </div>
+        <div className="reservation-policy-item">
+          <span className="reservation-policy-label">Límite Diario</span>
+          <span className="reservation-policy-value">Hasta 5 reservas por cliente al día</span>
+        </div>
+      </div>
 
       {/* Banner de Éxito */}
       {successBanner && (
-        <div style={styles.successBanner} role="alert">
-          <div style={styles.successIcon}>🎉</div>
-          <div style={{ flex: 1 }}>
-            <h4 style={styles.successTitle}>¡Reserva Creada Satisfactoriamente!</h4>
-            <p style={styles.successMessage}>{successBanner.message}</p>
+        <div className="reservation-alert-success" role="alert">
+          <div>
+            <h4>¡Reserva Registrada Satisfactoriamente!</h4>
+            <p>{successBanner.message}</p>
           </div>
           <button
             type="button"
             onClick={() => setActiveVoucher(successBanner.reservation)}
-            style={styles.viewVoucherBtn}
+            className="button button--primary button--small"
           >
-            🎟️ Ver Comprobante
+            Ver Comprobante Digital →
           </button>
         </div>
       )}
 
       {/* Grid Principal de 2 Columnas */}
-      <main style={styles.mainGrid}>
+      <main className="reservation-grid">
         {/* Columna Izquierda: Calendario y Horarios */}
         <section aria-label="Selección de Fecha y Disponibilidad">
           <AvailabilityCalendar
             selectedDate={selectedDate}
-            onDateChange={setSelectedDate}
-            selectedTime={selectedTime}
+            onDateChange={(newDate) => {
+              setSelectedDate(newDate);
+              setSelectedTime('');
+            }}
+            selectedTime={effectiveSelectedTime}
             onTimeSelect={setSelectedTime}
             slotsAvailability={slotsAvailability}
             guestsCount={guestsCount}
@@ -121,7 +133,7 @@ export const BookReservationPage = () => {
         <section aria-label="Formulario de Reserva">
           <BookingForm
             selectedDate={selectedDate}
-            selectedTime={selectedTime}
+            selectedTime={effectiveSelectedTime}
             currentUser={currentUser}
             guestsCount={guestsCount}
             onGuestsChange={setGuestsCount}
@@ -141,106 +153,4 @@ export const BookReservationPage = () => {
   );
 };
 
-const styles = {
-  pageWrapper: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '32px 20px 60px',
-    color: '#ffffff',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '28px'
-  },
-  pageHeader: {
-    textAlign: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '12px'
-  },
-  restaurantTag: {
-    fontSize: '12px',
-    fontWeight: '800',
-    letterSpacing: '3px',
-    color: '#ffd89b',
-    textTransform: 'uppercase',
-    background: 'rgba(212, 163, 89, 0.12)',
-    padding: '6px 14px',
-    borderRadius: '20px',
-    border: '1px solid rgba(212, 163, 89, 0.25)'
-  },
-  heading: {
-    margin: 0,
-    fontSize: '38px',
-    fontWeight: '700',
-    color: '#ffffff',
-    letterSpacing: '-0.5px'
-  },
-  leadText: {
-    margin: 0,
-    fontSize: '15px',
-    color: '#9ca3af',
-    maxWidth: '650px',
-    lineHeight: '1.5'
-  },
-  policiesRow: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '10px',
-    justifyContent: 'center',
-    marginTop: '6px'
-  },
-  policyPill: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    borderRadius: '20px',
-    padding: '5px 12px',
-    fontSize: '12px',
-    color: '#d1d5db'
-  },
-  successBanner: {
-    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.25))',
-    border: '1px solid rgba(16, 185, 129, 0.5)',
-    borderRadius: '16px',
-    padding: '16px 20px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-    flexWrap: 'wrap',
-    boxShadow: '0 8px 24px rgba(16, 185, 129, 0.15)'
-  },
-  successIcon: {
-    fontSize: '28px'
-  },
-  successTitle: {
-    margin: 0,
-    fontSize: '16px',
-    fontWeight: '700',
-    color: '#34d399'
-  },
-  successMessage: {
-    margin: '4px 0 0',
-    fontSize: '13px',
-    color: '#e5e7eb'
-  },
-  viewVoucherBtn: {
-    background: '#34d399',
-    color: '#064e3b',
-    border: 'none',
-    borderRadius: '10px',
-    padding: '10px 18px',
-    fontSize: '13px',
-    fontWeight: '700',
-    cursor: 'pointer',
-    boxShadow: '0 4px 12px rgba(52, 211, 153, 0.3)'
-  },
-  mainGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-    gap: '24px',
-    alignItems: 'start'
-  }
-};
+export default BookReservationPage;

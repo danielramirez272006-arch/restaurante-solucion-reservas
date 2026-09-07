@@ -3,7 +3,9 @@
  * Consume el backend simulado con JSON Server en http://localhost:3001/reservations
  */
 
-const API_BASE_URL = 'http://localhost:3001/reservations';
+import { mockFetch } from '../../shared/services/mock-api.js';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/reservations` : '/reservations';
 
 /**
  * Función auxiliar para procesar respuestas de la Fetch API
@@ -35,7 +37,7 @@ export const reservationService = {
   async getReservationsByDate(date) {
     if (!date) return [];
     try {
-      const response = await fetch(`${API_BASE_URL}?date=${encodeURIComponent(date)}`, {
+      const response = await mockFetch(`${API_BASE_URL}?date=${encodeURIComponent(date)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -59,7 +61,7 @@ export const reservationService = {
     try {
       // JSON Server soporta ordenamiento usando _sort y _order
       const url = `${API_BASE_URL}?userId=${encodeURIComponent(userId)}`;
-      const response = await fetch(url, {
+      const response = await mockFetch(url, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -85,7 +87,7 @@ export const reservationService = {
   async getReservationById(id) {
     if (!id) throw new Error('Se requiere el ID de la reserva.');
     try {
-      const response = await fetch(`${API_BASE_URL}/${encodeURIComponent(id)}`, {
+      const response = await mockFetch(`${API_BASE_URL}/${encodeURIComponent(id)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -118,11 +120,14 @@ export const reservationService = {
       notes: reservationData.notes ? reservationData.notes.trim() : '',
       // REGLA 3: Toda nueva reserva creada debe tener obligatoriamente el status: 'Pendiente'
       status: 'Pendiente',
+      // Aliases de compatibilidad con el panel de administración
+      estado: 'Pendiente',
+      cliente: reservationData.guestName.trim(),
       createdAt: reservationData.createdAt || new Date().toISOString()
     };
 
     try {
-      const response = await fetch(API_BASE_URL, {
+      const response = await mockFetch(API_BASE_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -146,7 +151,7 @@ export const reservationService = {
   async updateReservation(id, partialData) {
     if (!id) throw new Error('Se requiere el ID de la reserva a actualizar.');
     try {
-      const response = await fetch(`${API_BASE_URL}/${encodeURIComponent(id)}`, {
+      const response = await mockFetch(`${API_BASE_URL}/${encodeURIComponent(id)}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
@@ -172,13 +177,14 @@ export const reservationService = {
   async cancelReservation(id) {
     if (!id) throw new Error('Se requiere el ID de la reserva a cancelar.');
     try {
-      const response = await fetch(`${API_BASE_URL}/${encodeURIComponent(id)}`, {
+      const response = await mockFetch(`${API_BASE_URL}/${encodeURIComponent(id)}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           status: 'Cancelada',
+          estado: 'Cancelada',
           cancelledAt: new Date().toISOString()
         })
       });
