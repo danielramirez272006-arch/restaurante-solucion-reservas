@@ -10,9 +10,9 @@ export default function RegisterPage() {
           <span>Puerto Viejo · Costa Rica</span>
         </div>
         <Link className="brand" to="/" style={{ marginBottom: '20px', textDecoration: 'none' }}>
-          <img 
-            src="/brand-logo.png" 
-            alt="Donde Ray Logo" 
+          <img
+            src="/brand-logo.png"
+            alt="Donde Ray Logo"
             className="w-12 h-12 rounded-full border-2 border-[#c8860a] object-cover shadow-md"
             style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }}
           />

@@ -20,7 +20,7 @@ export const RESERVATION_TYPES = [
 /**
  * Calcula la ocupación actual por franja horaria para una fecha dada.
  * Excluye reservas con status 'Cancelada'.
- * 
+ *
  * @param {Array} reservations Lista de reservas de esa fecha
  * @returns {Record<string, number>} Mapa { [hora]: totalGuests }
  */
@@ -41,7 +41,7 @@ export const calculateOccupancyBySlot = (reservations = []) => {
 
 /**
  * Valida si un usuario ha alcanzado el límite estricto de 5 reservas para una fecha dada.
- * 
+ *
  * @param {Array} reservations Lista de reservas para esa fecha
  * @param {string|number} userId Identificador del cliente
  * @returns {{ allowed: boolean, currentCount: number, error: string|null }}
@@ -71,7 +71,7 @@ export const checkUserDailyLimit = (reservations = [], userId) => {
 
 /**
  * Evalúa la disponibilidad de cada franja horaria para una fecha y una cantidad de comensales solicitada.
- * 
+ *
  * @param {Array} dateReservations Reservas existentes en esa fecha
  * @param {Array<string>} timeSlots Franjas horarias configuradas
  * @param {number} requestedGuests Cantidad de invitados que el usuario desea reservar
@@ -107,7 +107,7 @@ export const getSlotsAvailability = (dateReservations = [], timeSlots = [], requ
 
 /**
  * Valida los datos del formulario antes de enviar el POST
- * @param {Object} data 
+ * @param {Object} data
  * @returns {{ isValid: boolean, errors: Record<string, string> }}
  */
 export const validateReservationForm = (data) => {

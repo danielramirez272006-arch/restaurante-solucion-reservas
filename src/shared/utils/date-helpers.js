@@ -153,7 +153,7 @@ export const getNextDays = (count = 7) => {
 
 /**
  * Genera la URL para agregar la reserva directamente a Google Calendar
- * @param {Object} reservation 
+ * @param {Object} reservation
  * @returns {string}
  */
 export const createGoogleCalendarUrl = (reservation) => {

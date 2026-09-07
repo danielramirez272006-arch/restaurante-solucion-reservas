@@ -17,21 +17,21 @@ function Navbar() {
   return (
     <header className="sticky top-0 z-50 bg-[#0d1f17] border-b border-[#c8860a]/25 shadow-md">
       {/* Gold & Emerald Fine Dining Accent Line */}
-      <div 
-        className="h-[2px] w-full bg-gradient-to-r from-[#15573f] via-[#c8860a] to-[#15573f]" 
+      <div
+        className="h-[2px] w-full bg-gradient-to-r from-[#15573f] via-[#c8860a] to-[#15573f]"
         aria-hidden="true"
       />
 
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 h-20 flex items-center justify-between">
         {/* Brand Logo & Tagline */}
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           onClick={closeMenu}
           className="flex items-center gap-3.5 group text-decoration-none"
         >
           {/* Official Artisan Brand Logo */}
-          <img 
-            src="/brand-logo.png" 
+          <img
+            src="/brand-logo.png"
             alt="Donde Ray Emblema"
             className="w-12 h-12 rounded-full border-2 border-[#c8860a] object-cover shadow-md group-hover:border-[#fae4a8] transition-all"
             style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }}

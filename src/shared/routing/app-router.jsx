@@ -23,9 +23,9 @@ function AdminLayout() {
       <header className="admin-header">
         <div className="admin-header-left">
           <Link className="brand" to="/admin">
-            <img 
-              src="/brand-logo.png" 
-              alt="Donde Ray Logo" 
+            <img
+              src="/brand-logo.png"
+              alt="Donde Ray Logo"
               className="w-10 h-10 rounded-full border border-[#c8860a] object-cover shadow-sm"
               style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1.5px solid #c8860a', objectFit: 'cover' }}
             />
@@ -41,8 +41,8 @@ function AdminLayout() {
             <NavLink to="/admin/clientes" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
               Clientes
             </NavLink>
-            <Link to="/" className="admin-nav-link">
-              ← Ver Sitio
+            <Link to="/" className="admin-nav-link" target="_blank" rel="noopener noreferrer">
+              ↗ Ver Sitio
             </Link>
           </nav>
         </div>

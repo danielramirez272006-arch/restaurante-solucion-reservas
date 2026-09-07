@@ -92,7 +92,7 @@ export default function DashboardPage() {
           <div className="capacity-summary-badge">
             <span>Ocupación global:</span>
             <strong>{occupancyPercentage}%</strong>
-            <small>({totalGuestsToday} de {totalMaxCapacityToday} personas)</small>
+            <small>({totalGuestsToday} de {totalMaxCapacityToday} comensales)</small>
           </div>
         </div>
 
@@ -122,7 +122,7 @@ export default function DashboardPage() {
                   />
                 </div>
                 <div className="slot-meta">
-                  <span>{booked} / {MAX_CAPACITY_PER_SLOT} personas</span>
+                  <span>{booked} / {MAX_CAPACITY_PER_SLOT} comensales</span>
                   <span>{percent}%</span>
                 </div>
               </div>
@@ -153,14 +153,14 @@ export default function DashboardPage() {
                 <div key={r.id} className="pending-item-card">
                   <div className="pending-item-info">
                     <div className="pending-item-header">
-                      <strong>{r.guestName || r.cliente || r.name || 'Cliente'}</strong>
+                      <strong>{r.guestName || r.cliente || r.name || 'Comensal'}</strong>
                       <span className="status-pill pendiente">Pendiente</span>
                     </div>
                     <div className="pending-item-meta">
-                      <span> {r.fecha || r.date}</span>
-                      <span> {formatTime12h(r.hora || r.time)}</span>
-                      <span> {r.personas || r.guests || 1} personas</span>
-                      <span> {r.tipo || r.type || 'Cena'}</span>
+                      <span>{r.fecha || r.date}</span>
+                      <span>{formatTime12h(r.hora || r.time)}</span>
+                      <span>{r.personas || r.guests || 1} personas</span>
+                      <span>{r.tipo || r.type || 'Cena'}</span>
                     </div>
                     {(r.notes || r.notas) && (
                       <p className="pending-item-notes">
@@ -175,7 +175,7 @@ export default function DashboardPage() {
                       disabled={reservationState.updatingId === r.id}
                       onClick={() => handleStatusUpdate(r, 'Confirmada')}
                     >
-                       Confirmar
+                      ✓ Confirmar
                     </button>
                     <button
                       type="button"
@@ -183,7 +183,7 @@ export default function DashboardPage() {
                       disabled={reservationState.updatingId === r.id}
                       onClick={() => handleStatusUpdate(r, 'Rechazada')}
                     >
-                       Rechazar
+                      ✕ Rechazar
                     </button>
                     <button
                       type="button"
@@ -198,7 +198,7 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="empty-state" style={{ padding: '32px 16px' }}>
-              <strong> Todo al día</strong>
+              <strong>Todo al día</strong>
               <p>No tienes solicitudes de mesa pendientes de responder en este momento.</p>
             </div>
           )}
@@ -209,7 +209,7 @@ export default function DashboardPage() {
           <div className="panel-heading">
             <div>
               <span className="eyebrow">Servicio del Día</span>
-              <h2>Mesas de hoy <em>({todayReservations.length})</em></h2>
+              <h2>Comensales de hoy <em>({todayReservations.length})</em></h2>
             </div>
             <Link className="text-link" to={`/admin/reservas?date=${todayStr}`}>
               Ver detalle <span>↗</span>

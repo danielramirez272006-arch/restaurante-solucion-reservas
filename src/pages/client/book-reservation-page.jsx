@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useReservations } from '../../features/client-reservations/use-reservations.js';
 import { AvailabilityCalendar } from '../../features/client-reservations/components/availability-calendar.jsx';
@@ -31,13 +31,21 @@ export const BookReservationPage = () => {
   const [guestsCount, setGuestsCount] = useState(paramGuests ? Math.max(1, Number(paramGuests)) : 2);
   const [successBanner, setSuccessBanner] = useState(null);
 
-  const [prevParams, setPrevParams] = useState({ date: paramDate, time: paramTime, guests: paramGuests });
-  if (paramDate !== prevParams.date || paramTime !== prevParams.time || paramGuests !== prevParams.guests) {
-    setPrevParams({ date: paramDate, time: paramTime, guests: paramGuests });
-    if (paramTime) setSelectedTime(paramTime);
-    if (paramGuests) setGuestsCount(Math.max(1, Number(paramGuests)));
-    if (paramDate) setSelectedDate(paramDate);
-  }
+  useEffect(() => {
+    const syncTimer = window.setTimeout(() => {
+      if (paramDate) {
+        setSelectedDate(paramDate);
+      }
+      if (paramTime) {
+        setSelectedTime(paramTime);
+      }
+      if (paramGuests) {
+        setGuestsCount(Math.max(1, Number(paramGuests)));
+      }
+    }, 0);
+
+    return () => window.clearTimeout(syncTimer);
+  }, [paramDate, paramTime, paramGuests, setSelectedDate]);
 
   // Memoizar el cálculo de disponibilidad para no recrear el array en cada render
   const slotsAvailability = useMemo(
@@ -79,8 +87,8 @@ export const BookReservationPage = () => {
       {/* Políticas destacadas editoriales */}
       <div className="reservation-policies-strip">
         <div className="reservation-policy-item">
-          <span className="reservation-policy-label">Cupo Garantizado</span>
-          <span className="reservation-policy-value">Máximo {MAX_CAPACITY_PER_SLOT} personas por turno</span>
+          <span className="reservation-policy-label">Aforo Garantizado</span>
+          <span className="reservation-policy-value">Máximo {MAX_CAPACITY_PER_SLOT} comensales por turno</span>
         </div>
         <div className="reservation-policy-item">
           <span className="reservation-policy-label">Estado Inicial</span>

@@ -95,7 +95,7 @@ export default function ManageReservationsPage() {
       return;
     }
 
-    const headers = ['ID', 'Cliente / Titular', 'Fecha', 'Hora', 'Personas', 'Turno/Ocasión', 'Estado', 'Teléfono', 'Email', 'Peticiones'];
+    const headers = ['ID', 'Comensal', 'Fecha', 'Hora', 'Personas', 'Turno/Ocasión', 'Estado', 'Teléfono', 'Email', 'Peticiones'];
     const rows = filtered.map((r) => [
       `"${r.id}"`,
       `"${r.guestName || r.cliente || r.name || ''}"`,
@@ -124,7 +124,7 @@ export default function ManageReservationsPage() {
     e.preventDefault();
     setFormError('');
     if (!newResForm.guestName.trim()) {
-      setFormError('El nombre del cliente o titular es obligatorio.');
+      setFormError('El nombre del comensal es obligatorio.');
       return;
     }
     if (!newResForm.date || !newResForm.time) {
@@ -186,7 +186,7 @@ export default function ManageReservationsPage() {
             onClick={handleExportCSV}
             title="Descargar listado en archivo Excel / CSV"
           >
-             Exportar reporte (CSV)
+            📥 Exportar reporte (CSV)
           </button>
         </div>
       </header>
@@ -236,10 +236,10 @@ export default function ManageReservationsPage() {
       <section className="panel" style={{ gap: '16px', padding: '24px' }}>
         <div className="admin-search-toolbar">
           <div className="search-input-wrap">
-            <span className="search-icon"></span>
+            <span className="search-icon">🔍</span>
             <input
               type="text"
-              placeholder="Buscar por cliente, código, teléfono o correo..."
+              placeholder="Buscar por comensal, código, teléfono o correo..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="admin-search-input"
@@ -250,7 +250,7 @@ export default function ManageReservationsPage() {
                 className="clear-search-btn"
                 onClick={() => setSearchTerm('')}
               >
-                
+                ✕
               </button>
             )}
           </div>
@@ -272,8 +272,8 @@ export default function ManageReservationsPage() {
                 onChange={(e) => setMealTypeFilter(e.target.value)}
               >
                 <option value="">Todos los turnos</option>
-                <option value="Almuerzo"> Almuerzo (12:00 - 15:00)</option>
-                <option value="Cena"> Cena (18:00 - 22:00)</option>
+                <option value="Almuerzo">☀️ Almuerzo (12:00 - 15:00)</option>
+                <option value="Cena">🌙 Cena (18:00 - 22:00)</option>
               </select>
             </label>
 
@@ -299,7 +299,7 @@ export default function ManageReservationsPage() {
         <div className="filtered-summary-strip">
           <span>
             Mostrando <strong>{filtered.length}</strong> {filtered.length === 1 ? 'reserva' : 'reservas'}
-            &nbsp;·&nbsp; <strong>{totalFilteredGuests}</strong> {totalFilteredGuests === 1 ? 'persona' : 'personas en total'}
+            &nbsp;·&nbsp; <strong>{totalFilteredGuests}</strong> {totalFilteredGuests === 1 ? 'comensal' : 'comensales en total'}
           </span>
           <button
             type="button"
@@ -343,12 +343,12 @@ export default function ManageReservationsPage() {
               onClick={() => setIsCreateModalOpen(false)}
               aria-label="Cerrar modal"
             >
-              
+              ✕
             </button>
             <span className="eyebrow">Recepción / Teléfono</span>
             <h2 id="manual-res-title">Registrar Reserva <em>Manual</em></h2>
             <p style={{ color: 'var(--muted)', fontSize: '13px', margin: '0 0 14px', lineHeight: 1.5 }}>
-              Registra una mesa tomada por teléfono, WhatsApp directo o cliente presencial (Walk-in).
+              Registra una mesa tomada por teléfono, WhatsApp directo o comensal presencial (Walk-in).
             </p>
 
             {formError && <div className="notice error" style={{ marginBottom: '14px' }}>{formError}</div>}
@@ -356,7 +356,7 @@ export default function ManageReservationsPage() {
             <form onSubmit={handleCreateSubmit} className="modal-form-grid">
               <div className="modal-two-cols">
                 <div className="modal-field-block">
-                  <label htmlFor="manual-name">Nombre del Cliente / Titular *:</label>
+                  <label htmlFor="manual-name">Nombre del Comensal *:</label>
                   <input
                     id="manual-name"
                     type="text"
@@ -429,12 +429,12 @@ export default function ManageReservationsPage() {
                     value={newResForm.type}
                     onChange={(e) => setNewResForm({ ...newResForm, type: e.target.value })}
                   >
-                    <option value="Cena"> Cena</option>
-                    <option value="Almuerzo"> Almuerzo</option>
-                    <option value="Cumpleaños"> Cumpleaños</option>
-                    <option value="Aniversario"> Aniversario</option>
-                    <option value="Negocios"> Negocios</option>
-                    <option value="Especial"> Ocasión Especial</option>
+                    <option value="Cena">Cena</option>
+                    <option value="Almuerzo">Almuerzo</option>
+                    <option value="Cumpleaños">Cumpleaños</option>
+                    <option value="Aniversario">Aniversario</option>
+                    <option value="Negocios">Negocios</option>
+                    <option value="Especial">Ocasión Especial</option>
                   </select>
                 </div>
                 <div className="modal-field-block">
@@ -442,7 +442,7 @@ export default function ManageReservationsPage() {
                   <input
                     id="manual-email"
                     type="email"
-                    placeholder="cliente@ejemplo.com"
+                    placeholder="comensal@ejemplo.com"
                     value={newResForm.email}
                     onChange={(e) => setNewResForm({ ...newResForm, email: e.target.value })}
                   />
@@ -454,7 +454,7 @@ export default function ManageReservationsPage() {
                 <textarea
                   id="manual-notes"
                   rows="2"
-                  placeholder="Ej. Mesa en terraza jardín, 1 persona celíaca, silla alta para bebé..."
+                  placeholder="Ej. Mesa en terraza jardín, 1 comensal celíaco, silla alta para bebé..."
                   value={newResForm.notes}
                   onChange={(e) => setNewResForm({ ...newResForm, notes: e.target.value })}
                 />

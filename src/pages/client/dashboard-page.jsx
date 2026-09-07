@@ -26,7 +26,7 @@ export default function DashboardPage() {
             <em>Tu mesa te espera.</em>
           </h1>
           <p className="lede">
-            Supervisa tus visitas a Donde Ray, accede a tus comprobantes con código QR y asegura tu lugar en nuestra mesa de alta cocina.
+            Supervisa tus visitas a Donde Ray, accede a tus comprobantes con código QR y asegura tu lugar en nuestra mesa de alta cocina caribeña.
           </p>
         </div>
         <div className="dashboard-actions">
@@ -89,7 +89,7 @@ export default function DashboardPage() {
               <div>
                 <strong className="next-visit-date">{formatDateToSpanish(nextReservation.date)}</strong>
                 <span className="next-visit-meta">
-                   {formatTime12h(nextReservation.time)} &nbsp;·&nbsp;  {nextReservation.guests} {nextReservation.guests === 1 ? 'persona' : 'personas'} &nbsp;·&nbsp;  {nextReservation.type || 'Cena'} &nbsp;·&nbsp;  Playa Chiquita
+                  {formatTime12h(nextReservation.time)} &nbsp;·&nbsp; {nextReservation.guests} {nextReservation.guests === 1 ? 'comensal' : 'comensales'} &nbsp;·&nbsp; {nextReservation.type || 'Cena'} &nbsp;·&nbsp; Playa Chiquita
                 </span>
               </div>
               <span className={`status-pill ${String(nextReservation.status || nextReservation.estado || '').toLowerCase()}`}>

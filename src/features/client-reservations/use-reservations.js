@@ -39,7 +39,7 @@ const getActiveUser = () => {
     id: 'u-client',
     guestName: 'Cliente Demo',
     email: 'user@demo.com',
-    phone: '+57 301 000 0000'
+    phone: '+506 8888 0002'
   };
 };
 

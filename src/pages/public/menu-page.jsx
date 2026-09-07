@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import rondonImg from '../../assets/images/rondon_soup_limon_1788651773676.jpg';
 import riceAndBeansImg from '../../assets/images/rice_and_beans_limon_1788651760839.jpg';
-import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg';
-import barImg from '../../assets/images/bar_caribeno_noche_1788651853426.jpg';
-import heroImg from '../../assets/images/caribbean_hero_bar_1788651748042.jpg';
+import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg.png';
+import cevicheImg from '../../assets/images/public/ceviche-coco.png';
+import barImg from '../../assets/images/bar_caribeno_noche_1788651853426.png';
+import heroImg from '../../assets/images/caribbean_hero_bar_1788651748042..png';
+import panBonImg from '../../assets/limon-community.png';
 
 const CATEGORIES = [
   { id: 'all', label: 'Toda la Carta' },
@@ -15,6 +17,18 @@ const CATEGORIES = [
 ];
 
 const MENU_ITEMS = [
+  {
+    id: 'pati-gourmet',
+    category: 'entradas',
+    name: 'Patí Artesanal Hojaldrado & Especias Antillanas',
+    tag: 'Entrada de Autor',
+    price: '₡7.200',
+    badge: 'Horno de Leña',
+    image: patiImg,
+    description:
+      'Masa dorada fina y crujiente elaborada en casa, rellena de lomo mechado al curry caribeño, pimienta de jamaica, tomillo y toque delicado de chile panameño. Servido con alioli ligero de coco y cilantro.',
+    notes: '2 unidades presentadas sobre piedra volcánica tibia.'
+  },
   {
     id: 'rondon-real',
     category: 'fuertes',
@@ -40,25 +54,13 @@ const MENU_ITEMS = [
     notes: 'Receta de familia perfeccionada bajo técnica de alta cocina.'
   },
   {
-    id: 'pati-gourmet',
-    category: 'entradas',
-    name: 'Patí Artesanal Hojaldrado & Especias Antillanas',
-    tag: 'Entrada de Autor',
-    price: '₡7.200',
-    badge: 'Horno de Leña',
-    image: patiImg,
-    description:
-      'Masa dorada fina y crujiente elaborada en casa, rellena de lomo mechado al curry caribeño, pimienta de jamaica, tomillo y toque delicado de chile panameño. Servido con alioli ligero de coco y cilantro.',
-    notes: '2 unidades presentadas sobre piedra volcánica tibia.'
-  },
-  {
     id: 'ceviche-coco',
     category: 'entradas',
     name: 'Ceviche Limonense de Corvina Reina al Coco y Jengibre',
     tag: 'Pesca Fresca del Día',
     price: '₡9.500',
     badge: 'Crudo & Fresco',
-    image: '/limon-food.jpg',
+    image: cevicheImg,
     description:
       'Láminas de corvina fresca marinadas en zumo de limón mandarina, emulsión sedosa de leche de coco virgen, cebolla morada confitada al vacío, aguacate de Talamanca y chips de plátano verde.',
     notes: 'Maridaje recomendado: Vino blanco Sauvignon Blanc o Agua de Sapo espumosa.'
@@ -66,7 +68,7 @@ const MENU_ITEMS = [
   {
     id: 'pescado-entero',
     category: 'fuertes',
-    name: 'Pesca Entera del Litoral al Escabeche Caribeño',
+    name: 'Pescado Entero del Litoral al Escabeche Caribeño',
     tag: 'Pesca Sostenible',
     price: '₡19.800',
     badge: 'Fuego Vivo',
@@ -94,7 +96,7 @@ const MENU_ITEMS = [
     tag: 'Postre de la Casa',
     price: '₡6.800',
     badge: 'Dulce Tradición',
-    image: '/limon-community.jpg',
+    image: panBonImg,
     description:
       'Bizcocho denso de especias caribeñas, pasas y frutas maceradas en ron oscuro Centenario, sellado en mantequilla clarificada y servido con helado cremoso de coco tostado y reducción de cacao amargo.',
     notes: 'El broche de oro perfecto para una velada memorable.'

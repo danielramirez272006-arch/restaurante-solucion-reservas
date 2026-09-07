@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import HeroSection from '../../shared/components/layout/hero-section.jsx';
 import riceAndBeansImg from '../../assets/images/rice_and_beans_limon_1788651760839.jpg';
 import rondonImg from '../../assets/images/rondon_soup_limon_1788651773676.jpg';
-import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg';
-import nightBarImg from '../../assets/images/bar_caribeno_noche_1788651853426.jpg';
+import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg.png';
+import nightBarImg from '../../assets/images/bar_caribeno_noche_1788651853426.png';
 
 const HIGHLIGHTS = [
   {
@@ -35,7 +35,7 @@ const COCKTAILS = [
 
 export default function HomePage() {
   return (
-    <main className="overflow-hidden">
+    <main className="overflow-hidden"><div className="beach-scene" aria-hidden="true" />
       {/* 1. HERO SECTION (Dark Roots #0d1f17 with Jungle Texture & Ember Particles) */}
       <HeroSection />
 

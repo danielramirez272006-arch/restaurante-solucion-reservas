@@ -8,6 +8,20 @@ function loadDb() {
     if (raw) {
       const parsed = JSON.parse(raw)
       if (parsed && Array.isArray(parsed.users) && Array.isArray(parsed.reservations)) {
+        let changed = false
+        parsed.users.forEach((u) => {
+          if (u.phone && u.phone.includes('+57')) {
+            u.phone = u.phone.replace('+57', '+506')
+            changed = true
+          }
+        })
+        parsed.reservations.forEach((r) => {
+          if (r.phone && r.phone.includes('+57')) {
+            r.phone = r.phone.replace('+57', '+506')
+            changed = true
+          }
+        })
+        if (changed) saveDb(parsed)
         return parsed
       }
     }

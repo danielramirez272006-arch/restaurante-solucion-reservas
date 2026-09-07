@@ -166,7 +166,7 @@ export const VoucherTicket = ({ reservation, onClose }) => {
             style={styles.closeIconBtn}
             aria-label="Cerrar modal"
           >
-            
+
           </button>
         </div>
 

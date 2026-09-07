@@ -145,10 +145,10 @@ export const BookingForm = ({
         </div>
       )}
 
-      {/* Campo: Número de Personas */}
+      {/* Campo: Número de Comensales */}
       <div className="reservation-field-group">
         <label className="reservation-field-label">
-          Personas (Cupo máximo: {MAX_CAPACITY_PER_SLOT})
+          Comensales (Aforo máximo {MAX_CAPACITY_PER_SLOT})
         </label>
         <div className="guest-selector">
           <button
@@ -210,6 +210,9 @@ export const BookingForm = ({
             onChange={(e) => handleChange('guestName', e.target.value)}
             onBlur={() => handleBlur('guestName')}
             className={`reservation-input ${touched.guestName && validationErrors.guestName ? 'is-invalid' : ''}`.trim()}
+            style={{
+              borderColor: touched.guestName && validationErrors.guestName ? '#dc2626' : undefined
+            }}
           />
           {touched.guestName && validationErrors.guestName && (
             <span style={{ fontSize: '11px', color: '#dc2626' }}>{validationErrors.guestName}</span>
@@ -229,6 +232,9 @@ export const BookingForm = ({
             onChange={(e) => handleChange('phone', e.target.value)}
             onBlur={() => handleBlur('phone')}
             className={`reservation-input ${touched.phone && validationErrors.phone ? 'is-invalid' : ''}`.trim()}
+            style={{
+              borderColor: touched.phone && validationErrors.phone ? '#dc2626' : undefined
+            }}
           />
           {touched.phone && validationErrors.phone && (
             <span style={{ fontSize: '11px', color: '#dc2626' }}>{validationErrors.phone}</span>
@@ -249,6 +255,9 @@ export const BookingForm = ({
           onChange={(e) => handleChange('email', e.target.value)}
           onBlur={() => handleBlur('email')}
           className={`reservation-input ${touched.email && validationErrors.email ? 'is-invalid' : ''}`.trim()}
+          style={{
+            borderColor: touched.email && validationErrors.email ? '#dc2626' : undefined
+          }}
         />
         {touched.email && validationErrors.email && (
           <span style={{ fontSize: '11px', color: '#dc2626' }}>{validationErrors.email}</span>

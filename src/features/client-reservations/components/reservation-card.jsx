@@ -45,22 +45,22 @@ export const ReservationCard = ({
     switch (currentStatus) {
       case 'Confirmada':
         return {
-          background: 'rgba(48, 75, 61, 0.12)',
-          color: '#264a39',
-          border: '1px solid rgba(48, 75, 61, 0.35)'
+          background: 'rgba(16, 185, 129, 0.15)',
+          color: '#34d399',
+          border: '1px solid rgba(16, 185, 129, 0.4)'
         };
       case 'Cancelada':
         return {
-          background: '#fef2f2',
-          color: '#b91c1c',
-          border: '1px solid #fca5a5'
+          background: 'rgba(239, 68, 68, 0.15)',
+          color: '#f87171',
+          border: '1px solid rgba(239, 68, 68, 0.4)'
         };
       case 'Pendiente':
       default:
         return {
-          background: 'rgba(177, 122, 60, 0.12)',
-          color: '#9c6828',
-          border: '1px solid rgba(177, 122, 60, 0.35)'
+          background: 'rgba(245, 158, 11, 0.15)',
+          color: '#fbbf24',
+          border: '1px solid rgba(245, 158, 11, 0.4)'
         };
     }
   };
@@ -165,7 +165,7 @@ export const ReservationCard = ({
               disabled={savingEdit}
               style={styles.saveBtn}
             >
-              {savingEdit ? 'Guardando...' : ' Guardar Cambios'}
+              {savingEdit ? 'Guardando...' : 'Guardar Cambios'}
             </button>
             <button
               type="button"
@@ -184,7 +184,14 @@ export const ReservationCard = ({
           {/* Contenido Principal: Fecha, Hora, Personas */}
           <div style={styles.mainInfo}>
             <div style={styles.dateBlock}>
-              <span style={styles.icon}></span>
+              <span style={styles.icon} aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </span>
               <div>
                 <div style={styles.dateText}>{formatDateToSpanish(date)}</div>
                 <div style={styles.timeText}>{formatTime12h(time)}</div>
@@ -193,9 +200,9 @@ export const ReservationCard = ({
 
             <div style={styles.chipsRow}>
               <span style={styles.chip}>
-                 {guests} {guests === 1 ? 'Persona' : 'Personas'}
+                {guests} {guests === 1 ? 'Persona' : 'Personas'}
               </span>
-              <span style={styles.chip}> {type || 'Cena'}</span>
+              <span style={styles.chip}>{type || 'Cena'}</span>
             </div>
           </div>
 
@@ -226,7 +233,7 @@ export const ReservationCard = ({
               onClick={() => onViewVoucher && onViewVoucher(reservation)}
               style={styles.voucherButton}
             >
-               Ver Voucher
+              Ver Voucher & QR
             </button>
 
             {status === 'Pendiente' && onReschedule && (
@@ -235,7 +242,7 @@ export const ReservationCard = ({
                 onClick={() => setIsEditing(true)}
                 style={styles.rescheduleButton}
               >
-                 Reagendar
+                Reagendar
               </button>
             )}
 
@@ -258,23 +265,24 @@ export const ReservationCard = ({
 
 const styles = {
   card: {
-    background: '#ebe5d8',
-    border: '1px solid #d6d1c5',
+    background: '#11261d',
+    border: '1px solid rgba(200, 134, 10, 0.35)',
+    borderLeft: '4px solid #c8860a',
     borderRadius: '12px',
     padding: '24px',
     display: 'flex',
     flexDirection: 'column',
     gap: '16px',
-    boxShadow: '0 4px 18px rgba(32, 40, 32, 0.05)',
+    boxShadow: '0 10px 28px rgba(0, 0, 0, 0.35)',
     transition: 'transform 0.2s ease, border-color 0.2s ease',
     textAlign: 'left',
-    color: '#202820'
+    color: '#f0e6cc'
   },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottom: '1px solid #d6d1c5',
+    borderBottom: '1px solid rgba(200, 134, 10, 0.2)',
     paddingBottom: '12px'
   },
   idGroup: {
@@ -284,14 +292,16 @@ const styles = {
   },
   idLabel: {
     fontSize: '11px',
-    color: '#73786f',
+    color: 'rgba(240, 230, 204, 0.65)',
     textTransform: 'uppercase',
-    fontWeight: '600'
+    fontWeight: '600',
+    letterSpacing: '0.06em'
   },
   idValue: {
     fontSize: '14px',
     fontWeight: '700',
-    color: '#b45309'
+    color: '#fae4a8',
+    fontFamily: 'monospace'
   },
   statusBadge: {
     fontSize: '11px',
@@ -312,23 +322,26 @@ const styles = {
     gap: '12px'
   },
   icon: {
-    fontSize: '18px',
-    background: 'rgba(15, 81, 50, 0.1)',
-    color: '#0f5132',
-    padding: '8px',
-    borderRadius: '8px'
+    fontSize: '20px',
+    background: 'rgba(200, 134, 10, 0.15)',
+    color: '#fae4a8',
+    padding: '8px 10px',
+    borderRadius: '8px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   dateText: {
     fontFamily: 'var(--font-display, "Fraunces", serif)',
-    fontSize: '20px',
+    fontSize: '21px',
     fontWeight: '600',
-    color: '#202820',
+    color: '#f0e6cc',
     letterSpacing: '-0.02em',
     textTransform: 'capitalize'
   },
   timeText: {
     fontSize: '13px',
-    color: '#0f5132',
+    color: '#e59c19',
     fontWeight: '700'
   },
   chipsRow: {
@@ -337,18 +350,18 @@ const styles = {
     flexWrap: 'wrap'
   },
   chip: {
-    background: '#f4f1e9',
-    border: '1px solid #d6d1c5',
-    borderRadius: '4px',
-    padding: '4px 10px',
+    background: 'rgba(13, 31, 23, 0.85)',
+    border: '1px solid rgba(200, 134, 10, 0.25)',
+    borderRadius: '6px',
+    padding: '5px 12px',
     fontSize: '12px',
-    color: '#202820',
+    color: '#fae4a8',
     fontWeight: '500'
   },
   detailsBox: {
-    background: '#f4f1e9',
+    background: 'rgba(13, 31, 23, 0.65)',
     borderRadius: '8px',
-    border: '1px solid #d6d1c5',
+    border: '1px solid rgba(200, 134, 10, 0.2)',
     padding: '14px',
     display: 'flex',
     flexDirection: 'column',
@@ -360,22 +373,22 @@ const styles = {
     gap: '8px'
   },
   detailLabel: {
-    color: '#73786f',
+    color: 'rgba(240, 230, 204, 0.65)',
     fontWeight: '500'
   },
   detailValue: {
-    color: '#202820',
+    color: '#f0e6cc',
     fontWeight: '600',
     wordBreak: 'break-word'
   },
   notesBlock: {
     marginTop: '4px',
-    borderTop: '1px dashed #e8e4db',
+    borderTop: '1px dashed rgba(200, 134, 10, 0.2)',
     paddingTop: '8px'
   },
   notesText: {
     margin: '2px 0 0',
-    color: '#555b52',
+    color: 'rgba(240, 230, 204, 0.85)',
     fontStyle: 'italic',
     fontSize: '12px'
   },
@@ -383,58 +396,61 @@ const styles = {
     display: 'flex',
     gap: '8px',
     marginTop: 'auto',
-    paddingTop: '12px',
-    borderTop: '1px solid #f0ece3'
+    paddingTop: '14px',
+    borderTop: '1px solid rgba(200, 134, 10, 0.2)'
   },
   voucherButton: {
     flex: 2,
-    background: '#0f5132',
+    background: 'linear-gradient(135deg, #c8860a 0%, #a66a04 100%)',
     border: 'none',
-    color: '#f8f5ed',
+    color: '#0d1f17',
     borderRadius: '8px',
     padding: '10px 12px',
     fontSize: '12px',
     fontWeight: '700',
     cursor: 'pointer',
     textAlign: 'center',
-    boxShadow: '0 2px 8px rgba(15, 81, 50, 0.25)'
+    boxShadow: '0 2px 10px rgba(200, 134, 10, 0.35)',
+    transition: 'all 0.2s'
   },
   rescheduleButton: {
     flex: 2,
-    background: '#ffffff',
-    border: '1px solid #d6d1c5',
-    color: '#202820',
+    background: 'rgba(200, 134, 10, 0.1)',
+    border: '1px solid rgba(200, 134, 10, 0.4)',
+    color: '#fae4a8',
     borderRadius: '8px',
     padding: '10px 12px',
     fontSize: '12px',
     fontWeight: '600',
     cursor: 'pointer',
-    textAlign: 'center'
+    textAlign: 'center',
+    transition: 'all 0.2s'
   },
   cancelButton: {
     flex: 1,
     background: 'transparent',
-    border: '1px solid #fca5a5',
-    color: '#dc2626',
+    border: '1px solid rgba(239, 68, 68, 0.35)',
+    color: '#f87171',
     borderRadius: '8px',
     padding: '10px 12px',
     fontSize: '12px',
     fontWeight: '500',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: 'all 0.2s'
   },
   editContainer: {
     display: 'flex',
     flexDirection: 'column',
     gap: '10px',
-    background: '#f4f1e9',
+    background: 'rgba(13, 31, 23, 0.85)',
     borderRadius: '10px',
     padding: '16px',
-    border: '1px solid #d6d1c5'
+    border: '1px solid rgba(200, 134, 10, 0.35)'
   },
   editTitle: {
     fontSize: '12px',
     fontWeight: '700',
-    color: '#b17a3c',
+    color: '#fae4a8',
     textTransform: 'uppercase',
     letterSpacing: '0.04em'
   },
@@ -445,26 +461,28 @@ const styles = {
   },
   editLabel: {
     fontSize: '11px',
-    color: '#73786f',
+    color: 'rgba(240, 230, 204, 0.7)',
     fontWeight: '600'
   },
   editInput: {
-    background: '#ffffff',
-    border: '1px solid #d6d1c5',
+    background: '#0d1e16',
+    border: '1px solid rgba(200, 134, 10, 0.3)',
     borderRadius: '6px',
-    color: '#202820',
+    color: '#f0e6cc',
     padding: '8px 12px',
     fontSize: '13px',
-    outline: 'none'
+    outline: 'none',
+    boxSizing: 'border-box'
   },
   editSelect: {
-    background: '#ffffff',
-    border: '1px solid #d6d1c5',
+    background: '#0d1e16',
+    border: '1px solid rgba(200, 134, 10, 0.3)',
     borderRadius: '6px',
-    color: '#202820',
+    color: '#f0e6cc',
     padding: '8px 12px',
     fontSize: '13px',
-    outline: 'none'
+    outline: 'none',
+    boxSizing: 'border-box'
   },
   editError: {
     background: 'rgba(239, 68, 68, 0.2)',
@@ -481,20 +499,20 @@ const styles = {
   },
   saveBtn: {
     flex: 2,
-    background: '#304b3d',
+    background: 'linear-gradient(135deg, #c8860a 0%, #a66a04 100%)',
     border: 'none',
-    color: '#f8f5ed',
+    color: '#0d1f17',
     borderRadius: '6px',
     padding: '10px',
     fontSize: '12px',
-    fontWeight: '600',
+    fontWeight: '700',
     cursor: 'pointer'
   },
   cancelEditBtn: {
     flex: 1,
-    background: '#ffffff',
-    border: '1px solid #d6d1c5',
-    color: '#73786f',
+    background: 'transparent',
+    border: '1px solid rgba(200, 134, 10, 0.3)',
+    color: 'rgba(240, 230, 204, 0.7)',
     borderRadius: '6px',
     padding: '10px',
     fontSize: '12px',

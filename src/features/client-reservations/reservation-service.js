@@ -30,7 +30,7 @@ export const reservationService = {
   /**
    * Obtiene todas las reservas registradas para una fecha específica.
    * Utilizado para calcular la ocupación dinámica de cupos (Regla 4).
-   * 
+   *
    * @param {string} date Formato 'YYYY-MM-DD'
    * @returns {Promise<Array>} Lista de reservas para la fecha
    */
@@ -52,7 +52,7 @@ export const reservationService = {
 
   /**
    * Obtiene las reservas exclusivas de un cliente específico usando query param (Regla 5).
-   * 
+   *
    * @param {string|number} userId Identificador único del usuario
    * @returns {Promise<Array>} Lista de reservas del usuario
    */
@@ -80,7 +80,7 @@ export const reservationService = {
 
   /**
    * Obtiene una reserva individual por su ID
-   * 
+   *
    * @param {string|number} id
    * @returns {Promise<Object>}
    */
@@ -102,7 +102,7 @@ export const reservationService = {
 
   /**
    * Crea una nueva reserva en JSON Server respetando el contrato de datos y Regla 3 (status: 'Pendiente').
-   * 
+   *
    * @param {Object} reservationData Datos de la reserva
    * @returns {Promise<Object>} Reserva creada
    */
@@ -143,7 +143,7 @@ export const reservationService = {
 
   /**
    * Actualiza o reagenda parcialmente una reserva existente
-   * 
+   *
    * @param {string|number} id ID de la reserva
    * @param {Object} partialData Datos a actualizar
    * @returns {Promise<Object>}
@@ -170,7 +170,7 @@ export const reservationService = {
 
   /**
    * Permite al cliente cancelar una de sus reservas
-   * 
+   *
    * @param {string|number} id ID de la reserva
    * @returns {Promise<Object>}
    */
