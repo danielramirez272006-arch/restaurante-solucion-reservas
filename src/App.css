@@ -609,6 +609,11 @@ em { color: var(--gold); font-style: italic; font-weight: inherit; }
 
 /* Footer */
 .site-footer { background: #0f1c13; color: #dce0d5; padding: 0 0 25px; }
+.cultural-marquee-container { width: 100%; overflow: hidden; border-top: 1px solid #1c3323; background: #0b1710; }
+.cultural-marquee-track { display: flex; width: max-content; min-height: 56px; align-items: center; animation: cultural-marquee 32s linear infinite; }
+.cultural-marquee-text { display: block; flex: 0 0 auto; padding-right: 1.5rem; color: #f3d99d; font-family: var(--font-label); font-size: 14px; font-weight: 600; letter-spacing: .035em; line-height: 1.4; text-transform: uppercase; white-space: nowrap; }
+@keyframes cultural-marquee { from { transform: translateX(0); } to { transform: translateX(-25%); } }
+@media (prefers-reduced-motion: reduce) { .cultural-marquee-track { animation: none; } }
 .footer-main { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 30px; padding: 48px max(40px,calc((100% - 1180px)/2)) 40px; }
 .footer-brand { font: 700 32px var(--font-display); color: #ffe099; }
 .footer-main p { color: #9da99e; font-size: 13px; line-height: 1.6; margin-top: 10px; max-width: 320px; }
