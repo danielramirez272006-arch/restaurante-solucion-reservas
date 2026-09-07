@@ -8,7 +8,8 @@ const highlights = [
 ]
 
 function HomePage() {
-	return <main>
+	return <main className="home-page">
+		<div className="beach-scene" aria-hidden="true" />
 		<section className="hero-section">
 			<div className="hero-copy"><span className="eyebrow">Restaurante · Buenos Aires</span><h1>Lo que somos<br /><em>se sirve en la mesa.</em></h1><p className="hero-lead">Cocina de autor con raíces argentinas, producto honesto y una sala donde el tiempo baja el ritmo.</p><div className="hero-actions"><Link className="button button--primary" to="/reservas">Reservar una mesa <span>→</span></Link><Link className="text-link" to="/menu">Explorar la carta <span>↗</span></Link></div></div>
 			<div className="hero-visual"><div className="hero-image" role="img" aria-label="Plato de cocina de autor servido en mesa" /><div className="hero-note"><span>Menú de temporada</span><strong>Otoño / invierno 2026</strong></div></div>

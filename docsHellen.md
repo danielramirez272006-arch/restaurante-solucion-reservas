@@ -9,12 +9,31 @@ La implementación se mantuvo separada de los servicios de datos y no reemplaza 
 ## 2. Dirección visual
 
 - **Identidad:** restaurante premium con una experiencia digital sobria y contemporánea.
-- **Paleta:** verde bosque, papel cálido, crema, cobre y tonos neutros.
+- **Paleta:** crema y marfil como base, verde selva y hoja para estructura, y limón, amarillo sol y terracota como acentos caribeños.
 - **Tipografías:** `Newsreader` para titulares editoriales y `DM Sans` para navegación, textos y controles.
 - **Composición:** espacios amplios, líneas finas, tarjetas discretas y jerarquía visual clara.
 - **Fotografía:** imágenes de cocina utilizadas como apoyo visual del hero y de los platos destacados.
 - **Interacción:** transiciones cortas en botones y navegación móvil desplegable.
 - **Criterios:** sin emojis, sin colores saturados, sin animaciones excesivas y con foco en legibilidad.
+
+La referencia `contextoAgentes.md` no está presente en el workspace actual. La implementación cromática se alineó con el brief de diseño de Donde Ray disponible en el proyecto.
+
+### Tokens de color
+
+| Token | Hex | Uso |
+| --- | --- | --- |
+| `--ink` | `#17241F` | Texto principal y contraste. |
+| `--deep-green` | `#24483B` | Cabeceras, fondos y navegación de aplicación. |
+| `--leaf-green` | `#6F9366` | Disponibilidad y acentos suaves. |
+| `--lime` | `#D7B940` | Líneas, etiquetas y detalles de identidad. |
+| `--sun-yellow` | `#E8C95B` | Pendientes y highlights. |
+| `--terracotta` | `#B94F35` | CTA principal y acciones destacadas. |
+| `--clay-dark` | `#8E3827` | Hover y estados rechazados. |
+| `--sand` | `#E7D8B9` | Tarjetas y superficies secundarias. |
+| `--cream` | `#F5F0E6` | Fondo principal. |
+| `--paper` | `#FCFAF5` | Tarjetas, formularios y modales. |
+| `--muted` | `#70786F` | Texto secundario y metadatos. |
+| `--line` | `#D7D5C9` | Separadores y bordes. |
 
 ## 3. Archivos creados o modificados
 
