@@ -6,7 +6,7 @@
       "email": "admin@demo.com",
       "password": "1234",
       "role": "admin",
-      "phone": "+57 300 000 0000"
+      "phone": "+506 2750 0001"
     },
     {
       "id": "u-client",
@@ -14,7 +14,7 @@
       "email": "user@demo.com",
       "password": "1234",
       "role": "user",
-      "phone": "+57 301 000 0000"
+      "phone": "+506 8888 0002"
     }
   ],
   "reservations": [
@@ -23,7 +23,7 @@
       "userId": "u-client",
       "guestName": "Cliente Demo",
       "email": "user@demo.com",
-      "phone": "+57 301 000 0000",
+      "phone": "+506 8888 0002",
       "date": "2026-09-04",
       "time": "13:00",
       "guests": 4,
@@ -37,7 +37,7 @@
       "userId": "user_2",
       "guestName": "Carlos Mendoza",
       "email": "carlos@ejemplo.com",
-      "phone": "+57 311 555 1234",
+      "phone": "+506 8345 1234",
       "date": "2026-09-04",
       "time": "13:00",
       "guests": 12,
@@ -51,7 +51,7 @@
       "userId": "user_3",
       "guestName": "Laura Gómez",
       "email": "laura@ejemplo.com",
-      "phone": "+57 315 444 9876",
+      "phone": "+506 8765 4321",
       "date": "2026-09-04",
       "time": "20:00",
       "guests": 20,
@@ -65,7 +65,7 @@
       "userId": "u-client",
       "guestName": "Cliente Demo",
       "email": "user@demo.com",
-      "phone": "+57 301 000 0000",
+      "phone": "+506 8888 0002",
       "date": "2026-09-09",
       "time": "19:00",
       "guests": 2,

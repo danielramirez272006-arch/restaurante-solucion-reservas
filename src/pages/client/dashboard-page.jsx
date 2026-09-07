@@ -89,7 +89,7 @@ export default function DashboardPage() {
               <div>
                 <strong className="next-visit-date">{formatDateToSpanish(nextReservation.date)}</strong>
                 <span className="next-visit-meta">
-                  🕒 {formatTime12h(nextReservation.time)} &nbsp;·&nbsp; 👥 {nextReservation.guests} {nextReservation.guests === 1 ? 'comensal' : 'comensales'} &nbsp;·&nbsp; 🏷️ {nextReservation.type || 'Cena'} &nbsp;·&nbsp; 📍 Playa Chiquita
+                  {formatTime12h(nextReservation.time)} &nbsp;·&nbsp; {nextReservation.guests} {nextReservation.guests === 1 ? 'comensal' : 'comensales'} &nbsp;·&nbsp; {nextReservation.type || 'Cena'} &nbsp;·&nbsp; Playa Chiquita
                 </span>
               </div>
               <span className={`status-pill ${String(nextReservation.status || nextReservation.estado || '').toLowerCase()}`}>

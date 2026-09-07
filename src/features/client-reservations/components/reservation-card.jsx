@@ -184,7 +184,14 @@ export const ReservationCard = ({
           {/* Contenido Principal: Fecha, Hora, Personas */}
           <div style={styles.mainInfo}>
             <div style={styles.dateBlock}>
-              <span style={styles.icon}>📅</span>
+              <span style={styles.icon} aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </span>
               <div>
                 <div style={styles.dateText}>{formatDateToSpanish(date)}</div>
                 <div style={styles.timeText}>{formatTime12h(time)}</div>
@@ -193,9 +200,9 @@ export const ReservationCard = ({
 
             <div style={styles.chipsRow}>
               <span style={styles.chip}>
-                👥 {guests} {guests === 1 ? 'Persona' : 'Personas'}
+                {guests} {guests === 1 ? 'Persona' : 'Personas'}
               </span>
-              <span style={styles.chip}>🏷️ {type || 'Cena'}</span>
+              <span style={styles.chip}>{type || 'Cena'}</span>
             </div>
           </div>
 
@@ -226,7 +233,7 @@ export const ReservationCard = ({
               onClick={() => onViewVoucher && onViewVoucher(reservation)}
               style={styles.voucherButton}
             >
-              🎟️ Ver Voucher & QR
+              Ver Voucher & QR
             </button>
 
             {status === 'Pendiente' && onReschedule && (
@@ -235,7 +242,7 @@ export const ReservationCard = ({
                 onClick={() => setIsEditing(true)}
                 style={styles.rescheduleButton}
               >
-                ✏️ Reagendar
+                Reagendar
               </button>
             )}
 
@@ -246,7 +253,7 @@ export const ReservationCard = ({
                 disabled={isCancelling}
                 style={styles.cancelButton}
               >
-                {isCancelling ? '...' : '✕ Cancelar'}
+                {isCancelling ? '...' : 'Cancelar'}
               </button>
             )}
           </div>

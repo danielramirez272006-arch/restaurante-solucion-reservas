@@ -221,7 +221,7 @@ export const MyReservationsPage = () => {
       {/* Mensaje de Error */}
       {error && (
         <div style={styles.errorAlert} role="alert">
-          <span>⚠️ {error}</span>
+          <span>{error}</span>
           <button type="button" onClick={loadUserReservations} style={styles.retryBtn}>
             Reintentar
           </button>
@@ -237,7 +237,7 @@ export const MyReservationsPage = () => {
       ) : filteredReservations.length === 0 ? (
         /* Estado Vacío */
         <div style={styles.emptyCard}>
-          <div style={styles.emptyIcon}>🌴</div>
+          <div style={styles.emptyIcon}>✦</div>
           <h3 style={styles.emptyTitle}>No se encontraron reservas</h3>
           <p style={styles.emptyText}>
             {searchTerm

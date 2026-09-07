@@ -33,13 +33,13 @@ function AdminLayout() {
           </Link>
           <nav className="admin-nav" aria-label="Navegación de administración">
             <NavLink to="/admin" end className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
-              📊 Resumen
+              Resumen
             </NavLink>
             <NavLink to="/admin/reservas" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
-              📅 Reservas
+              Reservas
             </NavLink>
             <NavLink to="/admin/clientes" className={({ isActive }) => isActive ? 'admin-nav-link active' : 'admin-nav-link'}>
-              👥 Clientes
+              Clientes
             </NavLink>
             <Link to="/" className="admin-nav-link" target="_blank" rel="noopener noreferrer">
               ↗ Ver Sitio
