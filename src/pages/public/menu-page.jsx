@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import rondonImg from '../../assets/images/rondon_soup_limon_1788651773676.jpg';
 import riceAndBeansImg from '../../assets/images/rice_and_beans_limon_1788651760839.jpg';
 import patiImg from '../../assets/images/pati_caribeno_1788651839747.jpg.png';
-import barImg from '../../assets/images/bar_caribeno_noche_1788651853426.jpg';
-import heroImg from '../../assets/images/caribbean_hero_bar_1788651748042.jpg';
+import cevicheImg from '../../assets/images/public/ceviche-coco.png';
+import barImg from '../../assets/images/bar_caribeno_noche_1788651853426.png';
+import heroImg from '../../assets/images/caribbean_hero_bar_1788651748042..png';
 
 const CATEGORIES = [
   { id: 'all', label: 'Toda la Carta' },
@@ -58,7 +59,7 @@ const MENU_ITEMS = [
     tag: 'Pesca Fresca del Día',
     price: '₡9.500',
     badge: 'Crudo & Fresco',
-    image: '/limon-food.jpg',
+    image: cevicheImg,
     description:
       'Láminas de corvina fresca marinadas en zumo de limón mandarina, emulsión sedosa de leche de coco virgen, cebolla morada confitada al vacío, aguacate de Talamanca y chips de plátano verde.',
     notes: 'Maridaje recomendado: Vino blanco Sauvignon Blanc o Agua de Sapo espumosa.'
@@ -66,7 +67,7 @@ const MENU_ITEMS = [
   {
     id: 'pescado-entero',
     category: 'fuertes',
-    name: 'Pesca Entera del Litoral al Escabeche Caribeño',
+    name: 'Pescado Entero del Litoral al Escabeche Caribeño',
     tag: 'Pesca Sostenible',
     price: '₡19.800',
     badge: 'Fuego Vivo',
