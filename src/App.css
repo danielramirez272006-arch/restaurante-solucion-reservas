@@ -19,6 +19,8 @@ body { background: var(--cream); background-image: radial-gradient(circle at 12%
 .about-section { background: var(--sand); background-image: radial-gradient(circle at 10% 20%, rgba(111,147,102,.12), transparent 23%); }.about-stamp { border-color: var(--terracotta); }.about-stamp small { color: var(--terracotta); }
 .site-footer { background: var(--ink); }.footer-contact a { color: var(--sun-yellow); }
 .menu-item:hover { background: rgba(215,185,64,.08); }.menu-line { border-color: var(--lime); }
+.dish-story-trigger { display: inline-flex; border: 0; border-bottom: 2px solid var(--terracotta); padding: 0 0 6px; background: transparent; color: var(--terracotta); cursor: pointer; font: 600 13px/1.2 'DM Sans', sans-serif; letter-spacing: .12em; text-transform: uppercase; text-align: left; transition: color .2s ease, border-color .2s ease, transform .2s ease; }.dish-story-trigger:hover, .dish-story-trigger:focus-visible { color: var(--clay-dark); border-color: var(--lime); transform: translateY(-1px); }.dish-story { color: var(--muted); font-size: 13px; line-height: 1.6; margin: 14px 0 0; }.dish-story em { color: var(--ink); }
+.dish-info > span:not(.dish-story-trigger) { display: inline-flex; border-bottom: 2px solid var(--terracotta); padding-bottom: 6px; color: var(--terracotta); font: 600 13px/1.2 'DM Sans', sans-serif; letter-spacing: .12em; text-transform: uppercase; }
 :root { --ink: #17241F; --deep-green: #24483B; --leaf-green: #6F9366; --lime: #D7B940; --sun-yellow: #E8C95B; --terracotta: #B94F35; --clay-dark: #8E3827; --sand: #E7D8B9; --cream: #F5F0E6; --paper: #FCFAF5; --muted: #70786F; --line: #D7D5C9; --green: var(--deep-green); --gold: var(--lime); }
 :root {
   /* --- PALETA VIBRANTE AFROCARIBEÑA LIMONENSE --- */
